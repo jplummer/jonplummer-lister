@@ -6,7 +6,7 @@ Lister is the easiest way to expose the contents of any web-accessible folder an
 
 * Directory listing shows a sortable list of files for any web-accessible directory or subdirectory
 * File type icons show file types at a glance
-* Simple installation allows you to be up and running in less than a minute
+* Simple drag-and-drop installation allows you to be up and running in less than a minute and is easy to remove
 * Sortable columns: default alphabetical by filename, with options to sort by type, size, or date
 * Theme and styling integrate with https://jonplummer.com/, including dark mode support
 * Easy file sharing via direct URL access
@@ -35,7 +35,7 @@ Lister is the easiest way to expose the contents of any web-accessible folder an
 
 ## Available technology
 
-It's meant to be installed in a web folder at Dreamhost, so the technologies we could use include
+It's meant to be installed in a web folder on any PHP-compatible hosting provider, so the technologies we could use include
 * cURL
 * Git
 * SOAP
@@ -61,3 +61,4 @@ It's meant to be installed in a web folder at Dreamhost, so the technologies we 
 - **Added directory access control**: Moved to "features to be considered" section
 - **Reorganized authentication**: Grouped upload/management features under clear hierarchy
 - **Removed MCP from immediate scope**: Moved to future features
+- **Clarified installation structure**: Installation requires `index.php` and `.htaccess` at root level for directory listing functionality, with application components organized in `/lister` subdirectory for clean deployment and maintenance

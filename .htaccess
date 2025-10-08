@@ -1,0 +1,35 @@
+# Lister Security Rules
+# Hide infrastructure files from web access
+
+# Deny access to config files
+<Files "*.json">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+# Deny access to PHP includes
+<Files "*.php">
+    <RequireAll>
+        Require all granted
+        # Only allow index.php in root
+        Require not expr "%{REQUEST_URI} =~ m#^/includes/#"
+        Require not expr "%{REQUEST_URI} =~ m#^/config/#"
+    </RequireAll>
+</Files>
+
+# Deny access to hidden files
+<Files ".*">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+# Allow access to assets
+<Directory "assets">
+    Require all granted
+</Directory>
+
+# Enable clean URLs (for future use)
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [QSA,L]

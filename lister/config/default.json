@@ -1,0 +1,32 @@
+{
+  "app": {
+    "name": "Lister",
+    "version": "1.0.0",
+    "debug": false
+  },
+  "security": {
+    "rate_limit": {
+      "enabled": true,
+      "max_requests": 100,
+      "time_window": 3600
+    },
+    "bot_detection": {
+      "enabled": true,
+      "blocked_user_agents": [
+        "bot",
+        "crawler",
+        "spider"
+      ]
+    }
+  },
+  "display": {
+    "items_per_page": 50,
+    "show_hidden_files": false,
+    "default_sort": "name",
+    "sort_direction": "asc"
+  },
+  "theme": {
+    "name": "default",
+    "dark_mode": false
+  }
+}
