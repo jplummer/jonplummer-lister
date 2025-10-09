@@ -1,0 +1,341 @@
+/* Lister - Directory Listing Styles */
+/* Based on jonplummer.com design system */
+
+:root {
+  /* Layout */
+  --gutter: 2rem;
+  --max-width: 66rem;
+  --breakpoint-mobile: 54rem;
+
+  /* Typography */
+  --font-family: system-ui, sans-serif;
+  --text-size: 16px;
+  --line-height: 1.5;
+  --font-size-xxs: 0.875rem;  --line-height-xxs: 1.715;
+  --font-size-xs: 1rem; --line-height-xs: 1.5;
+  --font-size-sm: 1.125rem; --line-height-sm: 1.3334;
+  --font-size-md: 1.25rem; --line-height-md: 1.2;
+  --font-size-lg: 1.5rem; --line-height-lg: 1;
+  --font-size-xl: 2rem; --line-height-xl: 1;
+  --font-size-2xl: 2.5rem; --line-height-2xl: 1.2;
+  --font-size-3xl: 4rem; --line-height-3xl: 1;
+  --line-height-tight: 1.1;
+
+  /* Font weights */
+  --font-weight-thin: 100;
+  --font-weight-bold: 700;
+  --font-weight-black: 900;
+
+  /* Letter spacing */
+  --letter-spacing-tight: -0.025em;
+  --letter-spacing-normal: normal;
+  --letter-spacing-loose: 0.025em;
+
+  /* Spacing */
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 1rem;
+  --spacing-md: 1.25rem;
+  --spacing-lg: 2rem;
+  --spacing-xl: 2.25rem;
+  --spacing-ex: 5ex;
+
+  /* Colors from jonplummer.com */
+  --text-color: #404040;
+  --text-color-light: #707070;
+  --background-color: #dadccf;
+  --content-background-color: #fff;
+  --link-color: #bf1b1b;
+  --link-hover-color: #ed3f1c;
+  --link-visited-color: #736b1e;
+  --link-active-color: #ed8008;
+  
+  /* Additional colors for Lister */
+  --border-color: #e2e8f0;
+  --hover-color: #f1f5f9;
+  --error-color: #dc2626;
+  --success-color: #16a34a;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text-color: #e0e0e0;
+    --text-color-light: #b0b0b0;
+    --background-color: #1a1a1a;
+    --content-background-color: #2d2d2d;
+    --link-color: #ff6b6b;
+    --link-hover-color: #ff8e8e;
+    --link-visited-color: #c4a484;
+    --link-active-color: #ffa500;
+    --border-color: #334155;
+    --hover-color: #1e293b;
+  }
+}
+
+/* Box sizing rules */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* Prevent font size inflation */
+html {
+  -moz-text-size-adjust: none;
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
+}
+
+/* Remove default margin in favour of better control in authored CSS */
+body, h1, h2, h3, h4, p,
+figure, blockquote, dl, dd, section {
+  margin-block-end: 0;
+}
+
+/* Take up the entire height of the viewport */
+body {
+  min-height: 100vh;
+  margin: 0; 
+  padding: 0;
+  font-family: var(--font-family);
+  font-size: var(--text-size);
+  line-height: var(--line-height);
+  letter-spacing: var(--letter-spacing-loose);
+  color: var(--text-color);
+  background-color: var(--background-color);
+}
+
+/* Main layout containers */
+body>header, body>main, body>footer {
+  margin: 0 auto;
+  padding: var(--gutter);
+  max-width: var(--max-width);
+  background-color: var(--content-background-color);
+}
+
+body>footer {
+  padding-top: 0;
+}
+
+/* Header layout */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
+}
+
+h1 {
+  margin: var(--spacing-md) 0 0.25rem 0;
+  font-size: var(--font-size-2xl);
+  line-height: var(--line-height-2xl);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--letter-spacing-tight);
+  color: var(--link-color);
+}
+
+/* Hgroup layout and typography */
+hgroup {
+  display: flex;
+  align-items: baseline;
+  gap: var(--spacing-sm);
+  flex-wrap: wrap;
+}
+
+hgroup h1 {
+  font-size: var(--font-size-3xl);
+  line-height: var(--line-height-3xl);
+  font-weight: var(--font-weight-thin);
+  margin: 0;
+}
+
+hgroup p {
+  margin: 0;
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-xs);
+  font-style: italic;
+}
+
+hgroup h1 a {
+  text-decoration: none;
+  color: var(--link-color);
+}
+
+hgroup h1 a:hover {
+  text-decoration: underline;
+}
+
+hgroup h1 a:visited {
+  color: var(--link-color); /* Keep hgroup as link-color even when visited */
+}
+
+.breadcrumbs {
+  font-size: var(--font-size-xxs);
+  line-height: var(--line-height-xxs);
+  color: var(--text-color-light);
+}
+
+.breadcrumbs a {
+  color: var(--link-color);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.breadcrumbs a:hover {
+  color: var(--link-hover-color);
+  text-decoration: underline;
+}
+
+.breadcrumbs a:visited {
+  color: var(--link-visited-color);
+}
+
+main {
+  max-width: var(--max-width);
+  margin: 0 auto;
+}
+
+.error {
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  padding: var(--spacing-lg);
+  margin: var(--spacing-lg) 0;
+  color: var(--error-color);
+}
+
+.directory-listing {
+  display: grid;
+  gap: var(--spacing-lg);
+}
+
+section {
+  background: var(--content-background-color);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+section h2 {
+  margin: 0;
+  padding: var(--spacing-md) var(--spacing-lg);
+  background-color: var(--hover-color);
+  border-bottom: 1px solid var(--border-color);
+  font-size: var(--font-size-lg);
+  line-height: var(--line-height-lg);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: var(--spacing-sm) var(--spacing-lg);
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+
+th {
+  background-color: var(--hover-color);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-xxs);
+  line-height: var(--line-height-xxs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+tbody tr:hover {
+  background-color: var(--hover-color);
+}
+
+.directory-link, .file-link {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  color: var(--text-color);
+  text-decoration: none;
+  font-weight: var(--font-weight-bold);
+  transition: color 0.3s ease;
+}
+
+.directory-link:hover, .file-link:hover {
+  color: var(--link-hover-color);
+  text-decoration: underline;
+}
+
+.directory-link:visited, .file-link:visited {
+  color: var(--link-visited-color);
+}
+
+.icon {
+  font-size: var(--font-size-sm);
+  width: 20px;
+  text-align: center;
+}
+
+.empty {
+  text-align: center;
+  padding: var(--spacing-xl) var(--spacing-lg);
+  color: var(--text-color-light);
+}
+
+footer {
+  margin-top: var(--spacing-xl);
+  padding-top: var(--spacing-lg);
+  border-top: 1px solid var(--border-color);
+  text-align: center;
+  color: var(--text-color-light);
+  font-size: var(--font-size-xxs);
+  line-height: var(--line-height-xxs);
+}
+
+/* Responsive design */
+@media all and (max-width: 54rem) {
+  /* Stack header elements vertically on mobile */
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  h1 {
+    font-size: var(--font-size-xl);
+    line-height: var(--line-height-xl);
+  }
+  
+  table {
+    font-size: var(--font-size-xxs);
+  }
+  
+  th, td {
+    padding: var(--spacing-xs) var(--spacing-sm);
+  }
+  
+  .breadcrumbs {
+    font-size: var(--font-size-xxs);
+  }
+}
+
+/* Print styles */
+@media print {
+  body {
+    background: white;
+    color: black;
+  }
+  
+  .breadcrumbs {
+    display: none;
+  }
+  
+  table {
+    border: 1px solid #000;
+  }
+  
+  th, td {
+    border: 1px solid #000;
+  }
+}

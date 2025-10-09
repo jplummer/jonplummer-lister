@@ -11,7 +11,8 @@ echo "User: $HOST_USERNAME"
 echo "Path: $HOST_REMOTE_PATH"
 
 # Upload files to root directory
-sftp -o StrictHostKeyChecking=no $HOST_USERNAME@$HOST_SERVER << EOF
+# Try SSH key first, fallback to password if needed
+sftp -o StrictHostKeyChecking=no -o PreferredAuthentications=publickey,password $HOST_USERNAME@$HOST_SERVER << EOF
 cd $HOST_REMOTE_PATH
 put index.php
 put .htaccess

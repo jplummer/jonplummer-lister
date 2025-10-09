@@ -6,12 +6,23 @@
 	],
 	"settings": {
 		"files.exclude": {
+			"**/.DS_Store": true,
+			"**/node_modules": true,
+			"**/.git": true
 		},
 		"files.associations": {
-			"*.njk": "nunjucks"
+			"*.env": "properties",
+			"*.htaccess": "apache"
 		},
 		"editor.tabSize": 2,
 		"editor.insertSpaces": true,
-		"editor.detectIndentation": false
+		"editor.detectIndentation": false,
+		"php.suggest.basic": false,
+		"php.validate.enable": true,
+		"files.watcherExclude": {
+			"**/.git/objects/**": true,
+			"**/.git/subtree-cache/**": true,
+			"**/node_modules/**": true
+		}
 	}
 }

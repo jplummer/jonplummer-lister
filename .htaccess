@@ -28,8 +28,9 @@
     Require all granted
 </Directory>
 
-# Enable clean URLs (for future use)
+# Enable clean URLs for directory navigation
 RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !^/lister/
 RewriteRule ^(.*)$ index.php [QSA,L]

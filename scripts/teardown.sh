@@ -11,7 +11,7 @@ echo "User: $HOST_USERNAME"
 echo "Path: $HOST_REMOTE_PATH"
 
 # Confirm before proceeding
-read -p "Are you sure you want to remove Lister? This will delete all Lister files. (y/N): " -n 1 -r
+read -p "Are you sure you want to remove Lister from the remote server? This will delete all Lister files. (y/N): " -n 1 -r
 echo
 if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     echo "Teardown cancelled."
@@ -19,7 +19,8 @@ if [[ ! $REPLY =~ ^[Yy]$ ]]; then
 fi
 
 # Remove files from server
-sftp -o StrictHostKeyChecking=no $HOST_USERNAME@$HOST_SERVER << EOF
+# Try SSH key first, fallback to password if needed
+sftp -o StrictHostKeyChecking=no -o PreferredAuthentications=publickey,password $HOST_USERNAME@$HOST_SERVER << EOF
 cd $HOST_REMOTE_PATH
 rm index.php
 rm .htaccess
@@ -28,4 +29,4 @@ quit
 EOF
 
 echo "Teardown complete!"
-echo "Lister has been removed from https://$HOST_DOMAIN/"
+echo "Lister has been removed from $HOST_DOMAIN"
