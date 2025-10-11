@@ -16,6 +16,7 @@ class App
   {
     $this->loadConfiguration();
     $this->checkEnvironment();
+    $this->checkSecurity();
     $this->initializeLister();
     $this->processRequest();
   }
@@ -57,6 +58,18 @@ class App
     // Check if we can read the current directory
     if (!is_readable('.')) {
       throw new Exception('Cannot read current directory');
+    }
+  }
+
+  /**
+   * Check security (rate limiting, bot detection)
+   */
+  private function checkSecurity()
+  {
+    if ($this->config['security']['enabled'] ?? false) {
+      require_once __DIR__ . '/Security.php';
+      $security = new Security($this->config);
+      $security->checkRequest();
     }
   }
 

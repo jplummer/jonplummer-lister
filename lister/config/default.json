@@ -5,19 +5,10 @@
     "debug": false
   },
   "security": {
-    "rate_limit": {
-      "enabled": true,
-      "max_requests": 100,
-      "time_window": 3600
-    },
-    "bot_detection": {
-      "enabled": true,
-      "blocked_user_agents": [
-        "bot",
-        "crawler",
-        "spider"
-      ]
-    }
+    "enabled": true,
+    "max_requests_per_minute": 30,
+    "block_duration_seconds": 300,
+    "log_suspicious_activity": true
   },
   "display": {
     "items_per_page": 50,

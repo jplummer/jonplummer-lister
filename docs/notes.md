@@ -4,7 +4,10 @@
 
 ### Local Development
 ```bash
-# Start local PHP server
+# Start local PHP server with router (recommended)
+php -S localhost:8000 router.php
+
+# Or start without router (basic)
 php -S localhost:8000
 
 # Test the application
@@ -14,6 +17,8 @@ curl http://localhost:8000
 # Stop server (if running in background)
 pkill -f "php -S localhost:8000"
 ```
+
+**Router.php**: The `router.php` file enables proper URL routing for the PHP built-in server, making it behave like Apache with mod_rewrite. It routes directory requests to `index.php` and serves static files directly. Only needed for local development - production uses `.htaccess` for routing.
 
 ### PHP Syntax Check
 ```bash
@@ -28,19 +33,36 @@ find . -name "*.php" -exec php -l {} \;
 
 ```
 lister/
-├── index.php              # Main application entry point
-├── .htaccess              # Apache security rules
-├── config/
-│   └── default.json       # Default configuration
-├── includes/              # PHP classes (future)
-├── assets/
-│   ├── css/               # Stylesheets
-│   ├── js/                # JavaScript
-│   └── icons/             # File type icons
+├── index.php              # Main application entry point – DEPLOYABLE
+├── .htaccess              # Apache security rules – DEPLOYABLE
+├── router.php             # PHP built-in server router (dev only)
+├── lister/                # Main application directory – DEPLOYABLE
+│   ├── config/
+│   │   ├── default.json   # Default configuration
+│   │   └── extensions.json # File type mappings
+│   ├── includes/          # PHP classes
+│   │   ├── App.php        # Main application class
+│   │   ├── DirectoryLister.php # Directory scanning
+│   │   └── Security.php   # Security & rate limiting
+│   ├── templates/
+│   │   └── index.php      # Main template
+│   ├── assets/
+│   │   └── lister.css     # Stylesheet
+│   ├── api.php            # AJAX API endpoint
+│   └── admin.php          # Security admin panel
+├── scripts/               # Utility scripts
+│   ├── deploy.sh          # Deployment script
+│   ├── teardown.sh        # Removal script
+│   ├── test_security.php  # Security testing
+│   └── test_pattern.php   # Pattern matching tests
+├── data/                  # Runtime data (git ignored)
+│   ├── security.log       # Security incidents
+│   └── rate_*.json        # Rate limiting data
 └── docs/
     ├── plan.md            # Development plan
     ├── requirements.md    # Project requirements
-    └── notes.md           # This file
+    ├── notes.md           # This file
+    └── configuration.md   # Configuration guide
 ```
 
 ## Development Workflow
@@ -53,9 +75,10 @@ lister/
 5. Commit changes when ready
 
 ### 2. Testing
-- **Local Testing**: Use `php -S localhost:8000`
+- **Local Testing**: Use `php -S localhost:8000 router.php`
 - **Syntax Check**: `php -l filename.php`
 - **Browser Testing**: Visit `http://localhost:8000`
+- **Security Testing**: Run `php scripts/test_security.php`
 - **API Testing**: Use `curl` or browser dev tools
 
 ### 3. Deployment to Web Server
@@ -80,39 +103,47 @@ git push origin main
 ```
 
 ### 4. Configuration
-- Edit `config/default.json` for app settings
+- Edit `lister/config/default.json` for app settings
 - Modify `.htaccess` for Apache rules
-- Update `index.php` for main functionality
+- Update `lister/includes/App.php` for main functionality
+- Access security admin at `yourdomain.com/lister/admin.php`
 
 ## Common Commands
 
 ### PHP Development
 ```bash
-# Start development server
-php -S localhost:8000
+# Start development server with router
+php -S localhost:8000 router.php
 
 # Check PHP version
 php --version
 
 # Run PHP with specific ini file
-php -c /path/to/php.ini -S localhost:8000
+php -c /path/to/php.ini -S localhost:8000 router.php
 
 # Check loaded extensions
 php -m
+
+# Test security system
+php scripts/test_security.php
 ```
 
 ### File Operations
 ```bash
-# Create directory structure
-mkdir -p config includes assets/{css,js,icons}
-
 # Check file permissions
 ls -la
 
 # Set proper permissions (if needed)
 chmod 644 *.php
-chmod 644 config/*.json
+chmod 644 lister/config/*.json
 chmod 644 .htaccess
+chmod 755 lister/
+chmod 755 lister/includes/
+chmod 755 lister/templates/
+chmod 755 lister/assets/
+
+# Check security logs
+tail -f data/security.log
 ```
 
 ### Git Operations
@@ -153,9 +184,10 @@ git pull origin main
 - Check `.htaccess` rules
 
 **Configuration Issues**
-- Verify `config/default.json` is valid JSON
+- Verify `lister/config/default.json` is valid JSON
 - Check file paths are correct
 - Ensure all required directories exist
+- Check security configuration in admin panel
 
 ### Debug Mode
 ```bash
@@ -166,25 +198,6 @@ php -d display_errors=1 -S localhost:8000
 tail -f /opt/homebrew/var/log/php/error.log
 ```
 
-## Development Phases
-
-### Phase 1: Core Foundation (Current)
-- [x] Basic PHP structure
-- [x] Configuration system
-- [x] Security rules (.htaccess)
-- [ ] Directory listing engine
-- [ ] User interface
-- [ ] Theming & styling
-
-### Phase 2: Enhanced Features
-- [ ] File management
-- [ ] User experience improvements
-- [ ] Advanced security
-
-### Phase 3: Future Enhancements
-- [ ] Search & discovery
-- [ ] File operations
-- [ ] Authentication system
 
 ## Environment Setup
 
@@ -224,8 +237,10 @@ tail -f /opt/homebrew/var/log/php/error.log
 
 ### PHP Security
 - Input validation and sanitization
-- Rate limiting (future)
-- Bot detection (future)
+- Rate limiting (30 requests/minute)
+- Bot detection (blocks curl, wget, etc.)
+- Suspicious request detection
+- Security logging and admin panel
 - Error handling
 
 ## Performance Tips
@@ -242,13 +257,12 @@ tail -f /opt/homebrew/var/log/php/error.log
 - Implement caching strategies
 - Monitor server resources
 
-## Next Steps
+## Current Status
 
-1. **Deploy to Dreamhost** - Test in production environment
-2. **Build Directory Engine** - Core listing functionality
-3. **Create UI** - User interface and styling
-4. **Add Security** - Rate limiting and bot detection
-5. **Test & Iterate** - Continuous improvement
+- **Production**: Deployed and working on misc.jonplummer.com
+- **Security**: Active monitoring via admin panel
+- **Development**: Ready for additional features
+- **Documentation**: Complete and up-to-date
 
 ## Useful Resources
 
@@ -259,6 +273,7 @@ tail -f /opt/homebrew/var/log/php/error.log
 
 ---
 
-*Last updated: 2025-10-08*
+*Last updated: 2025-01-10*
 *PHP Version: 8.4.13*
 *Project: Lister Directory Listing Application*
+*Status: Production Ready*
