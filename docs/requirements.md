@@ -18,7 +18,7 @@ Lister is the easiest way to expose the contents of any web-accessible folder an
 * Readme rendering allows exposing the contents of READMEs directly on the page
 * Text preview allows you to see a preview of a text or markdown document
 * Image preview allows you to see a preview of a selected image and page through images in the directory
-* Hidden files: ability to hide files from listing while keeping them accessible via direct URL
+* File hiding: configurable options to hide dotfiles, sensitive files, and OS-specific cruft from directory listings while keeping them accessible via direct URL
 * Directory access control: ability to restrict access to specific directories
 
 ## 3. Features to be considered later
@@ -32,6 +32,10 @@ Lister is the easiest way to expose the contents of any web-accessible folder an
   * Delete files or folders
   * Authentication via SSH key or user/pass (sshpass)
 * MCP (Model Context Protocol) integration for AI agents
+
+## 4. Nice to have features
+
+* Shared design system package to coordinate theme data with jonplummer-11ty and other projects
 
 ## Available technology
 
@@ -53,6 +57,9 @@ It's meant to be installed in a web folder on any PHP-compatible hosting provide
 * SSH
 
 # Changelog
+
+## 2025-01-27
+- **Added file hiding configuration**: Implemented configurable options to hide dotfiles, sensitive files, OS-specific cruft, and application files from directory listings. All four categories are enabled by default and use pattern matching for flexible file filtering. Application files include the `/lister` directory, `index.php`, `api.php`, and other app-related files.
 
 ## 2025-10-08
 - **Added design principles**: Specified preference for semantic HTML with minimal classes/IDs, no utility classes, and minimal JavaScript

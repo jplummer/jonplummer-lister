@@ -54,6 +54,9 @@
   --hover-color: #f1f5f9;
   --error-color: #dc2626;
   --success-color: #16a34a;
+  
+  /* Indentation system */
+  --indent-base: 2rem;
 }
 
 /* Dark mode support */
@@ -69,6 +72,11 @@
     --link-active-color: #ffa500;
     --border-color: #334155;
     --hover-color: #1e293b;
+  }
+  
+  /* Dark mode triangle color */
+  .directory-toggle .toggle-icon::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M3 2l6 4l-6 4z' fill='%23ff6b6b'/%3E%3C/svg%3E");
   }
 }
 
@@ -122,7 +130,6 @@ header {
   align-items: baseline;
   flex-wrap: wrap;
   gap: var(--spacing-sm);
-  border-bottom: 1px solid var(--border-color);
   padding-bottom: var(--spacing-lg);
   margin-bottom: var(--spacing-lg);
 }
@@ -197,6 +204,44 @@ main {
   margin: 0 auto;
 }
 
+/* Article layout */
+article {
+  margin: 0;
+  padding-bottom: var(--spacing-lg);
+}
+
+/* Article grid areas */
+article header {
+  margin-bottom: var(--spacing-lg);
+}
+
+article section {
+  width: 100%;
+}
+
+article footer {
+  margin-top: var(--spacing-lg);
+}
+
+/* Article headings */
+article h1 {
+  margin: 0 0 var(--spacing-sm) 0;
+  font-size: var(--font-size-2xl);
+  line-height: var(--line-height-2xl);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--letter-spacing-tight);
+  color: var(--link-color);
+}
+
+/* Mobile responsive layout */
+@media all and (max-width: 54rem) {
+  /* Stack header elements vertically on mobile */
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
 .error {
   background-color: #fef2f2;
   border: 1px solid #fecaca;
@@ -207,26 +252,7 @@ main {
 }
 
 .directory-listing {
-  display: grid;
-  gap: var(--spacing-lg);
-}
-
-section {
-  background: var(--content-background-color);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-section h2 {
-  margin: 0;
-  padding: var(--spacing-md) var(--spacing-lg);
-  background-color: var(--hover-color);
-  border-bottom: 1px solid var(--border-color);
-  font-size: var(--font-size-lg);
-  line-height: var(--line-height-lg);
-  font-weight: var(--font-weight-bold);
-  letter-spacing: var(--letter-spacing-tight);
+  margin-top: var(--spacing-sm);
 }
 
 table {
@@ -235,21 +261,21 @@ table {
 }
 
 th, td {
-  padding: var(--spacing-sm) var(--spacing-lg);
+  padding: var(--spacing-xs) 0;
   text-align: left;
-  border-bottom: 1px solid var(--border-color);
 }
 
 th {
-  background-color: var(--hover-color);
   font-weight: var(--font-weight-bold);
   font-size: var(--font-size-xxs);
   line-height: var(--line-height-xxs);
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  color: var(--text-color-light);
 }
 
-tbody tr:hover {
+/* Main table hover - only apply to direct children of main tbody, not nested tables */
+.directory-listing > table > tbody > tr:hover {
   background-color: var(--hover-color);
 }
 
@@ -260,8 +286,10 @@ tbody tr:hover {
   color: var(--text-color);
   text-decoration: none;
   font-weight: var(--font-weight-bold);
+  font-size: inherit;
   transition: color 0.3s ease;
 }
+
 
 .directory-link:hover, .file-link:hover {
   color: var(--link-hover-color);
@@ -285,13 +313,172 @@ tbody tr:hover {
 }
 
 footer {
-  margin-top: var(--spacing-xl);
-  padding-top: var(--spacing-lg);
-  border-top: 1px solid var(--border-color);
-  text-align: center;
-  color: var(--text-color-light);
+  margin-top: var(--spacing-lg);
+  text-align: right;
+  font-style: italic;
+  color: var(--link-visited-color);
   font-size: var(--font-size-xxs);
   line-height: var(--line-height-xxs);
+  font-weight: 300;
+}
+
+footer p {
+  margin: 0;
+}
+
+/* Expandable directory styles */
+.directory-toggle {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  color: var(--text-color);
+  text-decoration: none;
+  font-weight: var(--font-weight-bold);
+  font-size: inherit;
+  transition: color 0.3s ease;
+  width: 100%;
+  text-align: left;
+}
+
+
+.directory-toggle:hover {
+  color: var(--link-hover-color);
+  text-decoration: underline;
+}
+
+.directory-toggle:visited {
+  color: var(--link-visited-color);
+}
+
+.toggle-icon {
+  font-size: var(--font-size-xxs);
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+
+/* Change folder emoji when expanded */
+.item-row.expanded .directory-toggle .icon.folder::before {
+  content: '📂';
+}
+
+.item-row:not(.expanded) .directory-toggle .icon.folder::before {
+  content: '📁';
+}
+
+/* Expanded content styling removed - indentation provides visual hierarchy */
+
+/* Reserve space for caret on all items (files and folders) */
+.directory-toggle,
+.file-link {
+  padding-left: 0;
+  display: flex;
+  align-items: center;
+}
+
+/* Caret space - always reserve space for caret even on files */
+.directory-toggle .toggle-icon {
+  width: 16px;
+  text-align: center;
+  flex-shrink: 0;
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+
+/* Default state - right-pointing triangle */
+.directory-toggle .toggle-icon::before {
+  content: '';
+  display: block;
+  width: 12px;
+  height: 12px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M3 2l6 4l-6 4z' fill='%23bf1b1b'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  margin: 0 auto;
+  transition: transform 0.2s ease;
+}
+
+/* Expanded state - down-pointing triangle */
+.item-row.expanded .directory-toggle .toggle-icon::before {
+  transform: rotate(90deg);
+}
+
+/* Reserve same space for files as directories have for toggle icon */
+.file-link::before {
+  content: '';
+  width: 16px;
+  flex-shrink: 0;
+}
+
+/* Icon alignment - all icons align in strict column */
+.directory-toggle .icon,
+.file-link .icon {
+  width: 20px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+/* Progressive indentation for expanded content */
+.expanded-content[data-nesting-level="1"] .directory-toggle,
+.expanded-content[data-nesting-level="1"] .file-link,
+.expanded-content[data-nesting-level="1"] .empty-folder {
+  padding-left: var(--indent-base);
+}
+
+.expanded-content[data-nesting-level="2"] .directory-toggle,
+.expanded-content[data-nesting-level="2"] .file-link,
+.expanded-content[data-nesting-level="2"] .empty-folder {
+  padding-left: calc(var(--indent-base) * 2);
+}
+
+.expanded-content[data-nesting-level="3"] .directory-toggle,
+.expanded-content[data-nesting-level="3"] .file-link,
+.expanded-content[data-nesting-level="3"] .empty-folder {
+  padding-left: calc(var(--indent-base) * 3);
+}
+
+.expanded-content[data-nesting-level="4"] .directory-toggle,
+.expanded-content[data-nesting-level="4"] .file-link,
+.expanded-content[data-nesting-level="4"] .empty-folder {
+  padding-left: calc(var(--indent-base) * 4);
+}
+
+.expanded-content[data-nesting-level="5"] .directory-toggle,
+.expanded-content[data-nesting-level="5"] .file-link,
+.expanded-content[data-nesting-level="5"] .empty-folder {
+  padding-left: calc(var(--indent-base) * 5);
+}
+
+/* Empty folder styling */
+.empty-folder {
+  display: flex;
+  align-items: center;
+  color: var(--text-color-light);
+  font-style: italic;
+  cursor: default;
+  padding: var(--spacing-xs) 0;
+}
+
+.empty-folder .icon {
+  margin-right: var(--spacing-xs);
+  opacity: 0.7;
+}
+
+
+/* Loading state */
+.directory-toggle.loading .toggle-icon {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 /* Responsive design */

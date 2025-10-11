@@ -1,36 +1,31 @@
-# Lister Security Rules
-# Hide infrastructure files from web access
+# Lister - Simple .htaccess
+# Basic security and URL handling
 
-# Deny access to config files
-<Files "*.json">
-    Order Allow,Deny
-    Deny from all
-</Files>
-
-# Deny access to PHP includes
-<Files "*.php">
-    <RequireAll>
-        Require all granted
-        # Only allow index.php in root
-        Require not expr "%{REQUEST_URI} =~ m#^/includes/#"
-        Require not expr "%{REQUEST_URI} =~ m#^/config/#"
-    </RequireAll>
-</Files>
-
-# Deny access to hidden files
-<Files ".*">
-    Order Allow,Deny
-    Deny from all
-</Files>
-
-# Allow access to assets
-<Directory "assets">
-    Require all granted
-</Directory>
-
-# Enable clean URLs for directory navigation
+# Enable URL rewriting
 RewriteEngine On
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_URI} !^/lister/
-RewriteRule ^(.*)$ index.php [QSA,L]
+
+# Redirect root requests to index.php
+RewriteCond %{REQUEST_URI} ^/$
+RewriteRule ^(.*)$ index.php [L,QSA]
+
+# Handle directory requests - redirect to index.php
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteCond %{REQUEST_URI} !^/index\.php$
+RewriteRule ^(.*)$ index.php [L,QSA]
+
+# Handle file requests - serve files directly
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteCond %{REQUEST_URI} !^/index\.php$
+RewriteRule ^(.*)$ - [L]
+
+# Basic security - hide sensitive files
+<Files "*.json">
+  Order Deny,Allow
+  Deny from all
+</Files>
+
+<Files "*.php">
+  <RequireAll>
+    Require all granted
+  </RequireAll>
+</Files>

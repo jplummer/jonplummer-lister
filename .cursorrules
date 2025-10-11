@@ -62,7 +62,8 @@
 - Minimal JavaScript - only what's truly necessary
 - Mobile-first responsive design
 - Leverage semantic HTML behavior over ARIA attributes
-- Ask if color contrast seems insufficient
+- Make use of existing CSS customer properties befor eintriducing hardcoded values
+- Ask me if color contrast seems insufficient
 
 ### Code Development Principles
 1. First understand what's already working - don't break existing functionality

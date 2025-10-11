@@ -11,6 +11,7 @@ class DirectoryLister
   private $basePath;
   private $files = [];
   private $directories = [];
+  private $extensionTypes = null;
 
   public function __construct($config, $basePath = null)
   {
@@ -25,20 +26,18 @@ class DirectoryLister
   private function getCurrentPath()
   {
     $requestUri = $_SERVER['REQUEST_URI'];
-    $scriptName = $_SERVER['SCRIPT_NAME'];
     
     // Remove query string
     $path = parse_url($requestUri, PHP_URL_PATH);
     
-    // Remove script name from path
-    $path = str_replace(dirname($scriptName), '', $path);
+    // Remove leading slash
     $path = ltrim($path, '/');
     
     // Security: prevent directory traversal
     $path = str_replace(['../', '..\\'], '', $path);
     
-    // If path is empty or just the script name, use base path
-    if (empty($path) || $path === basename($scriptName)) {
+    // If path is empty, use base path
+    if (empty($path)) {
       return $this->basePath;
     }
     
@@ -49,19 +48,27 @@ class DirectoryLister
       return dirname($fullPath);
     }
     
-    return $fullPath;
+    // If the path is a directory, return it directly
+    if (is_dir($fullPath)) {
+      return $fullPath;
+    }
+    
+    // If neither file nor directory exists, return base path
+    return $this->basePath;
   }
 
   /**
    * Scan directory and return file/directory information
    */
-  public function scanDirectory()
+  public function scanDirectory($path = null)
   {
-    if (!is_dir($this->currentPath)) {
-      throw new Exception('Directory not found: ' . $this->currentPath);
+    $targetPath = $path ?: $this->currentPath;
+    
+    if (!is_dir($targetPath)) {
+      throw new Exception('Directory not found: ' . $targetPath);
     }
 
-    $items = scandir($this->currentPath);
+    $items = scandir($targetPath);
     $this->files = [];
     $this->directories = [];
 
@@ -70,10 +77,36 @@ class DirectoryLister
         continue;
       }
 
-      $fullPath = $this->currentPath . '/' . $item;
+      // Check if file should be hidden
+      if ($this->shouldHideFile($item)) {
+        error_log("Hiding item: $item");
+        continue;
+      }
+
+      $fullPath = $targetPath . '/' . $item;
       $itemInfo = $this->getItemInfo($item, $fullPath);
 
       if (is_dir($fullPath)) {
+        // Check if directory is empty
+        $dirContents = scandir($fullPath);
+        $hasVisibleItems = false;
+        
+        foreach ($dirContents as $dirItem) {
+          if ($dirItem === '.' || $dirItem === '..') {
+            continue;
+          }
+          if (!$this->shouldHideFile($dirItem)) {
+            $hasVisibleItems = true;
+            break;
+          }
+        }
+        
+        // If directory is empty, mark it as such
+        if (!$hasVisibleItems) {
+          $itemInfo['type'] = 'Empty folder';
+          $itemInfo['is_empty'] = true;
+        }
+        
         $this->directories[] = $itemInfo;
       } else {
         $this->files[] = $itemInfo;
@@ -89,6 +122,69 @@ class DirectoryLister
       'current_path' => $this->currentPath,
       'parent_path' => $this->getParentPath()
     ];
+  }
+
+  /**
+   * Check if a file should be hidden based on configuration
+   */
+  private function shouldHideFile($filename)
+  {
+    $hidingConfig = $this->config['file_hiding'] ?? [];
+    
+    // Check dotfiles
+    if (($hidingConfig['hide_dotfiles'] ?? true) && strpos($filename, '.') === 0) {
+      return true;
+    }
+    
+    // Check sensitive files
+    if ($hidingConfig['hide_sensitive_files'] ?? true) {
+      $sensitivePatterns = $hidingConfig['sensitive_patterns'] ?? [];
+      foreach ($sensitivePatterns as $pattern) {
+        if ($this->matchesPattern($filename, $pattern)) {
+          return true;
+        }
+      }
+    }
+    
+    // Check OS cruft
+    if ($hidingConfig['hide_os_cruft'] ?? true) {
+      $osCruftPatterns = $hidingConfig['os_cruft_patterns'] ?? [];
+      foreach ($osCruftPatterns as $pattern) {
+        if ($this->matchesPattern($filename, $pattern)) {
+          return true;
+        }
+      }
+    }
+    
+    // Check app files
+    if ($hidingConfig['hide_app_files'] ?? true) {
+      $appFilesPatterns = $hidingConfig['app_files_patterns'] ?? [];
+      foreach ($appFilesPatterns as $pattern) {
+        if ($this->matchesPattern($filename, $pattern)) {
+          return true;
+        }
+      }
+    }
+    
+    return false;
+  }
+
+  /**
+   * Check if filename matches a pattern (supports wildcards)
+   */
+  private function matchesPattern($filename, $pattern)
+  {
+    // Handle directory patterns (ending with /)
+    if (substr($pattern, -1) === '/') {
+      $dirPattern = substr($pattern, 0, -1);
+      return $filename === $dirPattern;
+    }
+    
+    // Convert wildcard pattern to regex
+    $regex = str_replace(['*', '.'], ['.*', '\.'], $pattern);
+    $regex = '/^' . $regex . '$/i';
+    
+    return preg_match($regex, $filename);
   }
 
   /**
@@ -111,6 +207,7 @@ class DirectoryLister
       'permissions' => $this->formatPermissions($stat['mode']),
       'extension' => $isDir ? null : $this->getFileExtension($name),
       'mime_type' => $isDir ? null : $this->getMimeType($fullPath),
+      'type' => $isDir ? 'Folder' : $this->getFileType($name),
       'icon' => $this->getFileIcon($name, $isDir)
     ];
   }
@@ -120,6 +217,8 @@ class DirectoryLister
    */
   private function getItemUrl($name)
   {
+    // For expandable directories, we'll use data attributes instead of URLs
+    // Files will still have direct URLs
     $currentUrl = $_SERVER['REQUEST_URI'];
     $currentUrl = rtrim($currentUrl, '/');
     return $currentUrl . '/' . urlencode($name);
@@ -192,6 +291,92 @@ class DirectoryLister
   }
 
   /**
+   * Load extension types from JSON file
+   * 
+   * Uses dyne/file-extension-list (https://github.com/dyne/file-extension-list)
+   * for comprehensive file extension to type mapping
+   */
+  private function loadExtensionTypes()
+  {
+    if ($this->extensionTypes !== null) {
+      return;
+    }
+    
+    $extensionsFile = __DIR__ . '/../config/extensions.json';
+    if (file_exists($extensionsFile)) {
+      $jsonData = file_get_contents($extensionsFile);
+      $this->extensionTypes = json_decode($jsonData, true) ?: [];
+    } else {
+      $this->extensionTypes = [];
+    }
+  }
+
+  /**
+   * Get descriptive file type from extension
+   */
+  private function getFileType($filename)
+  {
+    $this->loadExtensionTypes();
+    
+    $extension = $this->getFileExtension($filename);
+    if (empty($extension)) {
+      return 'File';
+    }
+    
+    // Check if we have type information for this extension
+    if (isset($this->extensionTypes[$extension])) {
+      $categories = $this->extensionTypes[$extension];
+      // Return the first category, or a more descriptive name
+      $category = $categories[0];
+      
+      // Convert category to more descriptive names
+      $typeMap = [
+        'code' => 'Code file',
+        'image' => 'Image',
+        'video' => 'Video',
+        'audio' => 'Audio',
+        'archive' => 'Archive',
+        'document' => 'Document',
+        'text' => 'Text file',
+        'data' => 'Data file',
+        'font' => 'Font',
+        'executable' => 'Executable',
+        'system' => 'System file',
+        'web' => 'Web file',
+        'presentation' => 'Presentation',
+        'spreadsheet' => 'Spreadsheet',
+        'database' => 'Database',
+        'cad' => 'CAD file',
+        'ebook' => 'E-book',
+        'game' => 'Game file',
+        'config' => 'Configuration',
+        'backup' => 'Backup'
+      ];
+      
+      // Special handling for specific extensions that need better categorization
+      $specialTypes = [
+        'pdf' => 'Document',
+        'doc' => 'Document',
+        'docx' => 'Document',
+        'odt' => 'Document',
+        'rtf' => 'Document',
+        'txt' => 'Text file',
+        'md' => 'Text file',
+        'log' => 'Text file'
+      ];
+      
+      if (isset($specialTypes[$extension])) {
+        return $specialTypes[$extension];
+      }
+      
+      return $typeMap[$category] ?? ucfirst($category);
+    }
+    
+    // Fallback to extension-based naming
+    return ucfirst($extension) . ' file';
+  }
+
+  /**
    * Get appropriate icon for file type
    */
   private function getFileIcon($name, $isDir)
@@ -200,40 +385,39 @@ class DirectoryLister
       return 'folder';
     }
     
+    $this->loadExtensionTypes();
     $extension = $this->getFileExtension($name);
     
-    // Common file type icons
-    $iconMap = [
-      // Images
-      'jpg' => 'image', 'jpeg' => 'image', 'png' => 'image', 'gif' => 'image',
-      'svg' => 'image', 'webp' => 'image', 'bmp' => 'image', 'ico' => 'image',
-      
-      // Documents
-      'pdf' => 'pdf', 'doc' => 'document', 'docx' => 'document',
-      'txt' => 'text', 'rtf' => 'document', 'odt' => 'document',
-      
-      // Archives
-      'zip' => 'archive', 'rar' => 'archive', '7z' => 'archive',
-      'tar' => 'archive', 'gz' => 'archive',
-      
-      // Code
-      'php' => 'code', 'js' => 'code', 'css' => 'code', 'html' => 'code',
-      'htm' => 'code', 'xml' => 'code', 'json' => 'code',
-      
-      // Audio
-      'mp3' => 'audio', 'wav' => 'audio', 'ogg' => 'audio', 'm4a' => 'audio',
-      
-      // Video
-      'mp4' => 'video', 'avi' => 'video', 'mov' => 'video', 'wmv' => 'video',
-      
-      // Spreadsheets
-      'xls' => 'spreadsheet', 'xlsx' => 'spreadsheet', 'csv' => 'spreadsheet',
-      
-      // Presentations
-      'ppt' => 'presentation', 'pptx' => 'presentation'
-    ];
+    if (empty($extension)) {
+      return 'file';
+    }
     
-    return $iconMap[$extension] ?? 'file';
+    // Check if we have type information for this extension
+    if (isset($this->extensionTypes[$extension])) {
+      $categories = $this->extensionTypes[$extension];
+      $category = $categories[0]; // Use the first category
+      
+      // Map categories to icon types
+      $categoryToIconMap = [
+        'code' => 'code',
+        'image' => 'image',
+        'video' => 'video',
+        'audio' => 'audio',
+        'archive' => 'archive',
+        'book' => 'book',
+        'exec' => 'exec',
+        'web' => 'web',
+        'sheet' => 'sheet',
+        'text' => 'text',
+        'font' => 'font',
+        'slide' => 'slide'
+      ];
+      
+      return $categoryToIconMap[$category] ?? 'file';
+    }
+    
+    // Fallback for unknown extensions
+    return 'file';
   }
 
   /**

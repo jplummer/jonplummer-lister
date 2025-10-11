@@ -59,6 +59,11 @@ See [docs/notes.md](docs/notes.md) for development workflow and troubleshooting.
 - Apache with mod_php
 - Web server with directory listing enabled
 
+## Acknowledgments
+
+- **File Type Detection**: Uses [dyne/file-extension-list](https://github.com/dyne/file-extension-list) for comprehensive file extension to type mapping
+- **Icons**: Emoji-based file type icons for clean, universal display
+
 ## License
 
 MIT License

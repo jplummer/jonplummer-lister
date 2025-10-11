@@ -25,8 +25,46 @@
     "default_sort": "name",
     "sort_direction": "asc"
   },
-  "theme": {
-    "name": "default",
-    "dark_mode": false
+  "file_hiding": {
+    "hide_dotfiles": true,
+    "hide_sensitive_files": true,
+    "hide_os_cruft": true,
+    "hide_app_files": true,
+    "sensitive_patterns": [
+      ".env",
+      "config.php",
+      "database.php",
+      "secrets.json",
+      "private.key",
+      "*.pem",
+      "*.p12",
+      "*.pfx",
+      "id_rsa",
+      "id_dsa",
+      "id_ecdsa",
+      "id_ed25519",
+      "known_hosts",
+      "authorized_keys"
+    ],
+    "os_cruft_patterns": [
+      "Thumbs.db",
+      ".DS_Store",
+      "desktop.ini",
+      "._*",
+      ".Spotlight-V100",
+      ".Trashes",
+      ".fseventsd",
+      ".TemporaryItems",
+      ".VolumeIcon.icns",
+      ".com.apple.timemachine.donotpresent",
+      "ehthumbs.db",
+      "ehthumbs_vista.db",
+      "*.tmp",
+      "*.temp"
+    ],
+    "app_files_patterns": [
+      "index.php",
+      "lister/"
+    ]
   }
 }

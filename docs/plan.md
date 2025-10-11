@@ -4,49 +4,52 @@
 **Goal**: Basic directory listing with sorting and theming
 
 ### 1.1 Project Structure & Setup
-- Create minimal PHP application structure
-- Set up .htaccess for clean URLs and security
-- Create configuration system for easy installation
-- Implement basic error handling and logging
+- [x] Create minimal PHP application structure
+- [x] Set up .htaccess for clean URLs and security
+- [x] Create configuration system for easy installation
+- [x] Implement basic error handling and logging
 
 ### 1.2 Directory Listing Engine
-- Build core directory scanning functionality
-- Implement file type detection and icon mapping
-- Create file size formatting utilities
-- Add modification date handling
+- [x] Build core directory scanning functionality
+- [x] Implement file type detection and icon mapping
+- [x] Create file size formatting utilities
+- [x] Add modification date handling
 
 ### 1.3 User Interface
-- Design semantic HTML structure with minimal classes
-- Implement sortable table with minimal JavaScript
-- Create file type icon system (CSS-based or icon font)
-- Build navigation breadcrumbs using semantic HTML
+- [x] Design semantic HTML structure with minimal classes
+- [x] Implement sortable table with minimal JavaScript
+- [x] Create file type icon system (CSS-based or icon font)
+- [x] Build navigation breadcrumbs using semantic HTML
 
 ### 1.4 Theming & Styling
-- Analyze jonplummer.com design patterns
-- Integrate existing CSS framework
-- Implement dark mode support
-- Ensure mobile-first responsive design
+- [x] Analyze jonplummer.com design patterns
+- [x] Integrate existing CSS framework
+- [ ] Implement dark mode support
+- [x] Ensure mobile-first responsive design
 
 ### 1.5 Security & Performance
-- Implement basic rate limiting
-- Add bot detection (User-Agent filtering)
-- Create .htaccess rules to hide infrastructure files
-- Add basic input sanitization
+- [ ] Implement basic rate limiting
+- [ ] Add bot detection (User-Agent filtering)
+- [x] Create .htaccess rules to hide infrastructure files
+- [x] Add basic input sanitization
 
 ## Phase 2: Enhanced Features
 **Goal**: Improved UX and additional functionality
 
+- Favicons from jonplummer.com
+- Design system from jonplummer.com
+
 ### 2.1 File Management
-- Implement hidden file functionality (.listerignore)
-- Add README rendering for directories
-- Create text file preview system
-- Build image preview with navigation
+- [x] Implement hidden file functionality (.listerignore)
+- [ ] Add README rendering for directories
+- [ ] Create text file preview system
+- [ ] Build image preview with navigation
 
 ### 2.2 User Experience
-- Add loading states and transitions
-- Implement keyboard navigation
-- Create better error messages
-- Add file sharing URL generation
+- [x] Add loading states and transitions
+- [ ] Implement keyboard navigation
+- [x] Create better error messages
+- [ ] Add file sharing URL generation
 
 ### 2.3 Advanced Security
 - Implement directory access control
@@ -117,11 +120,11 @@ lister/
 4. Directory is immediately browsable
 
 ## Success Criteria
-- [ ] Lists files in any directory with proper sorting
-- [ ] Integrates seamlessly with jonplummer.com design
-- [ ] Works on mobile and desktop
-- [ ] Handles common file types with appropriate icons
+- [x] Lists files in any directory with proper sorting
+- [x] Integrates seamlessly with jonplummer.com design
+- [x] Works on mobile and desktop
+- [x] Handles common file types with appropriate icons
 - [ ] Provides direct file sharing URLs
 - [ ] Includes basic anti-abuse protection
-- [ ] Installs in under 1 minute
-- [ ] Hides infrastructure files from listing
+- [x] Installs in under 1 minute
+- [x] Hides infrastructure files from listing
