@@ -80,6 +80,7 @@
 - [x] Create better error messages
 - [ ] Add file sharing URL generation
 - [ ] Accessibility audit
+- [ ] Favicons
 
 ### 2.4 Advanced Security
 - [x] Implement directory access control
@@ -87,6 +88,7 @@
 - [x] Create IP-based blocking system
 - [x] Add request logging and monitoring
 - [x] Add security admin dashboard
+- [ ] https://owasp.org/www-project-secure-headers/index.html#div-bestpractices
 
 ## Phase 3: Future Enhancements
 **Goal**: Advanced features and integrations
