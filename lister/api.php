@@ -23,32 +23,34 @@ try {
     // Build full path - handle both relative and absolute paths
     $basePath = $_SERVER['DOCUMENT_ROOT'];
     
-    // If path starts with basePath, use it directly
-    if (strpos($requestedPath, $basePath) === 0) {
+    // Normalize basePath for consistent path handling
+    $normalizedBasePath = realpath($basePath) ?: $basePath;
+    
+    // If path starts with basePath (normalized or not), use it directly
+    if (strpos($requestedPath, $normalizedBasePath) === 0 || strpos($requestedPath, $basePath) === 0) {
         $fullPath = $requestedPath;
     } else {
         // Otherwise, treat as relative to basePath
-        $fullPath = $basePath . '/' . ltrim($requestedPath, '/');
+        $fullPath = $normalizedBasePath . '/' . ltrim($requestedPath, '/');
     }
     
     // Ensure the path is within our base directory
-    $realBasePath = realpath($basePath);
     $realFullPath = realpath($fullPath);
     
-    if (!$realFullPath || strpos($realFullPath, $realBasePath) !== 0) {
+    if (!$realFullPath || strpos($realFullPath, $normalizedBasePath) !== 0) {
         throw new Exception('Access denied: Path outside base directory');
     }
     
     // Check if path exists and is a directory
-    if (!is_dir($fullPath)) {
+    if (!is_dir($realFullPath)) {
         throw new Exception('Directory not found: ' . $requestedPath);
     }
     
-    // Create DirectoryLister instance
-    $lister = new DirectoryLister($config, $basePath);
+    // Create DirectoryLister instance with normalized basePath
+    $lister = new DirectoryLister($config, $normalizedBasePath);
     
-    // Scan the requested directory
-    $result = $lister->scanDirectory($fullPath);
+    // Scan the requested directory (use normalized path)
+    $result = $lister->scanDirectory($realFullPath);
     
     // Return JSON response
     echo json_encode([

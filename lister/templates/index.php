@@ -232,11 +232,13 @@
             `;
           }
         } else {
+          // Escape URL for HTML attribute
+          const fileUrl = item.url || ('/' + encodeURIComponent(item.name));
           newRow.innerHTML = `
             <td>
-              <a href="${item.url}" class="file-link">
+              <a href="${fileUrl.replace(/"/g, '&quot;')}" class="file-link">
                 <span class="icon ${item.icon}">${getIconSymbol(item.icon)}</span>
-                ${item.name}
+                ${item.name.replace(/</g, '&lt;').replace(/>/g, '&gt;')}
               </a>
             </td>
             <td>${item.size_formatted || '-'}</td>

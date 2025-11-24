@@ -16,7 +16,9 @@ class DirectoryLister
   public function __construct($config, $basePath = null)
   {
     $this->config = $config;
-    $this->basePath = $basePath ?: $_SERVER['DOCUMENT_ROOT'];
+    $rawBasePath = $basePath ?: $_SERVER['DOCUMENT_ROOT'];
+    // Normalize basePath to ensure consistent path comparison
+    $this->basePath = realpath($rawBasePath) ?: $rawBasePath;
     $this->currentPath = $this->getCurrentPath();
   }
 
@@ -73,8 +75,18 @@ class DirectoryLister
     if (!is_dir($targetPath)) {
       throw new Exception('Directory not found: ' . $targetPath);
     }
+    
+    // Normalize the target path (resolve symlinks, etc.)
+    $normalizedPath = realpath($targetPath);
+    if ($normalizedPath === false) {
+      $normalizedPath = $targetPath;
+    }
+    
+    // Update currentPath to the directory being scanned
+    // This ensures getItemUrl() generates correct URLs for files in this directory
+    $this->currentPath = $normalizedPath;
 
-    $items = scandir($targetPath);
+    $items = scandir($normalizedPath);
     $this->files = [];
     $this->directories = [];
 
@@ -89,7 +101,8 @@ class DirectoryLister
         continue;
       }
 
-      $fullPath = $targetPath . '/' . $item;
+      // Use normalized path for consistency
+      $fullPath = $normalizedPath . '/' . $item;
       $itemInfo = $this->getItemInfo($item, $fullPath);
 
       if (is_dir($fullPath)) {
@@ -225,10 +238,67 @@ class DirectoryLister
   {
     // For expandable directories, we'll use data attributes instead of URLs
     // Files will still have direct URLs
-    $currentUrl = $_SERVER['REQUEST_URI'];
-    $currentUrl = rtrim($currentUrl, '/');
-    // Use rawurlencode for path encoding (spaces become %20, not +)
-    return $currentUrl . '/' . rawurlencode($name);
+    
+    // Ensure both paths are normalized (basePath is normalized in constructor,
+    // currentPath is normalized in scanDirectory)
+    $normalizedBase = rtrim($this->basePath, '/');
+    $normalizedCurrent = rtrim($this->currentPath, '/');
+    
+    // Safety check: ensure currentPath is valid
+    if (empty($normalizedCurrent) || !is_dir($normalizedCurrent)) {
+      // Fallback to base path if currentPath is invalid
+      $normalizedCurrent = $normalizedBase;
+    }
+    
+    // Build URL based on current path relative to base path
+    $relativePath = '';
+    if ($normalizedCurrent !== $normalizedBase) {
+      // Get the relative path from base to current directory
+      // Both paths should already be normalized, but verify with realpath
+      $realBase = realpath($normalizedBase);
+      $realCurrent = realpath($normalizedCurrent);
+      
+      if ($realBase && $realCurrent) {
+        // Both paths exist and are normalized
+        if (strpos($realCurrent, $realBase) === 0) {
+          // Current path is within base path
+          $relativePath = substr($realCurrent, strlen($realBase));
+          $relativePath = trim($relativePath, '/');
+        }
+      }
+      
+      // Fallback: if realpath failed or paths don't match, use string replacement
+      if (empty($relativePath)) {
+        $relativePath = str_replace($normalizedBase, '', $normalizedCurrent);
+        $relativePath = trim($relativePath, '/');
+      }
+    }
+    
+    // Construct URL path - encode each path segment
+    $urlParts = [];
+    if (!empty($relativePath)) {
+      // Split path and encode each segment
+      $pathSegments = explode('/', $relativePath);
+      foreach ($pathSegments as $segment) {
+        if (!empty($segment)) {
+          $urlParts[] = rawurlencode($segment);
+        }
+      }
+    }
+    // Add the filename (encoded)
+    $urlParts[] = rawurlencode($name);
+    
+    // Always return an absolute URL starting with /
+    $url = '/' . implode('/', $urlParts);
+    
+    // Safety check: ensure URL doesn't contain API endpoint patterns
+    if (strpos($url, 'api.php') !== false || strpos($url, 'lister/api') !== false) {
+      error_log("Warning: getItemUrl() generated invalid URL: $url for file: $name in path: $normalizedCurrent");
+      // Fallback: return just the filename if URL construction failed
+      return '/' . rawurlencode($name);
+    }
+    
+    return $url;
   }
 
   /**
@@ -497,3 +567,4 @@ class DirectoryLister
     return array_reverse($breadcrumbs);
   }
 }
+
