@@ -27,9 +27,16 @@ your-domain.com/
 ├── index.php              # Main application
 ├── .htaccess              # Security rules
 └── lister/
+    ├── api.php            # AJAX API endpoint
     ├── config/
-    │   └── default.json   # Configuration
+    │   ├── default.json   # Configuration (required)
+    │   └── extensions.json # File type mappings (optional)
     ├── includes/          # PHP classes
+    │   ├── App.php
+    │   ├── DirectoryLister.php
+    │   └── Security.php
+    ├── templates/
+    │   └── index.php      # Main template
     └── assets/            # CSS, JS, icons
 ```
 
