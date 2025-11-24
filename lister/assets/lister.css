@@ -39,44 +39,44 @@
   --spacing-xl: 2.25rem;
   --spacing-ex: 5ex;
 
-  /* Colors from jonplummer.com - based on DR10 palette, adjusted for WCAG AA contrast */
-  --text-color: #2a2a2a; /* darker for contrast on #d3d8d2 background */
-  --text-color-light: #5a5a5a;
-  --background-color: #d3d8d2;
-  --content-background-color: #fff;
-  --link-color: #e6423a;
-  --link-hover-color: #d97706; /* darker orange for contrast on white */
-  --link-visited-color: #5b4a3b;
-  --link-active-color: #0d703f;
+  /* Colors from jonplummer.com - DR10a color scheme */
+  --text-color: #1a1a1a;
+  --text-color-light: #666666;
+  --background-color: #ffffff;
+  --content-background-color: #ffffff;
+  --link-color: #D2010A; /* DR10a red */
+  --link-hover-color: #a00108; /* darker DR10a for hover */
+  --link-visited-color: #666666;
+  --link-active-color: #D2010A;
   
   /* Additional colors for Lister */
-  --border-color: #e2e8f0;
-  --hover-color: #f1f5f9;
-  --error-color: #dc2626;
-  --success-color: #16a34a;
+  --border-color: #e5e5e5;
+  --hover-color: #f5f5f5;
+  --error-color: #D2010A;
+  --success-color: #666666;
   
   /* Indentation system */
   --indent-base: 2rem;
 }
 
-/* Dark mode support - based on DR10 palette */
+/* Dark mode support - based on DR10a palette */
 @media (prefers-color-scheme: dark) {
   :root {
     --text-color: #e0e0e0;
-    --text-color-light: #b0b0b0;
+    --text-color-light: #999999;
     --background-color: #1a1a1a;
-    --content-background-color: #2d2d2d;
-    --link-color: #ff6b6b; /* lighter version of DR10 red #e6423a */
-    --link-hover-color: #f1b73a; /* DR10 yellow-orange */
-    --link-visited-color: #a89585; /* lighter version of DR10 dark brown #5b4a3b, adjusted for WCAG AA contrast */
-    --link-active-color: #2db366; /* lighter version of DR10 green #0d703f */
-    --border-color: #334155;
-    --hover-color: #1e293b;
+    --content-background-color: #1a1a1a;
+    --link-color: #ff4d5a; /* lighter DR10a for dark mode */
+    --link-hover-color: #ff6b77; /* slightly lighter for hover */
+    --link-visited-color: #999999;
+    --link-active-color: #ff4d5a;
+    --border-color: #333333;
+    --hover-color: #2a2a2a;
   }
   
   /* Dark mode triangle color */
   .directory-toggle .toggle-icon::before {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M3 2l6 4l-6 4z' fill='%23ff6b6b'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M0 0 L0 12 L12 6 Z' fill='%23ff4d5a'/%3E%3C/svg%3E");
   }
 }
 
@@ -243,8 +243,8 @@ article h1 {
 }
 
 .error {
-  background-color: #fef2f2;
-  border: 1px solid #fecaca;
+  background-color: #fff5f5;
+  border: 1px solid #ffcccc;
   border-radius: 6px;
   padding: var(--spacing-lg);
   margin: var(--spacing-lg) 0;
@@ -390,13 +390,13 @@ footer p {
   transition: transform 0.2s ease;
 }
 
-/* Default state - right-pointing triangle */
+/* Default state - right-pointing triangle with 90-degree point */
 .directory-toggle .toggle-icon::before {
   content: '';
   display: block;
   width: 12px;
   height: 12px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M3 2l6 4l-6 4z' fill='%23e6423a'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M0 0 L0 12 L12 6 Z' fill='%23D2010A'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
