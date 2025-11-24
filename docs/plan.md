@@ -100,6 +100,21 @@
 - [ ] Reduce file count (optional)
 - [ ] Check whether directory listing capability is required for the tool to work
 
+### 2.6 Error Experiences
+- [ ] Create 404 error page for non-existent files/directories
+  - [ ] Match jonplummer.com design system
+  - [ ] Include navigation back to parent directory or root
+  - [ ] Show helpful message with requested path
+  - [ ] Provide search suggestions if applicable
+- [ ] Enhance 500 error page for server errors
+  - [ ] Match jonplummer.com design system
+  - [ ] Replace basic error handler in index.php
+  - [ ] Include navigation back to root
+  - [ ] Show user-friendly message (hide technical details in production)
+  - [ ] Log detailed error information for debugging
+- [ ] Ensure error pages work in both development and production environments
+- [ ] Test error pages with various edge cases (malformed URLs, missing directories, etc.)
+
 ## Phase 3: Future Enhancements
 **Goal**: Advanced features and integrations
 
