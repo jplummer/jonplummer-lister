@@ -32,6 +32,26 @@ Lister is the easiest way to expose the contents of any web-accessible folder an
   * Delete files or folders
   * Authentication via SSH key or user/pass (sshpass)
 * MCP (Model Context Protocol) integration for AI agents
+* Security admin dashboard provides visibility into security incidents and system health:
+  * **Security concerns to prevent, trap, and log:**
+    * Bot scraping and automated access (curl, wget, scrapers, crawlers, spiders)
+    * Rate limit violations (excessive requests per minute)
+    * Directory traversal attempts (path manipulation with `..` or `//`)
+    * Suspicious query parameters (cmd, exec, system, eval, shell, passwd, shadow)
+    * Suspicious file extension requests (.php, .asp, .jsp, .py, .sh, .exe in URLs)
+    * Missing or suspicious user agents
+    * IP-based blocking and access attempts from blocked IPs
+  * **Dashboard should display:**
+    * Total security incidents count
+    * Recent security incidents with details (type, IP, timestamp, user agent, request URI, referer)
+    * Current security configuration settings
+    * Ability to view blocked IPs and their status
+    * Filtering and search capabilities for incident logs
+    * Export capabilities for security logs
+  * **Access control:**
+    * Password-protected access
+    * Session management to avoid repeated password entry
+    * Secure authentication mechanism
 
 ## 4. Nice to have features
 
@@ -56,10 +76,15 @@ It's meant to be installed in a web folder on any PHP-compatible hosting provide
 * SFTP
 * SSH
 
-# Changelog
+# Requirements Document Changelog
 
-## 2025-01-27
-- **Added file hiding configuration**: Implemented configurable options to hide dotfiles, sensitive files, OS-specific cruft, and application files from directory listings. All four categories are enabled by default and use pattern matching for flexible file filtering. Application files include the `/lister` directory, `index.php`, `api.php`, and other app-related files.
+This changelog tracks changes to the requirements specification document itself. For package release history, see [CHANGELOG.md](CHANGELOG.md).
+
+## 2025-11-23
+- **Added security admin dashboard specification**: Documented security concerns to prevent, trap, and log (bot scraping, rate limiting, directory traversal, suspicious parameters, etc.), dashboard display requirements (incident logs, statistics, configuration), and access control requirements (password protection, session management).
+
+## 2025-10-10
+- **Added file hiding configuration**: Documented configurable options to hide dotfiles, sensitive files, OS-specific cruft, and application files from directory listings. All four categories are enabled by default and use pattern matching for flexible file filtering. Application files include the `/lister` directory, `index.php`, `api.php`, and other app-related files.
 
 ## 2025-10-08
 - **Added design principles**: Specified preference for semantic HTML with minimal classes/IDs, no utility classes, and minimal JavaScript

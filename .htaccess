@@ -4,6 +4,15 @@
 # Enable URL rewriting
 RewriteEngine On
 
+# Basic security - hide sensitive files and directories (must come first)
+
+# Block access to sensitive directories and files
+RewriteCond %{REQUEST_URI} ^/(lister/includes|data|scripts)/ [OR]
+RewriteCond %{REQUEST_URI} ^/router\.php$ [OR]
+RewriteCond %{REQUEST_URI} ^/test_.*\.php$ [OR]
+RewriteCond %{REQUEST_URI} ^/.*_test\.php$
+RewriteRule ^(.*)$ - [F,L]
+
 # Redirect root requests to index.php
 RewriteCond %{REQUEST_URI} ^/$
 RewriteRule ^(.*)$ index.php [L,QSA]
@@ -18,12 +27,13 @@ RewriteCond %{REQUEST_FILENAME} -f
 RewriteCond %{REQUEST_URI} !^/index\.php$
 RewriteRule ^(.*)$ - [L]
 
-# Basic security - hide sensitive files
+# Block all JSON files (config files)
 <Files "*.json">
   Order Deny,Allow
   Deny from all
 </Files>
 
+# Allow PHP files in root and lister directory (but not includes, which is blocked above)
 <Files "*.php">
   <RequireAll>
     Require all granted
