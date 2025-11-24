@@ -33,7 +33,7 @@ Lister is the easiest way to expose the contents of any web-accessible folder an
   * Authentication via SSH key or user/pass (sshpass)
 * MCP (Model Context Protocol) integration for AI agents
 * Security admin dashboard provides visibility into security incidents and system health:
-  * **Security concerns to prevent, trap, and log:**
+  * **Security concerns to prevent, trap, and/or log:**
     * Bot scraping and automated access (curl, wget, scrapers, crawlers, spiders)
     * Rate limit violations (excessive requests per minute)
     * Directory traversal attempts (path manipulation with `..` or `//`)

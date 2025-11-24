@@ -7,14 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Planned
-- File previews (text and image)
-- Keyboard navigation
-- README rendering for directories
-- Directory access control
-- OWASP secure headers implementation
-- Favicons and HEAD matter integration
-- Design system integration from jonplummer.com
+### Fixed
+- Fixed URL encoding for files and directories with spaces in names
+  - Changed from `urlencode` to `rawurlencode` to properly encode spaces as %20 instead of +
 
 ## [1.0.1] - 2025-11-23
 
