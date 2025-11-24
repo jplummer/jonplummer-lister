@@ -83,11 +83,12 @@
 - [ ] Favicons
 
 ### 2.4 Advanced Security
-- [x] Implement directory access control
+- [ ] Implement directory access control
 - [x] Add more sophisticated rate limiting
 - [x] Create IP-based blocking system
 - [x] Add request logging and monitoring
-- [x] Add security admin dashboard
+- [x] Add security admin dashboard (basic implementation)
+- [ ] Block known and detected malicious bots and crawlers 
 - [ ] https://owasp.org/www-project-secure-headers/index.html#div-bestpractices
 
 ## Phase 3: Future Enhancements
