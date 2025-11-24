@@ -1,2 +1,11 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Exclude development files from GitHub's "Download ZIP" and releases
+# Only install package files will be included in downloads
+docs/ export-ignore
+scripts/ export-ignore
+router.php export-ignore
+test_security.php export-ignore
+.gitignore export-ignore
+.gitattributes export-ignore

@@ -326,6 +326,12 @@ footer p {
   margin: 0;
 }
 
+footer .deploy-id {
+  color: var(--text-color-light);
+  font-size: var(--font-size-xxs);
+  margin-top: 0.125rem;
+}
+
 /* Expandable directory styles */
 .directory-toggle {
   background: none;

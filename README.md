@@ -2,6 +2,23 @@
 
 A simple, clean directory listing application for web servers.
 
+## 📦 Install Package
+
+**For installation, you only need these files:**
+
+- `index.php` - Main application entry point
+- `.htaccess` - Apache security rules
+- `lister/` - Application directory (all contents)
+- `INSTALL.md` - Installation instructions
+
+**Do not upload these development files:**
+- `docs/` - Development documentation
+- `scripts/` - Development and deployment scripts
+- `router.php` - Development server router
+- `test_security.php` - Test file
+
+See [INSTALL.md](INSTALL.md) for detailed installation instructions.
+
 ## Quick Start
 
 ### Local Development
@@ -40,10 +57,6 @@ curl http://localhost:8000
     ├── requirements.md    # Project requirements
     └── notes.md           # Development notes
 ```
-
-## Installation
-
-See [INSTALL.md](INSTALL.md) for detailed installation instructions.
 
 ## Configuration
 

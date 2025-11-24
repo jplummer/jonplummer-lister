@@ -90,7 +90,10 @@
   </main>
 
   <footer>
-    <p>Lister<?= $deploymentTimestamp ? ' <code>' . htmlspecialchars($deploymentTimestamp) . '</code>' : '' ?> © <?= date('Y') ?> Jon Plummer</p>
+    <p>Lister © <?= date('Y') ?> Jon Plummer</p>
+    <?php if ($deploymentTimestamp): ?>
+      <p class="deploy-id"><?= htmlspecialchars($deploymentTimestamp) ?></p>
+    <?php endif; ?>
   </footer>
 
   <script>

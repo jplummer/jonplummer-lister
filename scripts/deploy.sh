@@ -17,9 +17,11 @@ echo "Host: $HOST_SERVER"
 echo "User: $HOST_USERNAME"
 echo "Path: $HOST_REMOTE_PATH"
 
-# Write deployment timestamp to file for app to read
-DEPLOY_TIMESTAMP=$(date -u +"%Y-%m-%d %H:%M:%S UTC")
-echo "$DEPLOY_TIMESTAMP" > "$REPO_ROOT/lister/.deploy-timestamp"
+# Write deployment timestamp to file for app to read (last 8 digits of unix timestamp)
+DEPLOY_TIMESTAMP=$(date +%s)
+DEPLOY_ID=${DEPLOY_TIMESTAMP: -8}
+DEPLOY_DATE=$(date -u +"%Y-%m-%d %H:%M:%S UTC")
+echo "$DEPLOY_ID" > "$REPO_ROOT/lister/.deploy-timestamp"
 
 # Upload files to root directory
 # Use sshpass if available and password is set, otherwise try SSH key or prompt
@@ -53,5 +55,5 @@ EOF
 fi
 
 echo "Deployment complete!"
-echo "Deployed at: $DEPLOY_TIMESTAMP"
+echo "Deployed at: $DEPLOY_DATE (ID: $DEPLOY_ID)"
 echo "Visit: https://$HOST_DOMAIN/"
