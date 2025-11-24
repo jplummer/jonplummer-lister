@@ -44,3 +44,6 @@ debug.php
 # Security test data
 security_test_*.json
 rate_*.json
+
+# Deployment tracking
+lister/.git-commit

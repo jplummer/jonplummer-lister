@@ -148,6 +148,32 @@ class App
   }
 
   /**
+   * Get git commit hash for deployment verification
+   */
+  private function getDeploymentHash()
+  {
+    // Try to read from .git-commit file (created during deployment)
+    $commitFile = __DIR__ . '/../.git-commit';
+    if (file_exists($commitFile)) {
+      $hash = trim(file_get_contents($commitFile));
+      if (!empty($hash)) {
+        return substr($hash, 0, 7); // Return short hash
+      }
+    }
+    
+    // Fallback: try to get from git directly (if available on server)
+    $gitDir = __DIR__ . '/../../.git';
+    if (is_dir($gitDir)) {
+      $hash = @shell_exec('cd ' . escapeshellarg(dirname($gitDir)) . ' && git rev-parse --short HEAD 2>/dev/null');
+      if ($hash) {
+        return trim($hash);
+      }
+    }
+    
+    return null;
+  }
+
+  /**
    * Render the application
    */
   public function render()
@@ -162,6 +188,7 @@ class App
     $data = $this->data;
     $breadcrumbs = $this->breadcrumbs;
     $error = $this->error;
+    $deploymentHash = $this->getDeploymentHash();
     
     // Make getIconSymbol function available to template
     $getIconSymbol = [$this, 'getIconSymbol'];

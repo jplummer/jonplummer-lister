@@ -2,14 +2,47 @@
 
 All notable changes to Lister will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+**Note**: As of 2025-11-23, this project uses git commit hashes for deployment tracking instead of semantic versioning. The deployed commit hash is displayed in the application footer.
 
-## [Unreleased]
+## Recent Changes
 
-### Fixed
+### 2025-11-23
+
+#### Changed
+- Update color palette to DR10 with WCAG AA contrast adjustments
+- Update documentation and configuration files
+- Replaced versioning system with git commit hash tracking for deployment verification
+
+#### Added
+- Add favicon and apple-touch-icon links to template
+- Add favicon image assets
+
+### 2025-11-23
+
+#### Added
+- Add version management system with commit-time prompts (removed in favor of commit hash tracking)
+- Add git hooks to scripts/ with setup script
+
+#### Security
+- Enhance security and documentation: block sensitive files, add changelog, document security dashboard
+
+#### Changed
+- Move data directory to lister/data/ for safer deployment
+
+#### Fixed
+- Fix file URL encoding and improve deployment scripts
 - Fixed URL encoding for files and directories with spaces in names
   - Changed from `urlencode` to `rawurlencode` to properly encode spaces as %20 instead of +
+
+## [1.0.1] - 2025-11-23
+
+### Changed
+- Update color palette to DR10 with WCAG AA contrast adjustments
+- Update documentation and configuration files
+
+### Added
+- Add favicon and apple-touch-icon links to template
+- Add favicon image assets
 
 ## [1.0.1] - 2025-11-23
 
@@ -128,7 +161,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Asset organization
   - Development tools
 
-[Unreleased]: https://github.com/jonplummer/lister/compare/v1.0.1...HEAD
 [1.0.1]: https://github.com/jonplummer/lister/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/jonplummer/lister/compare/v0.9.0...v1.0.0
 [0.9.0]: https://github.com/jonplummer/lister/compare/v0.8.0...v0.9.0

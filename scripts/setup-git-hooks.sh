@@ -1,5 +1,5 @@
 #!/bin/bash
-# Setup git hooks for version management
+# Setup git hooks
 # Copies hooks from scripts/git-hooks/ to .git/hooks/
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
@@ -20,6 +20,7 @@ fi
 
 echo "Installing git hooks..."
 
+HOOKS_FOUND=0
 for hook in "$HOOKS_SOURCE"/*; do
   if [ -f "$hook" ] && [ -x "$hook" ]; then
     hook_name=$(basename "$hook")
@@ -35,7 +36,12 @@ for hook in "$HOOKS_SOURCE"/*; do
     cp "$hook" "$target_hook"
     chmod +x "$target_hook"
     echo "  ✓ Installed $hook_name"
+    HOOKS_FOUND=1
   fi
 done
 
-echo "Git hooks installed successfully!"
+if [ $HOOKS_FOUND -eq 0 ]; then
+  echo "  No git hooks found to install"
+else
+  echo "Git hooks installed successfully!"
+fi

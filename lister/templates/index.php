@@ -90,7 +90,7 @@
   </main>
 
   <footer>
-    <p>Lister v<?= htmlspecialchars($config['app']['version'] ?? '1.0.0') ?> © <?= date('Y') ?> Jon Plummer</p>
+    <p>Lister<?= $deploymentHash ? ' <code>' . htmlspecialchars($deploymentHash) . '</code>' : '' ?> © <?= date('Y') ?> Jon Plummer</p>
   </footer>
 
   <script>
