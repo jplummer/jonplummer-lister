@@ -7,6 +7,9 @@
 $requestUri = $_SERVER['REQUEST_URI'];
 $path = parse_url($requestUri, PHP_URL_PATH);
 
+// Decode URL-encoded characters (e.g., %20 for spaces)
+$path = urldecode($path);
+
 // If it's a request to the root, serve the main app
 if ($path === '/' || $path === '/index.php') {
   require_once __DIR__ . '/index.php';

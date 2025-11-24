@@ -33,7 +33,13 @@ class DirectoryLister
     // Remove leading slash
     $path = ltrim($path, '/');
     
-    // Security: prevent directory traversal
+    // Security: prevent directory traversal (before decoding)
+    $path = str_replace(['../', '..\\'], '', $path);
+    
+    // Decode URL-encoded characters (e.g., %20 for spaces)
+    $path = urldecode($path);
+    
+    // Security: prevent directory traversal again after decoding
     $path = str_replace(['../', '..\\'], '', $path);
     
     // If path is empty, use base path
@@ -221,7 +227,8 @@ class DirectoryLister
     // Files will still have direct URLs
     $currentUrl = $_SERVER['REQUEST_URI'];
     $currentUrl = rtrim($currentUrl, '/');
-    return $currentUrl . '/' . urlencode($name);
+    // Use rawurlencode for path encoding (spaces become %20, not +)
+    return $currentUrl . '/' . rawurlencode($name);
   }
 
   /**
