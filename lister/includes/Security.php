@@ -12,7 +12,7 @@ class Security
   public function __construct($config)
   {
     $this->config = $config;
-    $this->dataDir = __DIR__ . '/../../data';
+    $this->dataDir = __DIR__ . '/../data';
     
     // Create data directory if it doesn't exist
     if (!is_dir($this->dataDir)) {
@@ -90,7 +90,8 @@ class Security
       '/bot/i', '/crawler/i', '/spider/i', '/scraper/i',
       '/curl/i', '/wget/i', '/python/i', '/java/i',
       '/go-http/i', '/okhttp/i', '/libwww/i', '/httpie/i',
-      '/postman/i', '/insomnia/i', '/scrapy/i', '/requests/i'
+      '/postman/i', '/insomnia/i', '/scrapy/i', '/requests/i',
+      '/petalbot/i'
     ];
     
     foreach ($botPatterns as $pattern) {

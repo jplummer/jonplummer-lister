@@ -49,15 +49,15 @@ lister/
 │   ├── assets/
 │   │   └── lister.css     # Stylesheet
 │   ├── api.php            # AJAX API endpoint
-│   └── admin.php          # Security admin panel
+│   ├── admin.php          # Security admin panel
+│   └── data/              # Runtime data (git ignored)
+│       ├── security.log   # Security incidents
+│       └── rate_*.json    # Rate limiting data
 ├── scripts/               # Utility scripts
 │   ├── deploy.sh          # Deployment script
 │   ├── teardown.sh        # Removal script
 │   ├── test_security.php  # Security testing
 │   └── test_pattern.php   # Pattern matching tests
-├── data/                  # Runtime data (git ignored)
-│   ├── security.log       # Security incidents
-│   └── rate_*.json        # Rate limiting data
 └── docs/
     ├── plan.md            # Development plan
     ├── requirements.md    # Project requirements
@@ -143,7 +143,7 @@ chmod 755 lister/templates/
 chmod 755 lister/assets/
 
 # Check security logs
-tail -f data/security.log
+tail -f lister/data/security.log
 ```
 
 ### Git Operations

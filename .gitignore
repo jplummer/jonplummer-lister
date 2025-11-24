@@ -7,7 +7,7 @@
 .env.production
 
 # Data directory (contains security logs and rate limiting data)
-data/
+lister/data/
 
 # Logs
 *.log
