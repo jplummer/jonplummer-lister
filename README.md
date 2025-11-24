@@ -6,8 +6,8 @@ A simple, clean directory listing application for web servers.
 
 ### Local Development
 ```bash
-# Start development server
-php -S localhost:8000
+# Start development server with router (recommended)
+php -S localhost:8000 router.php
 
 # Test the application
 curl http://localhost:8000
@@ -25,7 +25,7 @@ curl http://localhost:8000
 ## Project Structure
 
 ```
-lister/
+.
 ├── index.php              # Main application entry point
 ├── .htaccess              # Apache security rules
 ├── lister/                # Application directory
@@ -57,7 +57,6 @@ See [docs/notes.md](docs/notes.md) for development workflow and troubleshooting.
 
 - PHP 8.x
 - Apache with mod_php
-- Web server with directory listing enabled
 
 ## Acknowledgments
 

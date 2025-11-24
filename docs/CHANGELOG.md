@@ -12,48 +12,17 @@ All notable changes to Lister will be documented in this file.
 - Update color palette to DR10 with WCAG AA contrast adjustments
 - Update documentation and configuration files
 - Replaced versioning system with git commit hash tracking for deployment verification
+- Move data directory to lister/data/ for safer deployment
+- Fixed URL encoding for files and directories with spaces in names
+  - Changed from `urlencode` to `rawurlencode` to properly encode spaces as %20 instead of +
 
 #### Added
 - Add favicon and apple-touch-icon links to template
 - Add favicon image assets
-
-### 2025-11-23
-
-#### Added
-- Add version management system with commit-time prompts (removed in favor of commit hash tracking)
 - Add git hooks to scripts/ with setup script
 
 #### Security
 - Enhance security and documentation: block sensitive files, add changelog, document security dashboard
-
-#### Changed
-- Move data directory to lister/data/ for safer deployment
-
-#### Fixed
-- Fix file URL encoding and improve deployment scripts
-- Fixed URL encoding for files and directories with spaces in names
-  - Changed from `urlencode` to `rawurlencode` to properly encode spaces as %20 instead of +
-
-## [1.0.1] - 2025-11-23
-
-### Changed
-- Update color palette to DR10 with WCAG AA contrast adjustments
-- Update documentation and configuration files
-
-### Added
-- Add favicon and apple-touch-icon links to template
-- Add favicon image assets
-
-## [1.0.1] - 2025-11-23
-
-### Added
-- Security admin dashboard specification in requirements documentation
-  - Documented security concerns to prevent, trap, and log
-  - Defined dashboard display requirements
-  - Specified access control requirements
-
-### Changed
-- Updated plan.md to mark security admin dashboard as "basic implementation"
 
 ## [1.0.0] - 2025-10-10
 
@@ -160,9 +129,3 @@ All notable changes to Lister will be documented in this file.
   - Template system
   - Asset organization
   - Development tools
-
-[1.0.1]: https://github.com/jonplummer/lister/compare/v1.0.0...v1.0.1
-[1.0.0]: https://github.com/jonplummer/lister/compare/v0.9.0...v1.0.0
-[0.9.0]: https://github.com/jonplummer/lister/compare/v0.8.0...v0.9.0
-[0.8.0]: https://github.com/jonplummer/lister/releases/tag/v0.8.0
-

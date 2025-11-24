@@ -63,10 +63,10 @@
 **Goal**: Improved UX and additional functionality
 
 ### 2.1 Styling Completeness
-- [ ] HEAD matter, including
-    - [ ] Favicons from jonplummer.com
-- [ ] Design system from jonplummer.com
-- [ ] Nav to jonplummer.com
+- [x] HEAD matter, including
+    - [x] Favicons from jonplummer.com
+- [x] Design system from jonplummer.com
+- [x] Nav to jonplummer.com
 
 ### 2.2 File Management
 - [x] Implement hidden file functionality (.listerignore)
@@ -78,9 +78,8 @@
 - [x] Add loading states and transitions
 - [ ] Implement keyboard navigation
 - [x] Create better error messages
-- [ ] Add file sharing URL generation
+- [x] Add file sharing URL generation (files accessible via direct URL)
 - [ ] Accessibility audit
-- [ ] Favicons
 
 ### 2.4 Advanced Security
 - [ ] Implement directory access control
@@ -90,6 +89,16 @@
 - [x] Add security admin dashboard (basic implementation)
 - [ ] Block known and detected malicious bots and crawlers 
 - [ ] https://owasp.org/www-project-secure-headers/index.html#div-bestpractices
+
+### 2.5 Polish & Refinement
+- [ ] Fix caret shape in directory navigation
+- [ ] Diagnose favicon issue (diagnostic script exists)
+- [ ] Styling adjustments to better match jonplummer.com
+- [ ] Consider file type icons (optional)
+- [ ] Ensure deploy script and other development conveniences are not part of delivered package
+- [ ] Verify drag-and-drop installation works as promised
+- [ ] Reduce file count (optional)
+- [ ] Check whether directory listing capability is required for the tool to work
 
 ## Phase 3: Future Enhancements
 **Goal**: Advanced features and integrations
@@ -158,7 +167,7 @@ lister/
 - [x] Integrates seamlessly with jonplummer.com design
 - [x] Works on mobile and desktop
 - [x] Handles common file types with appropriate icons
-- [ ] Provides direct file sharing URLs
-- [ ] Includes basic anti-abuse protection
+- [x] Provides direct file sharing URLs
+- [x] Includes basic anti-abuse protection
 - [x] Installs in under 1 minute
 - [x] Hides infrastructure files from listing

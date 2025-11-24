@@ -15,7 +15,7 @@ Do not upload documentation files or other non-essential items from the reposito
 ```bash
 chmod 644 index.php
 chmod 644 .htaccess
-chmod 644 config/*.json
+chmod 644 lister/config/*.json
 ```
 
 ### Step 3: Test

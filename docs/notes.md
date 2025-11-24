@@ -257,12 +257,25 @@ tail -f /opt/homebrew/var/log/php/error.log
 - Implement caching strategies
 - Monitor server resources
 
-## Current Status
 
-- **Production**: Deployed and working on misc.jonplummer.com
-- **Security**: Active monitoring via admin panel
-- **Development**: Ready for additional features
-- **Documentation**: Complete and up-to-date
+## Technology Choices
+
+The application is installed in a web folder on any PHP-compatible hosting provider. Technologies considered during development:
+* cURL
+* Git
+* SOAP
+* CGI
+* .htaccess (selected)
+* JSON
+* Perl
+* PHP (selected)
+* Laravel
+* Cake
+* Python
+* Ruby
+* mod-rewrite
+* SFTP
+* SSH
 
 ## Useful Resources
 
@@ -271,9 +284,3 @@ tail -f /opt/homebrew/var/log/php/error.log
 - [Dreamhost PHP Documentation](https://help.dreamhost.com/hc/en-us/categories/115000252511-PHP)
 - [JSON Configuration](https://www.json.org/)
 
----
-
-*Last updated: 2025-01-10*
-*PHP Version: 8.4.13*
-*Project: Lister Directory Listing Application*
-*Status: Production Ready*
