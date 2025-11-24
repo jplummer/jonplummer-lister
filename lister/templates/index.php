@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Miscellaneous - Directory Listing</title>
-  <link rel="icon" href="lister/assets/images/2021/02/jp_round-48x48.jpg" sizes="32x32">
-  <link rel="icon" href="lister/assets/images/2021/02/jp_round.jpg" sizes="192x192">
-  <link rel="apple-touch-icon" href="lister/assets/images/2021/02/jp_round-180x180.jpg">
-  <link rel="stylesheet" href="lister/assets/lister.css">
+  <link rel="icon" href="/lister/assets/images/2021/02/jp_round-48x48.jpg" sizes="32x32">
+  <link rel="icon" href="/lister/assets/images/2021/02/jp_round.jpg" sizes="192x192">
+  <link rel="apple-touch-icon" href="/lister/assets/images/2021/02/jp_round-180x180.jpg">
+  <link rel="stylesheet" href="/lister/assets/lister.css">
 </head>
 <body>
   <header>
@@ -90,7 +90,7 @@
   </main>
 
   <footer>
-    <p>Lister<?= $deploymentHash ? ' <code>' . htmlspecialchars($deploymentHash) . '</code>' : '' ?> © <?= date('Y') ?> Jon Plummer</p>
+    <p>Lister<?= $deploymentTimestamp ? ' <code>' . htmlspecialchars($deploymentTimestamp) . '</code>' : '' ?> © <?= date('Y') ?> Jon Plummer</p>
   </footer>
 
   <script>

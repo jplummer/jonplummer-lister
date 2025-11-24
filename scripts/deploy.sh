@@ -8,8 +8,7 @@ source "$(dirname "$0")/../.env"
 SCRIPT_DIR="$(dirname "$0")"
 REPO_ROOT="$(dirname "$SCRIPT_DIR")"
 
-# Get git commit hash for deployment verification
-GIT_COMMIT=$(cd "$REPO_ROOT" && git rev-parse HEAD 2>/dev/null || echo "")
+# Get git commit hash for display (optional)
 GIT_COMMIT_SHORT=$(cd "$REPO_ROOT" && git rev-parse --short HEAD 2>/dev/null || echo "")
 
 echo "Deploying Lister to web server..."
@@ -18,10 +17,9 @@ echo "Host: $HOST_SERVER"
 echo "User: $HOST_USERNAME"
 echo "Path: $HOST_REMOTE_PATH"
 
-# Write commit hash to file for app to read
-if [ -n "$GIT_COMMIT" ]; then
-  echo "$GIT_COMMIT" > "$REPO_ROOT/lister/.git-commit"
-fi
+# Write deployment timestamp to file for app to read
+DEPLOY_TIMESTAMP=$(date -u +"%Y-%m-%d %H:%M:%S UTC")
+echo "$DEPLOY_TIMESTAMP" > "$REPO_ROOT/lister/.deploy-timestamp"
 
 # Upload files to root directory
 # Use sshpass if available and password is set, otherwise try SSH key or prompt
@@ -55,5 +53,5 @@ EOF
 fi
 
 echo "Deployment complete!"
-echo "Commit deployed: $GIT_COMMIT_SHORT"
+echo "Deployed at: $DEPLOY_TIMESTAMP"
 echo "Visit: https://$HOST_DOMAIN/"
