@@ -2,16 +2,21 @@
 
 All notable changes to Lister will be documented in this file.
 
-**Note**: As of 2025-11-23, this project uses git commit hashes for deployment tracking instead of semantic versioning. The deployed commit hash is displayed in the application footer.
+**Note**: As of 2025-11-23, this project uses a compact deployment ID (last 8 digits of unix timestamp) for deployment tracking instead of semantic versioning. The deployment ID is displayed in the application footer.
 
 ## Recent Changes
+
+### 2025-11-24
+
+#### Changed
+- Update files
 
 ### 2025-11-23
 
 #### Changed
 - Update color palette to DR10 with WCAG AA contrast adjustments
 - Update documentation and configuration files
-- Replaced versioning system with git commit hash tracking for deployment verification
+- Replaced versioning system with compact deployment ID (last 8 digits of unix timestamp) for deployment verification
 - Move data directory to lister/data/ for safer deployment
 - Fixed URL encoding for files and directories with spaces in names
   - Changed from `urlencode` to `rawurlencode` to properly encode spaces as %20 instead of +
