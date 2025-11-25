@@ -115,6 +115,15 @@
 - [ ] Ensure error pages work in both development and production environments
 - [ ] Test error pages with various edge cases (malformed URLs, missing directories, etc.)
 
+### 2.7 Customization & Integration
+- [ ] Make it easier to integrate Lister with custom website styling
+  - [ ] Document CSS custom properties and how to override them
+  - [ ] Create minimal/stripped CSS version for custom styling
+  - [ ] Provide clear separation between core functionality and visual styling
+  - [ ] Add configuration options for header/footer customization
+  - [ ] Document template structure for easy modification
+  - [ ] Consider providing CSS class hooks for external styling
+
 ## Phase 3: Future Enhancements
 **Goal**: Advanced features and integrations
 
