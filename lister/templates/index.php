@@ -231,14 +231,12 @@
       
       // Get the nesting level of the current row
       const currentNestingLevel = parseInt(row.getAttribute('data-nesting-level')) || 0;
-      const currentPath = row.getAttribute('data-path');
       
       // Find all rows after this one that are descendants of this directory
       for (let i = currentIndex + 1; i < allRows.length; i++) {
         const nextRow = allRows[i];
         if (nextRow.classList.contains('expanded-content')) {
           const nextNestingLevel = parseInt(nextRow.getAttribute('data-nesting-level')) || 1;
-          const parentPath = nextRow.getAttribute('data-parent-path');
           
           // Remove ALL descendants (any level deeper than current)
           if (nextNestingLevel > currentNestingLevel) {
@@ -262,15 +260,88 @@
       toggleIcon.textContent = ''; // Clear text since CSS handles the icon
     }
     
-    function escapeAttr(value) {
-      return String(value)
-        .replace(/&/g, '&amp;')
-        .replace(/"/g, '&quot;')
-        .replace(/</g, '&lt;');
-    }
-
     function itemWebPath(item) {
       return item.web_path != null ? item.web_path : item.path;
+    }
+
+    function appendTextCell(row, text) {
+      const td = document.createElement('td');
+      td.textContent = text == null ? '' : String(text);
+      row.appendChild(td);
+    }
+
+    /**
+     * One table row for an item returned by lister/api.php (expanded subtree).
+     * Uses DOM APIs so names and metadata are not parsed as HTML.
+     */
+    function buildExpandedContentRow(item, webPath, nestingLevel, parentWebPath) {
+      const tr = document.createElement('tr');
+      tr.className = 'item-row expanded-content';
+      tr.setAttribute('data-type', item.is_directory ? 'directory' : 'file');
+      tr.setAttribute('data-path', webPath);
+      tr.setAttribute('data-nesting-level', String(nestingLevel));
+      tr.setAttribute('data-parent-path', parentWebPath);
+
+      const tdName = document.createElement('td');
+
+      if (item.is_directory) {
+        if (item.is_empty) {
+          const wrap = document.createElement('span');
+          wrap.className = 'empty-folder';
+          const iconEl = document.createElement('span');
+          iconEl.className = 'icon folder';
+          const nameSpan = document.createElement('span');
+          nameSpan.className = 'item-name';
+          nameSpan.textContent = item.name;
+          wrap.appendChild(iconEl);
+          wrap.appendChild(nameSpan);
+          tdName.appendChild(wrap);
+        } else {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'directory-toggle';
+          btn.setAttribute('data-path', webPath);
+          const toggleIcon = document.createElement('span');
+          toggleIcon.className = 'toggle-icon';
+          const iconEl = document.createElement('span');
+          iconEl.className = 'icon folder';
+          const nameSpan = document.createElement('span');
+          nameSpan.className = 'item-name';
+          nameSpan.textContent = item.name;
+          btn.appendChild(toggleIcon);
+          btn.appendChild(iconEl);
+          btn.appendChild(nameSpan);
+          tdName.appendChild(btn);
+        }
+      } else {
+        const a = document.createElement('a');
+        a.className = 'file-link';
+        const fileUrl = item.url || ('/' + encodeURIComponent(item.name));
+        a.setAttribute('href', fileUrl);
+        const iconSpan = document.createElement('span');
+        const iconKey = item.icon || 'file';
+        iconSpan.className = 'icon ' + iconKey;
+        iconSpan.textContent = getIconSymbol(iconKey);
+        const nameSpan = document.createElement('span');
+        nameSpan.className = 'item-name';
+        nameSpan.textContent = item.name;
+        a.appendChild(iconSpan);
+        a.appendChild(nameSpan);
+        tdName.appendChild(a);
+      }
+
+      tr.appendChild(tdName);
+      appendTextCell(tr, item.size_formatted || '-');
+      appendTextCell(tr, item.modified_formatted != null ? item.modified_formatted : '');
+      let typeLabel;
+      if (item.is_directory) {
+        typeLabel = item.is_empty ? (item.type || 'Empty folder') : (item.type || 'Folder');
+      } else {
+        typeLabel = item.type || 'Unknown';
+      }
+      appendTextCell(tr, typeLabel);
+
+      return tr;
     }
 
     function createNestedContainer(parentRow, data) {
@@ -280,63 +351,14 @@
       // Calculate nesting level based on parent row
       const parentNestingLevel = parseInt(parentRow.getAttribute('data-nesting-level')) || 0;
       const nestingLevel = parentNestingLevel + 1;
+      const parentWebPath = parentRow.getAttribute('data-path') || '';
       
       // Find where to insert (after the parent row)
       let insertAfter = parentRow;
       
       allItems.forEach(item => {
         const webPath = itemWebPath(item);
-        const newRow = document.createElement('tr');
-        newRow.className = 'item-row expanded-content';
-        newRow.setAttribute('data-type', item.is_directory ? 'directory' : 'file');
-        newRow.setAttribute('data-path', webPath);
-        newRow.setAttribute('data-nesting-level', nestingLevel);
-        newRow.setAttribute('data-parent-path', parentRow.getAttribute('data-path'));
-        
-        if (item.is_directory) {
-          if (item.is_empty) {
-            newRow.innerHTML = `
-              <td>
-                <span class="empty-folder">
-                  <span class="icon folder"></span>
-                  <span class="item-name">${item.name.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</span>
-                </span>
-              </td>
-              <td>${item.size_formatted || '-'}</td>
-              <td>${item.modified_formatted}</td>
-              <td>${item.type || 'Empty folder'}</td>
-            `;
-          } else {
-            newRow.innerHTML = `
-              <td>
-                <button class="directory-toggle" data-path="${escapeAttr(webPath)}">
-                  <span class="toggle-icon"></span>
-                  <span class="icon folder"></span>
-                  <span class="item-name">${item.name.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</span>
-                </button>
-              </td>
-              <td>${item.size_formatted || '-'}</td>
-              <td>${item.modified_formatted}</td>
-              <td>${item.type || 'Folder'}</td>
-            `;
-          }
-        } else {
-          // Escape URL for HTML attribute
-          const fileUrl = item.url || ('/' + encodeURIComponent(item.name));
-          newRow.innerHTML = `
-            <td>
-              <a href="${fileUrl.replace(/"/g, '&quot;')}" class="file-link">
-                <span class="icon ${item.icon}">${getIconSymbol(item.icon)}</span>
-                <span class="item-name">${item.name.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</span>
-              </a>
-            </td>
-            <td>${item.size_formatted || '-'}</td>
-            <td>${item.modified_formatted}</td>
-            <td>${item.type || 'Unknown'}</td>
-          `;
-        }
-        
-        // Insert after the current insertAfter position
+        const newRow = buildExpandedContentRow(item, webPath, nestingLevel, parentWebPath);
         tbody.insertBefore(newRow, insertAfter.nextSibling);
         insertAfter = newRow;
       });
