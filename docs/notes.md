@@ -42,6 +42,7 @@ Repository root (same directory as `index.php`, `router.php`, and `.htaccess`):
 │   │   ├── App.php        # Main application class
 │   │   ├── ConfigLoader.php # Loads default.json
 │   │   ├── PathSanitizer.php # Traversal strip + URL decode for paths
+│   │   ├── IconSymbols.php # File-type icon key → emoji (App + template JS)
 │   │   ├── DirectoryLister.php # Directory scanning
 │   │   ├── Security.php   # Security & rate limiting
 │   │   └── SortPreference.php # Sort cookie / query handling

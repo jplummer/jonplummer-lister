@@ -8,6 +8,9 @@ All notable changes to Lister will be documented in this file.
 
 ### 2026-03-21
 
+#### Added
+- Add IconSymbols class
+
 #### Changed
 - Folder expand: viewport-centered loading panel (themed translucent rounded square, larger hourglass), minimum display 500ms, depth counting for overlapping fetches.
 

@@ -134,49 +134,8 @@ class App
    */
   public function getIconSymbol($icon)
   {
-    $icons = [
-      // Folders
-      'folder' => '📁',
-      
-      // Basic file types
-      'file' => '📄',
-      
-      // Media types
-      'image' => '🖼️',
-      'video' => '🎬',
-      'audio' => '🎵',
-      
-      // Documents and text
-      'document' => '📄',
-      'text' => '📝',
-      'pdf' => '📕',
-      'book' => '📚',
-      
-      // Code and development
-      'code' => '💻',
-      'web' => '🌐',
-      'exec' => '⚙️',
-      
-      // Data and office
-      'spreadsheet' => '📊',
-      'sheet' => '📊',
-      'presentation' => '📽️',
-      'slide' => '📽️',
-      
-      // Archives and storage
-      'archive' => '📦',
-      
-      // System and fonts
-      'font' => '🔤',
-      'config' => '⚙️',
-      'backup' => '💾',
-      'database' => '🗄️',
-      'cad' => '📐',
-      'ebook' => '📖',
-      'game' => '🎮'
-    ];
-    
-    return $icons[$icon] ?? '📄';
+    require_once __DIR__ . '/IconSymbols.php';
+    return IconSymbols::symbolFor($icon);
   }
 
   /**
@@ -222,6 +181,12 @@ class App
     
     // Make getIconSymbol function available to template
     $getIconSymbol = [$this, 'getIconSymbol'];
+
+    require_once __DIR__ . '/IconSymbols.php';
+    $listerIconSymbolsJson = json_encode(IconSymbols::getMap(), JSON_UNESCAPED_UNICODE);
+    if ($listerIconSymbolsJson === false) {
+      throw new Exception('Failed to encode icon symbol map for template.');
+    }
 
     // Include the template
     include $templatePath;

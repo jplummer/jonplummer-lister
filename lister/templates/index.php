@@ -109,6 +109,8 @@
   </footer>
 
   <script>
+    const LISTER_ICON_SYMBOLS = <?= $listerIconSymbolsJson ?>;
+
     // Expandable directory functionality with nested containers
     const EXPANDING_INDICATOR_MIN_MS = 500;
 
@@ -341,48 +343,7 @@
     }
     
     function getIconSymbol(iconType) {
-      const icons = {
-        // Folders
-        'folder': '📁',
-        
-        // Basic file types
-        'file': '📄',
-        
-        // Media types
-        'image': '🖼️',
-        'video': '🎬',
-        'audio': '🎵',
-        
-        // Documents and text
-        'document': '📄',
-        'text': '📝',
-        'pdf': '📕',
-        'book': '📚',
-        
-        // Code and development
-        'code': '💻',
-        'web': '🌐',
-        'exec': '⚙️',
-        
-        // Data and office
-        'spreadsheet': '📊',
-        'sheet': '📊',
-        'presentation': '📽️',
-        'slide': '📽️',
-        
-        // Archives and storage
-        'archive': '📦',
-        
-        // System and fonts
-        'font': '🔤',
-        'config': '⚙️',
-        'backup': '💾',
-        'database': '🗄️',
-        'cad': '📐',
-        'ebook': '📖',
-        'game': '🎮'
-      };
-      return icons[iconType] || '📄';
+      return LISTER_ICON_SYMBOLS[iconType] ?? '📄';
     }
   </script>
 </body>
