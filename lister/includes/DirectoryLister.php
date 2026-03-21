@@ -304,7 +304,7 @@ class DirectoryLister
     
     // Safety check: ensure URL doesn't contain API endpoint patterns
     if (strpos($url, 'api.php') !== false || strpos($url, 'lister/api') !== false) {
-      error_log("Warning: getItemUrl() generated invalid URL: $url for file: $name in path: $normalizedCurrent");
+      error_log('Warning: getItemUrl() generated invalid URL: ' . $url . ' for file: ' . $name . ' in directory: ' . $this->currentPath);
       // Fallback: return just the filename if URL construction failed
       return '/' . rawurlencode($name);
     }
