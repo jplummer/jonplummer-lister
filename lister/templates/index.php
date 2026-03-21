@@ -97,6 +97,10 @@
     </article>
   </main>
 
+  <div id="lister-expanding-indicator" class="lister-expanding-indicator" role="status" aria-live="polite" aria-atomic="true" aria-hidden="true">
+    <span class="lister-expanding-indicator-panel" aria-hidden="true">⏳</span>
+  </div>
+
   <footer>
     <p>Lister © <?= date('Y') ?> Jon Plummer</p>
     <?php if ($deploymentTimestamp): ?>
@@ -106,6 +110,45 @@
 
   <script>
     // Expandable directory functionality with nested containers
+    const EXPANDING_INDICATOR_MIN_MS = 500;
+
+    let expandingIndicatorDepth = 0;
+    let expandingIndicatorShownAt = 0;
+    let expandingIndicatorHideTimeoutId = null;
+
+    function setExpandingIndicator(active) {
+      const el = document.getElementById('lister-expanding-indicator');
+      if (!el) {
+        return;
+      }
+      el.classList.toggle('is-active', active);
+      el.setAttribute('aria-hidden', active ? 'false' : 'true');
+    }
+
+    function beginExpandingIndicator() {
+      if (expandingIndicatorDepth === 0) {
+        clearTimeout(expandingIndicatorHideTimeoutId);
+        expandingIndicatorHideTimeoutId = null;
+        expandingIndicatorShownAt = performance.now();
+        setExpandingIndicator(true);
+      }
+      expandingIndicatorDepth++;
+    }
+
+    function endExpandingIndicator() {
+      expandingIndicatorDepth = Math.max(0, expandingIndicatorDepth - 1);
+      if (expandingIndicatorDepth > 0) {
+        return;
+      }
+      const elapsed = performance.now() - expandingIndicatorShownAt;
+      const remaining = Math.max(0, EXPANDING_INDICATOR_MIN_MS - elapsed);
+      clearTimeout(expandingIndicatorHideTimeoutId);
+      expandingIndicatorHideTimeoutId = setTimeout(() => {
+        setExpandingIndicator(false);
+        expandingIndicatorHideTimeoutId = null;
+      }, remaining);
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
       // Use event delegation to handle all directory toggles
       document.addEventListener('click', function(event) {
@@ -133,9 +176,8 @@
         return;
       }
       
-      // Show loading state
-      toggleIcon.textContent = '⏳';
-      
+      beginExpandingIndicator();
+
       // POST body: nested web paths may break as GET query (slashes / %2F) on some hosts.
       const body = new URLSearchParams();
       body.set('path', path);
@@ -166,15 +208,15 @@
             // Create nested container
             createNestedContainer(row, data.data);
             row.classList.add('expanded');
-            toggleIcon.textContent = ''; // Clear text since CSS handles the icon
           } else {
             console.error('Error loading directory:', data.error);
-            toggleIcon.textContent = ''; // Clear text since CSS handles the icon
           }
         })
         .catch(error => {
           console.error('Error:', error);
-          toggleIcon.textContent = ''; // Clear text since CSS handles the icon
+        })
+        .finally(() => {
+          endExpandingIndicator();
         });
     }
     

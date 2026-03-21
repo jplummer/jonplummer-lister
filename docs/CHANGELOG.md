@@ -9,12 +9,13 @@ All notable changes to Lister will be documented in this file.
 ### 2026-03-21
 
 #### Changed
-- Update files
+- Folder expand: viewport-centered loading panel (themed translucent rounded square, larger hourglass), minimum display 500ms, depth counting for overlapping fetches.
 
 #### Added
 - Add PathSanitizer class
 
 #### Changed
+- Update files
 - `plan.md`: Phase 2 operations subsection (access logs, safe-delete workflow, Referer caveats); optional log-analysis helpers (3.4); Phase 4 wording clarified as optional in threat-model note.
 
 #### Security
@@ -22,12 +23,14 @@ All notable changes to Lister will be documented in this file.
 - Add SortPreference class
 
 #### Changed
+- Update files
 - Reorganize `plan.md` and `requirements.md`: archive completed plan items, detangle Phase 2, Phase 3 personal-scope backlog, Phase 4 deferred commercialization/multi-user; requirements deployment context and section 5 deferred scope.
 - Align lister CSS with jonplummer.com DR10 palette: `light-dark()` tokens, sage page background, theme-aware error box, masked folder caret, print `:root` overrides.
 
 ### 2025-11-24
 
 #### Changed
+- Update files
 - Update files
 - Update files
 - Update files
@@ -47,10 +50,12 @@ All notable changes to Lister will be documented in this file.
 - Update files
 - Update files
 - Update files
+- Update files
 
 ### 2025-11-23
 
 #### Changed
+- Update files
 - Update files
 - Update files
 - Update files
