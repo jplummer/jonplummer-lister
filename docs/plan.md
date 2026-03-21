@@ -15,7 +15,7 @@
 ## Phase 2: Enhanced Features
 **Goal**: Improved UX and additional functionality.
 
-**Context**: Primary use is **personal, convenient file access**, not high-sensitivity hosting. **Threat model**: automated abuse (bots, scrapers) is the main concern—not fine-grained control over curious humans. Multi-tenant access, auth-as-product, and similar work are **Phase 4** and do not drive the current deployment.
+**Context**: Primary use is **personal, convenient file access**, not high-sensitivity hosting. **Threat model**: automated abuse (bots, scrapers) is the main concern—not fine-grained control over curious humans. Multi-tenant access, auth-as-product, and similar work are an optional **Phase 4** and do not drive the current deployment.
 
 ### Styling completeness (Phase 2.1)
 **Status**: Complete — see [Archive](#archive-completed-work).
@@ -46,6 +46,13 @@
   - [ ] Log detailed error information for debugging
 - [ ] Ensure error pages work in both development and production environments
 - [ ] Test error pages with various edge cases (malformed URLs, missing directories, etc.)
+
+### Operations: traffic, links, and delete safety
+**Goal**: Use server-side evidence to avoid breaking external bookmarks, embeds, or automations that still request file URLs; discover inbound links where possible.
+
+- [ ] Document how to use **web server access logs** to see whether specific listed paths (or URL prefixes) received requests over a chosen time window; include host-specific pointers where useful (e.g. DreamHost log location and format)
+- [ ] Document a **safe-delete workflow** (e.g. check logs → optional quarantine period → delete) and what logs do *not* prove (non-HTTP access, clients that never hit the server)
+- [ ] Document **Referer** in logs: when it appears, what it suggests about off-site links, and why it is incomplete (direct navigation, apps, stripped referrers); complement with **Search Console** (or similar) and occasional URL search for link discovery
 
 ### Shipping & installation
 - [ ] Ensure deploy script and other development conveniences are not part of delivered package
@@ -83,6 +90,9 @@
 
 ### 3.3 Other
 - MCP (Model Context Protocol) integration for AI agents
+
+### 3.4 Log analysis helpers (optional)
+- [ ] Add documented **grep/awk (or small script) recipes** for common log formats to aggregate hits by path or list distinct referrers for a path—stays optional if raw log access is enough
 
 ## Phase 4: Commercialization and multi-user
 **Goal**: Product-grade hosting, tenants, or sensitive data—**out of scope** for the current personal deployment. Revisit only if Lister is sold, multi-tenant, or holds data you treat as confidential.
