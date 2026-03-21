@@ -1,11 +1,11 @@
 # Lister Development Plan
 
-## Current Status: PRODUCTION READY ✅
+## Current Status: WORKS GOOD ✅
 - **Deployed**: misc.jonplummer.com
 - **Phase 1**: Complete (MVP + additional features)
 - **Phase 2**: Partially complete (UX, abuse resistance, shipping polish)
 - **Phase 3**: Not started (search, bulk file operations)
-- **Phase 4**: Deferred — commercialization / multi-user (see [Phase 4](#phase-4-commercialization-and-multi-user))
+- **Phase 4**: Someday maybe — commercialization / multi-user (see [Phase 4](#phase-4-commercialization-and-multi-user))
 - **Next**: File previews, keyboard navigation, README rendering
 
 ## Phase 1: Core Foundation (MVP)
