@@ -6,8 +6,7 @@ A simple, clean directory listing application for web servers.
 
 **For installation, you only need these files:**
 
-- `index.php` - Main application entry point
-- `install_error.php` - Installation error page (same folder as `index.php`)
+- `index.php` - Main application entry point (includes preflight install error UI)
 - `.htaccess` - Apache security rules
 - `lister/` - Application directory (all contents)
 - `INSTALL.md` - Installation instructions
@@ -44,8 +43,7 @@ curl http://localhost:8000
 
 ```
 .
-├── index.php              # Main application entry point
-├── install_error.php      # Install error HTML (preflight failures)
+├── index.php              # Main application entry point (preflight install errors)
 ├── .htaccess              # Apache security rules
 ├── lister/                # Application directory
 │   ├── config/

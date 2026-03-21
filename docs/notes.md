@@ -31,8 +31,7 @@ find . -name "*.php" -exec php -l {} \;
 Repository root (same directory as `index.php`, `router.php`, and `.htaccess`):
 
 ```
-├── index.php              # Main application entry point – DEPLOYABLE
-├── install_error.php      # Preflight install error page – DEPLOYABLE
+├── index.php              # Main application entry point – DEPLOYABLE (preflight install errors inline)
 ├── router.php             # PHP built-in server router (dev only)
 ├── .htaccess              # Apache security rules – DEPLOYABLE
 ├── lister/                # Application directory – DEPLOYABLE

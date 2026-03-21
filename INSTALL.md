@@ -6,7 +6,6 @@
 Upload only the following files and folders to your web server's root (or target) directory:
 
 - `index.php`
-- `install_error.php` (installation error page; keep next to `index.php`)
 - `.htaccess`
 - `lister/` folder
 
@@ -15,7 +14,6 @@ Do not upload documentation files or other non-essential items from the reposito
 ### Step 2: Set Permissions
 ```bash
 chmod 644 index.php
-chmod 644 install_error.php
 chmod 644 .htaccess
 chmod 644 lister/config/*.json
 ```
@@ -26,8 +24,7 @@ Visit `https://yourdomain.com/` in your browser.
 ## File Structure
 ```
 your-domain.com/
-├── index.php              # Main application
-├── install_error.php      # Missing-file install error (loaded by index.php)
+├── index.php              # Main application (preflight install errors inline)
 ├── .htaccess              # Security rules
 └── lister/
     ├── api.php            # AJAX API endpoint
@@ -49,6 +46,9 @@ Edit `lister/config/default.json` to customize:
 - Display settings
 - Security options
 - Theme preferences
+
+## Upgrading
+If you previously deployed `install_error.php` next to `index.php`, you can delete that file after uploading the new `index.php` (preflight errors are shown from `index.php` only).
 
 ## Removal
 To remove Lister, you can either:

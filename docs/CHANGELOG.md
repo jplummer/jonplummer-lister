@@ -9,12 +9,14 @@ All notable changes to Lister will be documented in this file.
 ### 2026-03-21
 
 #### Changed
+- Update deployment configuration
 - Update files
 
 #### Added
 - README preview below listing: `ReadmePreview.php`, bundled `Parsedown.php`, `display.readme_preview` in config, styles under `.lister-readme`.
 
 #### Changed
+- Update deployment configuration
 - File type and folder icons use Material Symbols Outlined (Google Fonts); `lister/includes/IconSymbols.php` maps keys to ligature names.
 - Update files
 
@@ -22,6 +24,7 @@ All notable changes to Lister will be documented in this file.
 - Add 2 new files
 
 #### Changed
+- Update deployment configuration
 - Update files
 - Update files
 
@@ -29,6 +32,7 @@ All notable changes to Lister will be documented in this file.
 - Add IconSymbols class
 
 #### Changed
+- Update deployment configuration
 - Update files
 - Folder expand: viewport-centered loading panel (themed translucent rounded square, larger hourglass), minimum display 500ms, depth counting for overlapping fetches.
 
@@ -36,6 +40,7 @@ All notable changes to Lister will be documented in this file.
 - Add PathSanitizer class
 
 #### Changed
+- Update deployment configuration
 - Update files
 - Update files
 - `plan.md`: Phase 2 operations subsection (access logs, safe-delete workflow, Referer caveats); optional log-analysis helpers (3.4); Phase 4 wording clarified as optional in threat-model note.
@@ -45,6 +50,7 @@ All notable changes to Lister will be documented in this file.
 - Add SortPreference class
 
 #### Changed
+- Update deployment configuration
 - Update files
 - Update files
 - Reorganize `plan.md` and `requirements.md`: archive completed plan items, detangle Phase 2, Phase 3 personal-scope backlog, Phase 4 deferred commercialization/multi-user; requirements deployment context and section 5 deferred scope.
@@ -53,6 +59,7 @@ All notable changes to Lister will be documented in this file.
 ### 2025-11-24
 
 #### Changed
+- Update deployment configuration
 - Update files
 - Update files
 - Update files
@@ -67,6 +74,7 @@ All notable changes to Lister will be documented in this file.
 - Add 2 new files
 
 #### Changed
+- Update deployment configuration
 - Update files
 - Update files
 - Update files
@@ -80,6 +88,7 @@ All notable changes to Lister will be documented in this file.
 ### 2025-11-23
 
 #### Changed
+- Update deployment configuration
 - Update files
 - Update files
 - Update files
