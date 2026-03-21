@@ -12,7 +12,7 @@ All notable changes to Lister will be documented in this file.
 - Add PathSanitizer class
 
 #### Changed
-- Update files
+- `plan.md`: Phase 2 operations subsection (access logs, safe-delete workflow, Referer caveats); optional log-analysis helpers (3.4); Phase 4 wording clarified as optional in threat-model note.
 
 #### Security
 - Add ConfigLoader class
