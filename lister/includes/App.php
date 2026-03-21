@@ -28,25 +28,8 @@ class App
    */
   private function loadConfiguration()
   {
-    $configPath = __DIR__ . '/../config/default.json';
-    if (!file_exists($configPath)) {
-      throw new Exception('Configuration file not found: lister/config/default.json. Make sure you uploaded the entire lister/ folder.');
-    }
-    
-    if (!is_readable($configPath)) {
-      $perms = substr(sprintf('%o', fileperms($configPath)), -4);
-      throw new Exception('Cannot read configuration file: lister/config/default.json. Current permissions: ' . $perms . '. Run: chmod 644 lister/config/default.json');
-    }
-    
-    $configContent = file_get_contents($configPath);
-    if ($configContent === false) {
-      throw new Exception('Failed to read configuration file: lister/config/default.json. Check file permissions.');
-    }
-    
-    $this->config = json_decode($configContent, true);
-    if (json_last_error() !== JSON_ERROR_NONE) {
-      throw new Exception('Invalid configuration file: lister/config/default.json. JSON error: ' . json_last_error_msg() . '. Check the file for syntax errors.');
-    }
+    require_once __DIR__ . '/ConfigLoader.php';
+    $this->config = ConfigLoader::loadDefaultJson();
   }
 
   /**

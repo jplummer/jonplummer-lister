@@ -9,6 +9,7 @@ All notable changes to Lister will be documented in this file.
 ### 2026-03-21
 
 #### Security
+- Add ConfigLoader class
 - Add SortPreference class
 
 #### Changed
@@ -60,6 +61,7 @@ All notable changes to Lister will be documented in this file.
 - Add git hooks to scripts/ with setup script
 
 #### Security
+- Add ConfigLoader class
 - Enhance security and documentation: block sensitive files, add changelog, document security dashboard
 
 ## [1.0.0] - 2025-10-10

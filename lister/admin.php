@@ -38,7 +38,20 @@ if (!isset($_POST['password']) || $_POST['password'] !== $adminPassword) {
 }
 
 // Load configuration and security class
-$config = json_decode(file_get_contents(__DIR__ . '/config/default.json'), true);
+require_once __DIR__ . '/includes/ConfigLoader.php';
+try {
+  $config = ConfigLoader::loadDefaultJson();
+} catch (Exception $e) {
+  http_response_code(500);
+  ?>
+  <!DOCTYPE html>
+  <html lang="en">
+  <head><meta charset="UTF-8"><title>Configuration error</title></head>
+  <body><p><?= htmlspecialchars($e->getMessage()) ?></p></body>
+  </html>
+  <?php
+  exit;
+}
 require_once __DIR__ . '/includes/Security.php';
 
 $security = new Security($config);

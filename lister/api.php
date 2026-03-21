@@ -4,14 +4,18 @@
  * Handles AJAX requests for expandable directory navigation
  */
 
-$configPath = __DIR__ . '/config/default.json';
-$configRaw = file_get_contents($configPath);
-$config = json_decode($configRaw !== false ? $configRaw : '', true);
+require_once __DIR__ . '/includes/ConfigLoader.php';
 
-if (!is_array($config)) {
+try {
+    $config = ConfigLoader::loadDefaultJson();
+} catch (Exception $e) {
     header('Content-Type: application/json');
     http_response_code(500);
-    echo json_encode(['success' => false, 'error' => 'Configuration error']);
+    $jsonFlags = 0;
+    if (defined('JSON_INVALID_UTF8_SUBSTITUTE')) {
+        $jsonFlags |= JSON_INVALID_UTF8_SUBSTITUTE;
+    }
+    echo json_encode(['success' => false, 'error' => $e->getMessage()], $jsonFlags);
     exit;
 }
 

@@ -7,9 +7,9 @@
 # Start local PHP server with router (required)
 php -S localhost:8000 router.php
 
-# Test the application
-curl http://localhost:8000
-# or visit http://localhost:8000 in browser
+# Test the application (browser is reliable; default curl User-Agent is blocked when security is on)
+curl -H 'User-Agent: Mozilla/5.0 (local smoke test)' http://localhost:8000/
+# or visit http://localhost:8000 in a browser
 
 # Stop server (if running in background)
 pkill -f "php -S localhost:8000"
@@ -28,19 +28,22 @@ find . -name "*.php" -exec php -l {} \;
 
 ## Project Structure
 
+Repository root (same directory as `index.php`, `router.php`, and `.htaccess`):
+
 ```
-lister/
 ├── index.php              # Main application entry point – DEPLOYABLE
-├── .htaccess              # Apache security rules – DEPLOYABLE
 ├── router.php             # PHP built-in server router (dev only)
-├── lister/                # Main application directory – DEPLOYABLE
+├── .htaccess              # Apache security rules – DEPLOYABLE
+├── lister/                # Application directory – DEPLOYABLE
 │   ├── config/
 │   │   ├── default.json   # Default configuration
 │   │   └── extensions.json # File type mappings
 │   ├── includes/          # PHP classes
 │   │   ├── App.php        # Main application class
+│   │   ├── ConfigLoader.php # Loads default.json
 │   │   ├── DirectoryLister.php # Directory scanning
-│   │   └── Security.php   # Security & rate limiting
+│   │   ├── Security.php   # Security & rate limiting
+│   │   └── SortPreference.php # Sort cookie / query handling
 │   ├── templates/
 │   │   └── index.php      # Main template
 │   ├── assets/
@@ -53,8 +56,9 @@ lister/
 ├── scripts/               # Utility scripts
 │   ├── deploy.sh          # Deployment script
 │   ├── teardown.sh        # Removal script
-│   ├── test_security.php  # Security testing
-│   └── test_pattern.php   # Pattern matching tests
+│   ├── diagnose_favicon.php
+│   ├── setup-git-hooks.sh
+│   └── pre-commit-changelog.sh
 └── docs/
     ├── plan.md            # Development plan
     ├── requirements.md    # Project requirements
@@ -78,7 +82,11 @@ Before testing, you can check for PHP syntax errors: `php -l filename.php`. This
 ### Optional: API Testing
 The app uses `lister/api.php` for AJAX requests when expanding directories. If directory expansion isn't working, you can test the API directly:
 ```bash
-curl -X POST -d 'path=some/relative/folder' http://localhost:8000/lister/api.php
+# With security enabled, curl is treated as a bot (User-Agent contains "curl").
+# Use a browser-like User-Agent for local checks, e.g.:
+curl -X POST -d 'path=some/relative/folder' \
+  -H 'User-Agent: Mozilla/5.0 (local API test)' \
+  http://localhost:8000/lister/api.php
 ```
 Or use browser dev tools Network tab to inspect API responses. Only needed when debugging directory expansion issues.
 
@@ -104,9 +112,9 @@ git push origin main
 ```
 
 ### 4. Configuration
-- Edit `lister/config/default.json` for app settings
+- Edit `lister/config/default.json` for app settings (loaded via `lister/includes/ConfigLoader.php`)
 - Modify `.htaccess` for Apache rules
-- Update `lister/includes/App.php` for main functionality
+- Update `lister/includes/App.php` for request handling and page rendering
 - Access security admin at `yourdomain.com/lister/admin.php`
 
 ## Common Commands
@@ -125,8 +133,6 @@ php -c /path/to/php.ini -S localhost:8000 router.php
 # Check loaded extensions
 php -m
 
-# Test security system
-php scripts/test_security.php
 ```
 
 ### File Operations
@@ -171,7 +177,7 @@ git pull origin main
 
 **PHP Server Won't Start**
 - Check if port 8000 is in use: `lsof -i :8000`
-- Try different port: `php -S localhost:8080`
+- Try different port: `php -S localhost:8080 router.php`
 - Check PHP installation: `which php`
 
 **Syntax Errors**
@@ -192,10 +198,10 @@ git pull origin main
 
 ### Debug Mode
 ```bash
-# Enable error reporting in PHP
-php -d display_errors=1 -S localhost:8000
+# Enable error reporting in PHP (still pass router for directory URLs)
+php -d display_errors=1 -S localhost:8000 router.php
 
-# Check PHP error log
+# Check PHP error log (path depends on install; Homebrew PHP on macOS often uses:)
 tail -f /opt/homebrew/var/log/php/error.log
 ```
 
@@ -203,9 +209,9 @@ tail -f /opt/homebrew/var/log/php/error.log
 ## Environment Setup
 
 ### Local Development
-- **PHP**: 8.4.13 (via Homebrew)
-- **Server**: Built-in PHP development server
-- **OS**: macOS (darwin 25.0.0)
+- **PHP**: 8.x CLI (exact version depends on your install, e.g. Homebrew)
+- **Server**: Built-in PHP development server with `router.php`
+- **OS**: macOS (darwin version varies with OS updates)
 
 ### Production (Dreamhost)
 - **PHP**: 8.x (Dreamhost compatible)
@@ -238,8 +244,8 @@ tail -f /opt/homebrew/var/log/php/error.log
 
 ### PHP Security
 - Input validation and sanitization
-- Rate limiting (30 requests/minute)
-- Bot detection (blocks curl, wget, etc.)
+- Rate limiting (`max_requests_per_minute` in config; default 30 per minute)
+- Bot detection (matches curl, wget, and other tool-like user agents when enabled)
 - Suspicious request detection
 - Security logging and admin panel
 - Error handling
