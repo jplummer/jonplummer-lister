@@ -6,6 +6,7 @@
 Upload only the following files and folders to your web server's root (or target) directory:
 
 - `index.php`
+- `install_error.php` (installation error page; keep next to `index.php`)
 - `.htaccess`
 - `lister/` folder
 
@@ -14,6 +15,7 @@ Do not upload documentation files or other non-essential items from the reposito
 ### Step 2: Set Permissions
 ```bash
 chmod 644 index.php
+chmod 644 install_error.php
 chmod 644 .htaccess
 chmod 644 lister/config/*.json
 ```
@@ -25,6 +27,7 @@ Visit `https://yourdomain.com/` in your browser.
 ```
 your-domain.com/
 ├── index.php              # Main application
+├── install_error.php      # Missing-file install error (loaded by index.php)
 ├── .htaccess              # Security rules
 └── lister/
     ├── api.php            # AJAX API endpoint
@@ -36,7 +39,8 @@ your-domain.com/
     │   ├── DirectoryLister.php
     │   └── Security.php
     ├── templates/
-    │   └── index.php      # Main template
+    │   ├── index.php      # Main template
+    │   └── runtime_error.php # Fatal error page (loaded by index.php)
     └── assets/            # CSS, JS, icons
 ```
 

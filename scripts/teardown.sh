@@ -25,6 +25,7 @@ if command -v sshpass >/dev/null 2>&1 && [ -n "$HOST_PASSWORD" ]; then
   sshpass -p "$HOST_PASSWORD" sftp -o StrictHostKeyChecking=no -o PreferredAuthentications=password,publickey $HOST_USERNAME@$HOST_SERVER << EOF
 cd $HOST_REMOTE_PATH
 rm index.php
+rm install_error.php
 rm .htaccess
 rm -r lister/
 quit
@@ -43,6 +44,7 @@ else
   sftp -o StrictHostKeyChecking=no -o PreferredAuthentications=publickey,password $HOST_USERNAME@$HOST_SERVER << EOF
 cd $HOST_REMOTE_PATH
 rm index.php
+rm install_error.php
 rm .htaccess
 rm -r lister/
 quit

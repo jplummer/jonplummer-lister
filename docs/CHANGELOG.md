@@ -8,6 +8,9 @@ All notable changes to Lister will be documented in this file.
 
 ### 2026-03-21
 
+#### Added
+- Add 2 new files
+
 #### Changed
 - Update files
 - Update files

@@ -32,6 +32,7 @@ Repository root (same directory as `index.php`, `router.php`, and `.htaccess`):
 
 ```
 ├── index.php              # Main application entry point – DEPLOYABLE
+├── install_error.php      # Preflight install error page – DEPLOYABLE
 ├── router.php             # PHP built-in server router (dev only)
 ├── .htaccess              # Apache security rules – DEPLOYABLE
 ├── lister/                # Application directory – DEPLOYABLE
@@ -47,7 +48,8 @@ Repository root (same directory as `index.php`, `router.php`, and `.htaccess`):
 │   │   ├── Security.php   # Security & rate limiting
 │   │   └── SortPreference.php # Sort cookie / query handling
 │   ├── templates/
-│   │   └── index.php      # Main template
+│   │   ├── index.php      # Main template
+│   │   └── runtime_error.php # Fatal error HTML (index.php catch)
 │   ├── assets/
 │   │   └── lister.css     # Stylesheet
 │   ├── api.php            # AJAX API endpoint
