@@ -4,11 +4,8 @@
 
 ### Local Development
 ```bash
-# Start local PHP server with router (recommended)
+# Start local PHP server with router (required)
 php -S localhost:8000 router.php
-
-# Or start without router (basic)
-php -S localhost:8000
 
 # Test the application
 curl http://localhost:8000
@@ -18,7 +15,7 @@ curl http://localhost:8000
 pkill -f "php -S localhost:8000"
 ```
 
-**Router.php**: The `router.php` file enables proper URL routing for the PHP built-in server, making it behave like Apache with mod_rewrite. It routes directory requests to `index.php` and serves static files directly. Only needed for local development - production uses `.htaccess` for routing.
+**Note: router.php**: Required for local development. Located in your project root (same folder as `index.php`). The PHP built-in server doesn't handle directory URLs the same way Apache does, so router.php ensures directory requests are properly routed to `index.php`. **Don't deploy to production** as remote servers use `.htaccess` for routing instead.
 
 ### PHP Syntax Check
 ```bash
@@ -67,19 +64,23 @@ lister/
 
 ## Development Workflow
 
-### 1. Making Changes
-1. Edit files in your IDE
-2. Test locally: `php -S localhost:8000`
-3. Check syntax: `php -l index.php`
-4. Test functionality in browser
-5. Commit changes when ready
+### Standard Process
+1. **Edit files** in your IDE
+2. **Test locally**: Start server with `php -S localhost:8000 router.php`, then visit `http://localhost:8000` in browser
+3. **Test on host**: If local testing looks good, deploy and test on production server
+4. **Commit changes**: If everything works, commit your changes
 
-### 2. Testing
-- **Local Testing**: Use `php -S localhost:8000 router.php`
-- **Syntax Check**: `php -l filename.php`
-- **Browser Testing**: Visit `http://localhost:8000`
-- **Security Testing**: Run `php scripts/test_security.php`
-- **API Testing**: Use `curl` or browser dev tools
+**About the router**: `router.php` is in your local project root (same folder as `index.php` and `lister/`) and is only used for local development. Always use it when starting the local server - the PHP built-in server doesn't handle directory URLs the same way Apache does, so without the router, directory listings won't work properly. **Do not deploy `router.php` to your remote server** - production uses `.htaccess` for routing instead.
+
+### Optional: Syntax Checking
+Before testing, you can check for PHP syntax errors: `php -l filename.php`. This catches typos and parse errors that would prevent the server from starting. Useful if the server won't start and you're not sure why.
+
+### Optional: API Testing
+The app uses `lister/api.php` for AJAX requests when expanding directories. If directory expansion isn't working, you can test the API directly:
+```bash
+curl -X POST -d 'path=some/relative/folder' http://localhost:8000/lister/api.php
+```
+Or use browser dev tools Network tab to inspect API responses. Only needed when debugging directory expansion issues.
 
 ### 3. Deployment to Web Server
 ```bash
