@@ -9,10 +9,7 @@ All notable changes to Lister will be documented in this file.
 ### 2026-03-21
 
 #### Changed
-- Update files
-- Update files
-- Update files
-- Update files
+- Reorganize `plan.md` and `requirements.md`: archive completed plan items, detangle Phase 2, Phase 3 personal-scope backlog, Phase 4 deferred commercialization/multi-user; requirements deployment context and section 5 deferred scope.
 - Align lister CSS with jonplummer.com DR10 palette: `light-dark()` tokens, sage page background, theme-aware error box, masked folder caret, print `:root` overrides.
 
 ### 2025-11-24
