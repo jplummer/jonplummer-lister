@@ -266,12 +266,17 @@ th, td {
 }
 
 th {
+  vertical-align: bottom;
   font-weight: var(--font-weight-bold);
   font-size: var(--font-size-xxs);
   line-height: var(--line-height-xxs);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--text-color-light);
+}
+
+td {
+  vertical-align: top;
 }
 
 /* Main table hover - only apply to direct children of main tbody, not nested tables */
@@ -281,7 +286,7 @@ th {
 
 .directory-link, .file-link {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--spacing-xs);
   color: var(--text-color);
   text-decoration: none;
@@ -340,7 +345,7 @@ footer .deploy-id {
   margin: 0;
   cursor: pointer;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--spacing-xs);
   color: var(--text-color);
   text-decoration: none;
@@ -384,7 +389,20 @@ footer .deploy-id {
 .file-link {
   padding-left: 0;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+}
+
+/* Let long names wrap without stretching icon/caret column; only this flex item grows */
+.directory-toggle .item-name,
+.file-link .item-name,
+.empty-folder .item-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  word-break: break-word;
+}
+
+.directory-listing td:first-child {
+  min-width: 0;
 }
 
 /* Caret space - always reserve space for caret even on files */
@@ -402,7 +420,7 @@ footer .deploy-id {
   display: block;
   width: 12px;
   height: 12px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M0 0 L0 12 L12 6 Z' fill='%23D2010A'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M 12 6 L 6 0 L 6 12 Z' fill='%23D2010A'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
@@ -464,7 +482,7 @@ footer .deploy-id {
 /* Empty folder styling */
 .empty-folder {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   color: var(--text-color-light);
   font-style: italic;
   cursor: default;

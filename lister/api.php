@@ -14,8 +14,9 @@ require_once __DIR__ . '/includes/DirectoryLister.php';
 header('Content-Type: application/json');
 
 try {
-    // Get the requested path from query parameter
-    $requestedPath = $_GET['path'] ?? '';
+    // Path from POST body avoids servers that mishandle slashes in query strings (nested folders).
+    // GET still supported for single-segment paths and manual requests.
+    $requestedPath = $_POST['path'] ?? $_GET['path'] ?? '';
     
     // Security: prevent directory traversal
     $requestedPath = str_replace(['../', '..\\'], '', $requestedPath);
@@ -25,23 +26,46 @@ try {
     
     // Normalize basePath for consistent path handling
     $normalizedBasePath = realpath($basePath) ?: $basePath;
-    
-    // If path starts with basePath (normalized or not), use it directly
-    if (strpos($requestedPath, $normalizedBasePath) === 0 || strpos($requestedPath, $basePath) === 0) {
+
+    // True if string looks like an absolute filesystem path (legacy clients)
+    $isAbsoluteFs = static function ($p) {
+        if ($p === '' || $p === null) {
+            return false;
+        }
+        if ($p[0] === '/') {
+            return true;
+        }
+        return (bool) preg_match('#^[A-Za-z]:[/\\\\]#', $p);
+    };
+
+    if (!$isAbsoluteFs($requestedPath)) {
+        // Preferred: web-root-relative path (e.g. tpotter/subfolder)
+        $relative = str_replace('\\', '/', $requestedPath);
+        $relative = ltrim($relative, '/');
+        $fullPath = $relative === ''
+            ? $normalizedBasePath
+            : $normalizedBasePath . '/' . $relative;
+    } elseif (strpos($requestedPath, $normalizedBasePath) === 0 || strpos($requestedPath, $basePath) === 0) {
         $fullPath = $requestedPath;
     } else {
-        // Otherwise, treat as relative to basePath
         $fullPath = $normalizedBasePath . '/' . ltrim($requestedPath, '/');
     }
     
-    // Ensure the path is within our base directory
     $realFullPath = realpath($fullPath);
+    if ($realFullPath === false) {
+        throw new Exception('Directory not found: ' . $requestedPath);
+    }
     
-    if (!$realFullPath || strpos($realFullPath, $normalizedBasePath) !== 0) {
+    // Prefix check with path boundary (avoids /var/www/html matching /var/www/html2)
+    $realBasePath = realpath($normalizedBasePath) ?: $normalizedBasePath;
+    $baseNorm = rtrim(str_replace('\\', '/', $realBasePath), '/');
+    $fullNorm = str_replace('\\', '/', $realFullPath);
+    $insideBase = ($fullNorm === $baseNorm || strpos($fullNorm, $baseNorm . '/') === 0);
+    
+    if (!$insideBase) {
         throw new Exception('Access denied: Path outside base directory');
     }
     
-    // Check if path exists and is a directory
     if (!is_dir($realFullPath)) {
         throw new Exception('Directory not found: ' . $requestedPath);
     }
@@ -52,17 +76,25 @@ try {
     // Scan the requested directory (use normalized path)
     $result = $lister->scanDirectory($realFullPath);
     
-    // Return JSON response
+    // Return JSON response (tolerate odd filenames that are not valid UTF-8)
+    $jsonFlags = JSON_UNESCAPED_SLASHES;
+    if (defined('JSON_INVALID_UTF8_SUBSTITUTE')) {
+        $jsonFlags |= JSON_INVALID_UTF8_SUBSTITUTE;
+    }
     echo json_encode([
         'success' => true,
         'data' => $result
-    ]);
+    ], $jsonFlags);
     
 } catch (Exception $e) {
     // Return error response
     http_response_code(400);
+    $jsonFlags = 0;
+    if (defined('JSON_INVALID_UTF8_SUBSTITUTE')) {
+        $jsonFlags |= JSON_INVALID_UTF8_SUBSTITUTE;
+    }
     echo json_encode([
         'success' => false,
         'error' => $e->getMessage()
-    ]);
+    ], $jsonFlags);
 }

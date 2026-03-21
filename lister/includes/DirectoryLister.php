@@ -207,6 +207,63 @@ class DirectoryLister
   }
 
   /**
+   * Directory path relative to base (no leading/trailing slashes), unencoded segment text.
+   */
+  private function getCurrentDirectoryRelativeToBase()
+  {
+    $normalizedBase = rtrim($this->basePath, '/');
+    $normalizedCurrent = rtrim($this->currentPath, '/');
+    
+    if (empty($normalizedCurrent) || !is_dir($normalizedCurrent)) {
+      $normalizedCurrent = $normalizedBase;
+    }
+    
+    $relativePath = '';
+    if ($normalizedCurrent !== $normalizedBase) {
+      $realBase = realpath($normalizedBase);
+      $realCurrent = realpath($normalizedCurrent);
+      
+      if ($realBase && $realCurrent && strpos($realCurrent, $realBase) === 0) {
+        $relativePath = substr($realCurrent, strlen($realBase));
+        $relativePath = trim($relativePath, '/');
+      }
+      
+      if (empty($relativePath)) {
+        $relativePath = str_replace($normalizedBase, '', $normalizedCurrent);
+        $relativePath = trim($relativePath, '/');
+      }
+    }
+    
+    return $relativePath;
+  }
+
+  /**
+   * Path segments from document root to this item (unencoded). Used for web_path and URLs.
+   */
+  private function getItemUrlPathSegmentsUnencoded($name)
+  {
+    $relativePath = $this->getCurrentDirectoryRelativeToBase();
+    $segments = [];
+    if (!empty($relativePath)) {
+      foreach (explode('/', $relativePath) as $segment) {
+        if ($segment !== '') {
+          $segments[] = $segment;
+        }
+      }
+    }
+    $segments[] = $name;
+    return $segments;
+  }
+
+  /**
+   * Path under document root (no leading slash), unencoded — for API, data-path, and filesystem join.
+   */
+  private function getItemWebPath($name)
+  {
+    return implode('/', $this->getItemUrlPathSegmentsUnencoded($name));
+  }
+
+  /**
    * Get detailed information about a file or directory
    */
   private function getItemInfo($name, $fullPath)
@@ -217,6 +274,7 @@ class DirectoryLister
     return [
       'name' => $name,
       'path' => $fullPath,
+      'web_path' => $this->getItemWebPath($name),
       'url' => $this->getItemUrl($name),
       'is_directory' => $isDir,
       'size' => $isDir ? null : $stat['size'],
@@ -238,55 +296,8 @@ class DirectoryLister
   {
     // For expandable directories, we'll use data attributes instead of URLs
     // Files will still have direct URLs
-    
-    // Ensure both paths are normalized (basePath is normalized in constructor,
-    // currentPath is normalized in scanDirectory)
-    $normalizedBase = rtrim($this->basePath, '/');
-    $normalizedCurrent = rtrim($this->currentPath, '/');
-    
-    // Safety check: ensure currentPath is valid
-    if (empty($normalizedCurrent) || !is_dir($normalizedCurrent)) {
-      // Fallback to base path if currentPath is invalid
-      $normalizedCurrent = $normalizedBase;
-    }
-    
-    // Build URL based on current path relative to base path
-    $relativePath = '';
-    if ($normalizedCurrent !== $normalizedBase) {
-      // Get the relative path from base to current directory
-      // Both paths should already be normalized, but verify with realpath
-      $realBase = realpath($normalizedBase);
-      $realCurrent = realpath($normalizedCurrent);
-      
-      if ($realBase && $realCurrent) {
-        // Both paths exist and are normalized
-        if (strpos($realCurrent, $realBase) === 0) {
-          // Current path is within base path
-          $relativePath = substr($realCurrent, strlen($realBase));
-          $relativePath = trim($relativePath, '/');
-        }
-      }
-      
-      // Fallback: if realpath failed or paths don't match, use string replacement
-      if (empty($relativePath)) {
-        $relativePath = str_replace($normalizedBase, '', $normalizedCurrent);
-        $relativePath = trim($relativePath, '/');
-      }
-    }
-    
-    // Construct URL path - encode each path segment
-    $urlParts = [];
-    if (!empty($relativePath)) {
-      // Split path and encode each segment
-      $pathSegments = explode('/', $relativePath);
-      foreach ($pathSegments as $segment) {
-        if (!empty($segment)) {
-          $urlParts[] = rawurlencode($segment);
-        }
-      }
-    }
-    // Add the filename (encoded)
-    $urlParts[] = rawurlencode($name);
+    $segments = $this->getItemUrlPathSegmentsUnencoded($name);
+    $urlParts = array_map('rawurlencode', $segments);
     
     // Always return an absolute URL starting with /
     $url = '/' . implode('/', $urlParts);

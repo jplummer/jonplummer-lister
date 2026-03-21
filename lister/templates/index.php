@@ -47,19 +47,19 @@
                   $allItems = array_merge($data['directories'] ?? [], $data['files'] ?? []);
                   foreach ($allItems as $item): 
                   ?>
-                    <tr class="item-row" data-type="<?= $item['is_directory'] ? 'directory' : 'file' ?>" data-path="<?= htmlspecialchars($item['path']) ?>" data-nesting-level="0">
+                    <tr class="item-row" data-type="<?= $item['is_directory'] ? 'directory' : 'file' ?>" data-path="<?= htmlspecialchars($item['web_path']) ?>" data-nesting-level="0">
                       <td>
                         <?php if ($item['is_directory']): ?>
                           <?php if (isset($item['is_empty']) && $item['is_empty']): ?>
                             <span class="empty-folder">
                               <span class="icon folder"></span>
-                              <?= htmlspecialchars($item['name']) ?>
+                              <span class="item-name"><?= htmlspecialchars($item['name']) ?></span>
                             </span>
                           <?php else: ?>
-                            <button class="directory-toggle" data-path="<?= htmlspecialchars($item['path']) ?>">
+                            <button class="directory-toggle" data-path="<?= htmlspecialchars($item['web_path']) ?>">
                               <span class="toggle-icon"></span>
                               <span class="icon folder"></span>
-                              <?= htmlspecialchars($item['name']) ?>
+                              <span class="item-name"><?= htmlspecialchars($item['name']) ?></span>
                             </button>
                           <?php endif; ?>
                         <?php else: ?>
@@ -67,7 +67,7 @@
                             <span class="icon <?= htmlspecialchars($item['icon']) ?>">
                               <?= $getIconSymbol($item['icon']) ?>
                             </span>
-                            <?= htmlspecialchars($item['name']) ?>
+                            <span class="item-name"><?= htmlspecialchars($item['name']) ?></span>
                           </a>
                         <?php endif; ?>
                       </td>
@@ -128,9 +128,24 @@
       // Show loading state
       toggleIcon.textContent = '⏳';
       
-      // Make API request
-      fetch(`lister/api.php?path=${encodeURIComponent(path)}`)
-        .then(response => response.json())
+      // POST body: nested web paths may break as GET query (slashes / %2F) on some hosts.
+      const body = new URLSearchParams();
+      body.set('path', path);
+      
+      fetch('/lister/api.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: body.toString()
+      })
+        .then(async (response) => {
+          const data = await response.json().catch(() => ({}));
+          if (!response.ok) {
+            const msg = data.error || `HTTP ${response.status}`;
+            console.error('Lister API:', msg);
+            throw new Error(msg);
+          }
+          return data;
+        })
         .then(data => {
           if (data.success) {
             // Create nested container
@@ -188,6 +203,17 @@
       toggleIcon.textContent = ''; // Clear text since CSS handles the icon
     }
     
+    function escapeAttr(value) {
+      return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/</g, '&lt;');
+    }
+
+    function itemWebPath(item) {
+      return item.web_path != null ? item.web_path : item.path;
+    }
+
     function createNestedContainer(parentRow, data) {
       const tbody = parentRow.parentNode;
       const allItems = [...(data.directories || []), ...(data.files || [])];
@@ -200,10 +226,11 @@
       let insertAfter = parentRow;
       
       allItems.forEach(item => {
+        const webPath = itemWebPath(item);
         const newRow = document.createElement('tr');
         newRow.className = 'item-row expanded-content';
         newRow.setAttribute('data-type', item.is_directory ? 'directory' : 'file');
-        newRow.setAttribute('data-path', item.path);
+        newRow.setAttribute('data-path', webPath);
         newRow.setAttribute('data-nesting-level', nestingLevel);
         newRow.setAttribute('data-parent-path', parentRow.getAttribute('data-path'));
         
@@ -213,7 +240,7 @@
               <td>
                 <span class="empty-folder">
                   <span class="icon folder"></span>
-                  ${item.name}
+                  <span class="item-name">${item.name.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</span>
                 </span>
               </td>
               <td>${item.size_formatted || '-'}</td>
@@ -223,10 +250,10 @@
           } else {
             newRow.innerHTML = `
               <td>
-                <button class="directory-toggle" data-path="${item.path}">
+                <button class="directory-toggle" data-path="${escapeAttr(webPath)}">
                   <span class="toggle-icon"></span>
                   <span class="icon folder"></span>
-                  ${item.name}
+                  <span class="item-name">${item.name.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</span>
                 </button>
               </td>
               <td>${item.size_formatted || '-'}</td>
@@ -241,7 +268,7 @@
             <td>
               <a href="${fileUrl.replace(/"/g, '&quot;')}" class="file-link">
                 <span class="icon ${item.icon}">${getIconSymbol(item.icon)}</span>
-                ${item.name.replace(/</g, '&lt;').replace(/>/g, '&gt;')}
+                <span class="item-name">${item.name.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</span>
               </a>
             </td>
             <td>${item.size_formatted || '-'}</td>
