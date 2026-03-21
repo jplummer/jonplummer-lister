@@ -104,7 +104,6 @@ class DirectoryLister
 
       // Check if file should be hidden
       if ($this->shouldHideFile($item)) {
-        error_log("Hiding item: $item");
         continue;
       }
 
@@ -162,36 +161,31 @@ class DirectoryLister
       return true;
     }
     
-    // Check sensitive files
-    if ($hidingConfig['hide_sensitive_files'] ?? true) {
-      $sensitivePatterns = $hidingConfig['sensitive_patterns'] ?? [];
-      foreach ($sensitivePatterns as $pattern) {
-        if ($this->matchesPattern($filename, $pattern)) {
-          return true;
-        }
+    if (($hidingConfig['hide_sensitive_files'] ?? true) && $this->filenameMatchesAnyPattern($filename, $hidingConfig['sensitive_patterns'] ?? [])) {
+      return true;
+    }
+
+    if (($hidingConfig['hide_os_cruft'] ?? true) && $this->filenameMatchesAnyPattern($filename, $hidingConfig['os_cruft_patterns'] ?? [])) {
+      return true;
+    }
+
+    if (($hidingConfig['hide_app_files'] ?? true) && $this->filenameMatchesAnyPattern($filename, $hidingConfig['app_files_patterns'] ?? [])) {
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * @param string[] $patterns
+   */
+  private function filenameMatchesAnyPattern($filename, $patterns)
+  {
+    foreach ($patterns as $pattern) {
+      if ($this->matchesPattern($filename, $pattern)) {
+        return true;
       }
     }
-    
-    // Check OS cruft
-    if ($hidingConfig['hide_os_cruft'] ?? true) {
-      $osCruftPatterns = $hidingConfig['os_cruft_patterns'] ?? [];
-      foreach ($osCruftPatterns as $pattern) {
-        if ($this->matchesPattern($filename, $pattern)) {
-          return true;
-        }
-      }
-    }
-    
-    // Check app files
-    if ($hidingConfig['hide_app_files'] ?? true) {
-      $appFilesPatterns = $hidingConfig['app_files_patterns'] ?? [];
-      foreach ($appFilesPatterns as $pattern) {
-        if ($this->matchesPattern($filename, $pattern)) {
-          return true;
-        }
-      }
-    }
-    
     return false;
   }
 
