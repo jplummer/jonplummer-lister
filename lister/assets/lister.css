@@ -266,10 +266,19 @@ td {
   background-color: var(--hover-color);
 }
 
+/* Rows size to their own cells only (avoids some WebKit/table height coupling) */
+.directory-listing > table > tbody > tr,
+.directory-listing > table > tbody > tr > td {
+  height: auto;
+}
+
 .directory-link, .file-link {
-  display: flex;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: 16px 20px minmax(0, 1fr);
+  align-items: start;
   gap: var(--spacing-xs);
+  height: fit-content;
+  min-height: 0;
   color: var(--text-color);
   text-decoration: none;
   font-weight: var(--font-weight-bold);
@@ -326,9 +335,12 @@ footer .deploy-id {
   padding: 0;
   margin: 0;
   cursor: pointer;
-  display: flex;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: 16px 20px minmax(0, 1fr);
+  align-items: start;
   gap: var(--spacing-xs);
+  height: fit-content;
+  min-height: 0;
   color: var(--text-color);
   text-decoration: none;
   font-weight: var(--font-weight-bold);
@@ -351,7 +363,6 @@ footer .deploy-id {
 .toggle-icon {
   font-size: var(--font-size-xxs);
   transition: transform 0.2s ease;
-  flex-shrink: 0;
 }
 
 
@@ -370,15 +381,12 @@ footer .deploy-id {
 .directory-toggle,
 .file-link {
   padding-left: 0;
-  display: flex;
-  align-items: flex-start;
 }
 
-/* Let long names wrap without stretching icon/caret column; only this flex item grows */
+/* Grid last column: wrap long names; minmax(0,1fr) already constrains width */
 .directory-toggle .item-name,
 .file-link .item-name,
 .empty-folder .item-name {
-  flex: 1 1 auto;
   min-width: 0;
   word-break: break-word;
 }
@@ -391,7 +399,6 @@ footer .deploy-id {
 .directory-toggle .toggle-icon {
   width: 16px;
   text-align: center;
-  flex-shrink: 0;
   display: inline-block;
   transition: transform 0.2s ease;
 }
@@ -424,7 +431,6 @@ footer .deploy-id {
 .file-link::before {
   content: '';
   width: 16px;
-  flex-shrink: 0;
 }
 
 /* Icon alignment - all icons align in strict column */
@@ -432,7 +438,12 @@ footer .deploy-id {
 .file-link .icon {
   width: 20px;
   text-align: center;
-  flex-shrink: 0;
+}
+
+/* Non-name cells: single-line metadata does not need extra line-height from wrapping row */
+.directory-listing > table > tbody > tr > td:not(:first-child) {
+  line-height: var(--line-height-xxs);
+  white-space: nowrap;
 }
 
 /* Progressive indentation for expanded content */
@@ -468,8 +479,12 @@ footer .deploy-id {
 
 /* Empty folder styling */
 .empty-folder {
-  display: flex;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr);
+  align-items: start;
+  gap: var(--spacing-xs);
+  height: fit-content;
+  min-height: 0;
   color: var(--text-color-light);
   font-style: italic;
   cursor: default;
@@ -477,7 +492,6 @@ footer .deploy-id {
 }
 
 .empty-folder .icon {
-  margin-right: var(--spacing-xs);
   opacity: 0.7;
 }
 

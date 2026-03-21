@@ -91,7 +91,7 @@
 - [ ] https://owasp.org/www-project-secure-headers/index.html#div-bestpractices
 
 ### 2.5 Polish & Refinement
-- [ ] Fix caret shape in directory navigation
+- [x] Fix caret shape in directory navigation
 - [ ] Diagnose favicon issue (diagnostic script exists)
 - [ ] Styling adjustments to better match jonplummer.com
 - [ ] Consider file type icons (optional)
