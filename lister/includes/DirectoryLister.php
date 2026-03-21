@@ -517,20 +517,19 @@ class DirectoryLister
     $sortDir = $this->config['display']['sort_direction'] ?? 'asc';
     
     $sortFunction = function($a, $b) use ($sortBy, $sortDir) {
-      $valueA = $a[$sortBy] ?? '';
-      $valueB = $b[$sortBy] ?? '';
-      
       if ($sortBy === 'size') {
-        $valueA = $a['size'] ?? 0;
-        $valueB = $b['size'] ?? 0;
+        $valueA = (int) ($a['size'] ?? 0);
+        $valueB = (int) ($b['size'] ?? 0);
+        $result = $valueA <=> $valueB;
+      } elseif ($sortBy === 'modified') {
+        $valueA = (int) ($a['modified'] ?? 0);
+        $valueB = (int) ($b['modified'] ?? 0);
+        $result = $valueA <=> $valueB;
+      } else {
+        $valueA = (string) ($a[$sortBy] ?? '');
+        $valueB = (string) ($b[$sortBy] ?? '');
+        $result = strcasecmp($valueA, $valueB);
       }
-      
-      if ($sortBy === 'modified') {
-        $valueA = $a['modified'] ?? 0;
-        $valueB = $b['modified'] ?? 0;
-      }
-      
-      $result = strcasecmp($valueA, $valueB);
       return $sortDir === 'desc' ? -$result : $result;
     };
     
