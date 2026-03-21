@@ -4,6 +4,8 @@
  * Handles directory scanning, file type detection, and data formatting
  */
 
+require_once __DIR__ . '/PathSanitizer.php';
+
 class DirectoryLister
 {
   private $config;
@@ -44,18 +46,10 @@ class DirectoryLister
     
     // Remove query string
     $path = parse_url($requestUri, PHP_URL_PATH);
+    $path = PathSanitizer::stripTraversalAfterUrlDecode($path ?? '');
     
     // Remove leading slash
     $path = ltrim($path, '/');
-    
-    // Security: prevent directory traversal (before decoding)
-    $path = str_replace(['../', '..\\'], '', $path);
-    
-    // Decode URL-encoded characters (e.g., %20 for spaces)
-    $path = urldecode($path);
-    
-    // Security: prevent directory traversal again after decoding
-    $path = str_replace(['../', '..\\'], '', $path);
     
     // If path is empty, use base path
     if (empty($path)) {

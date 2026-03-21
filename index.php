@@ -8,6 +8,7 @@
 $requiredFiles = [
   'lister/includes/App.php' => 'Main application class',
   'lister/includes/ConfigLoader.php' => 'Configuration loader',
+  'lister/includes/PathSanitizer.php' => 'Path sanitization helper',
   'lister/config/default.json' => 'Configuration file',
   'lister/templates/index.php' => 'Main template',
   'lister/includes/DirectoryLister.php' => 'Directory listing class',

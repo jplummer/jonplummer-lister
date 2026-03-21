@@ -25,6 +25,7 @@ if ($config['security']['enabled'] ?? false) {
     $security->checkRequest();
 }
 
+require_once __DIR__ . '/includes/PathSanitizer.php';
 require_once __DIR__ . '/includes/DirectoryLister.php';
 require_once __DIR__ . '/includes/SortPreference.php';
 
@@ -34,9 +35,7 @@ try {
     // Path from POST body avoids servers that mishandle slashes in query strings (nested folders).
     // GET still supported for single-segment paths and manual requests.
     $requestedPath = $_POST['path'] ?? $_GET['path'] ?? '';
-    
-    // Security: prevent directory traversal
-    $requestedPath = str_replace(['../', '..\\'], '', $requestedPath);
+    $requestedPath = PathSanitizer::stripTraversalAfterUrlDecode($requestedPath);
     
     // Build full path - handle both relative and absolute paths
     $basePath = $_SERVER['DOCUMENT_ROOT'];
