@@ -3,104 +3,36 @@
 ## Current Status: PRODUCTION READY ✅
 - **Deployed**: misc.jonplummer.com
 - **Phase 1**: Complete (MVP + additional features)
-- **Phase 2**: Partially complete (security, UX improvements)
+- **Phase 2**: Partially complete (UX, abuse resistance, shipping polish)
+- **Phase 3**: Not started (search, bulk file operations)
+- **Phase 4**: Deferred — commercialization / multi-user (see [Phase 4](#phase-4-commercialization-and-multi-user))
 - **Next**: File previews, keyboard navigation, README rendering
 
 ## Phase 1: Core Foundation (MVP)
-**Goal**: Basic directory listing with sorting and theming
-
-### 1.1 Project Structure & Setup
-- [x] Create minimal PHP application structure
-- [x] Set up .htaccess for clean URLs and security
-- [x] Create configuration system for easy installation
-- [x] Implement basic error handling and logging
-
-### 1.2 Directory Listing Engine
-- [x] Build core directory scanning functionality
-- [x] Implement file type detection and icon mapping
-- [x] Create file size formatting utilities
-- [x] Add modification date handling
-
-### 1.3 User Interface
-- [x] Design semantic HTML structure with minimal classes
-- [x] Implement sortable table with minimal JavaScript
-- [x] Create file type icon system (CSS-based or icon font)
-- [x] Build navigation breadcrumbs using semantic HTML
-
-### 1.4 Theming & Styling
-- [x] Analyze jonplummer.com design patterns
-- [x] Integrate existing CSS framework
-- [x] Implement dark mode support
-- [x] Ensure mobile-first responsive design
-
-### 1.5 Security & Performance
-- [x] Implement basic rate limiting
-- [x] Add bot detection (User-Agent filtering)
-- [x] Create .htaccess rules to hide infrastructure files
-- [x] Add basic input sanitization
-- [x] Add security logging and admin panel
-- [x] Implement suspicious request detection
-
-### 1.6 Enhanced Directory Navigation
-- [x] Implement expandable directory navigation with AJAX
-- [x] Add empty folder detection and display
-- [x] Create progressive indentation for nested folders
-- [x] Add loading states for directory expansion
-
-### 1.7 File Type System
-- [x] Implement comprehensive file type detection (700+ extensions)
-- [x] Add proper file type capitalization
-- [x] Create file type icon system with emoji fallbacks
-- [x] Add MIME type detection
-
-### 1.8 Development Tools
-- [x] Create deployment scripts (deploy.sh, teardown.sh)
-- [x] Add security testing script
-- [x] Implement pattern matching tests
-- [x] Create development router for PHP built-in server
+**Goal**: Basic directory listing with sorting and theming  
+**Status**: Complete — details in [Archive](#archive-completed-work).
 
 ## Phase 2: Enhanced Features
-**Goal**: Improved UX and additional functionality
+**Goal**: Improved UX and additional functionality.
 
-### 2.1 Styling Completeness
-- [x] HEAD matter, including
-    - [x] Favicons from jonplummer.com
-- [x] Design system from jonplummer.com
-- [x] Nav to jonplummer.com
+**Context**: Primary use is **personal, convenient file access**, not high-sensitivity hosting. **Threat model**: automated abuse (bots, scrapers) is the main concern—not fine-grained control over curious humans. Multi-tenant access, auth-as-product, and similar work are **Phase 4** and do not drive the current deployment.
 
-### 2.2 File Management
-- [x] Implement hidden file functionality (.listerignore)
+### Styling completeness (Phase 2.1)
+**Status**: Complete — see [Archive](#archive-completed-work).
+
+### Product: browsing & previews
 - [ ] Add README rendering for directories
 - [ ] Create text file preview system
 - [ ] Build image preview with navigation
 
-### 2.3 User Experience
-- [x] Add loading states and transitions
+### Product: interaction & quality
 - [ ] Implement keyboard navigation
-- [x] Create better error messages
-- [x] Add file sharing URL generation (files accessible via direct URL)
 - [ ] Accessibility audit
 
-### 2.4 Advanced Security
-- [ ] Implement directory access control
-- [x] Add more sophisticated rate limiting
-- [x] Create IP-based blocking system
-- [x] Add request logging and monitoring
-- [x] Add security admin dashboard (basic implementation)
-- [ ] Block known and detected malicious bots and crawlers 
-- [ ] https://owasp.org/www-project-secure-headers/index.html#div-bestpractices
+### Abuse & automation
+- [ ] Block known and detected malicious bots and crawlers
 
-### 2.5 Polish & Refinement
-- [x] Fix caret shape in directory navigation
-- [ ] Diagnose favicon issue (diagnostic script exists)
-- [ ] Styling adjustments to better match jonplummer.com
-- [ ] Consider file type icons (optional)
-- [ ] Ensure deploy script and other development conveniences are not part of delivered package
-- [ ] Verify drag-and-drop installation works as promised
-- [ ] Reduce file count (optional)
-- [ ] Check whether directory listing capability is required for the tool to work
-
-### 2.6 Error Experiences
+### Error experiences
 - [ ] Create 404 error page for non-existent files/directories
   - [ ] Match jonplummer.com design system
   - [ ] Include navigation back to parent directory or root
@@ -115,17 +47,29 @@
 - [ ] Ensure error pages work in both development and production environments
 - [ ] Test error pages with various edge cases (malformed URLs, missing directories, etc.)
 
-### 2.7 Customization & Integration
+### Shipping & installation
+- [ ] Ensure deploy script and other development conveniences are not part of delivered package
+- [ ] Verify drag-and-drop installation works as promised
+- [ ] Check whether directory listing capability is required for the tool to work
+- [ ] **Low priority**: Investigate OpenSSH “post-quantum key exchange” warning when running `deploy.sh` / SFTP (what client and DreamHost `sshd` support; optional hardening, not urgent for this threat model) — https://openssh.com/pq.html
+
+### Visual polish (incremental / optional)
+- [ ] Diagnose favicon issue (diagnostic script exists)
+- [ ] Styling adjustments to better match jonplummer.com
+- [ ] Consider file type icons (optional)
+- [ ] Reduce file count (optional)
+
+### Customization & integration
 - [ ] Make it easier to integrate Lister with custom website styling
   - [ ] Document CSS custom properties and how to override them
   - [ ] Create minimal/stripped CSS version for custom styling
   - [ ] Provide clear separation between core functionality and visual styling
   - [ ] Add configuration options for header/footer customization
-  - [ ] Document template structure for easy modification
+  - [ ] Document template structure for modification
   - [ ] Consider providing CSS class hooks for external styling
 
 ## Phase 3: Future Enhancements
-**Goal**: Advanced features and integrations
+**Goal**: Advanced features that still fit **personal** browsing and sharing (no multi-user product assumptions).
 
 ### 3.1 Search & Discovery
 - Implement client-side file search
@@ -137,11 +81,31 @@
 - Implement zip download functionality
 - Add file hash generation and display
 
-### 3.3 Authentication System
-- Design user authentication framework
-- Implement SSH key-based auth
-- Create file upload interface
-- Build drag-and-drop functionality
+### 3.3 Other
+- MCP (Model Context Protocol) integration for AI agents
+
+## Phase 4: Commercialization and multi-user
+**Goal**: Product-grade hosting, tenants, or sensitive data—**out of scope** for the current personal deployment. Revisit only if Lister is sold, multi-tenant, or holds data you treat as confidential.
+
+**Related requirements**: [Commercialization and multi-user (deferred)](requirements.md#5-commercialization-and-multi-user-deferred) in `requirements.md`.
+
+### Access and hardening
+- [ ] Implement directory access control
+- [ ] OWASP secure headers — https://owasp.org/www-project-secure-headers/index.html#div-bestpractices
+
+### Authentication and file management
+- [ ] Design user authentication framework
+- [ ] Implement SSH key-based auth
+- [ ] Create file upload interface
+- [ ] Build drag-and-drop functionality (upload / rearrangement; align with requirements when scoped)
+
+### Security admin (product-depth)
+- [ ] Enhanced security admin dashboard (beyond current basics), including:
+  - [ ] Incident totals, detailed recent incidents, config summary, blocked-IP views
+  - [ ] Filtering, search, and export for security logs
+  - [ ] Password-protected access to admin features where applicable
+  - [ ] Session management to avoid repeated password entry
+  - [ ] Secure authentication mechanism for admin
 
 ## Technical Architecture
 
@@ -186,7 +150,88 @@ lister/
 3. Optionally customize config.json
 4. Directory is immediately browsable
 
-## Success Criteria
+---
+
+## Archive: completed work
+
+### Phase 1: Core Foundation (MVP)
+
+#### 1.1 Project Structure & Setup
+- [x] Create minimal PHP application structure
+- [x] Set up .htaccess for clean URLs and security
+- [x] Create configuration system for easy installation
+- [x] Implement basic error handling and logging
+
+#### 1.2 Directory Listing Engine
+- [x] Build core directory scanning functionality
+- [x] Implement file type detection and icon mapping
+- [x] Create file size formatting utilities
+- [x] Add modification date handling
+
+#### 1.3 User Interface
+- [x] Design semantic HTML structure with minimal classes
+- [x] Implement sortable table with minimal JavaScript
+- [x] Create file type icon system (CSS-based or icon font)
+- [x] Build navigation breadcrumbs using semantic HTML
+
+#### 1.4 Theming & Styling
+- [x] Analyze jonplummer.com design patterns
+- [x] Integrate existing CSS framework
+- [x] Implement dark mode support
+- [x] Ensure mobile-first responsive design
+
+#### 1.5 Security & Performance
+- [x] Implement basic rate limiting
+- [x] Add bot detection (User-Agent filtering)
+- [x] Create .htaccess rules to hide infrastructure files
+- [x] Add basic input sanitization
+- [x] Add security logging and admin panel
+- [x] Implement suspicious request detection
+
+#### 1.6 Enhanced Directory Navigation
+- [x] Implement expandable directory navigation with AJAX
+- [x] Add empty folder detection and display
+- [x] Create progressive indentation for nested folders
+- [x] Add loading states for directory expansion
+
+#### 1.7 File Type System
+- [x] Implement comprehensive file type detection (700+ extensions)
+- [x] Add proper file type capitalization
+- [x] Create file type icon system with emoji fallbacks
+- [x] Add MIME type detection
+
+#### 1.8 Development Tools
+- [x] Create deployment scripts (deploy.sh, teardown.sh)
+- [x] Add security testing script
+- [x] Implement pattern matching tests
+- [x] Create development router for PHP built-in server
+
+### Phase 2: completed items
+
+#### 2.1 Styling Completeness
+- [x] HEAD matter, including
+    - [x] Favicons from jonplummer.com
+- [x] Design system from jonplummer.com
+- [x] Nav to jonplummer.com
+
+#### 2.2 File Management
+- [x] Implement hidden file functionality (.listerignore)
+
+#### 2.3 User Experience
+- [x] Add loading states and transitions
+- [x] Create better error messages
+- [x] Add file sharing URL generation (files accessible via direct URL)
+
+#### 2.4 Advanced Security
+- [x] Add more sophisticated rate limiting
+- [x] Create IP-based blocking system
+- [x] Add request logging and monitoring
+- [x] Add security admin dashboard (basic implementation)
+
+#### 2.5 Polish & Refinement
+- [x] Fix caret shape in directory navigation
+
+### Success criteria (met)
 - [x] Lists files in any directory with proper sorting
 - [x] Integrates seamlessly with jonplummer.com design
 - [x] Works on mobile and desktop
@@ -195,3 +240,4 @@ lister/
 - [x] Includes basic anti-abuse protection
 - [x] Installs in under 1 minute
 - [x] Hides infrastructure files from listing
+- [x] Works equally well when visiting subfolder URLs directly in browser

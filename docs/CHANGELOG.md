@@ -12,11 +12,13 @@ All notable changes to Lister will be documented in this file.
 - Update files
 - Update files
 - Update files
+- Update files
 - Align lister CSS with jonplummer.com DR10 palette: `light-dark()` tokens, sage page background, theme-aware error box, masked folder caret, print `:root` overrides.
 
 ### 2025-11-24
 
 #### Changed
+- Update files
 - Update files
 - Update files
 - Update files
@@ -34,10 +36,12 @@ All notable changes to Lister will be documented in this file.
 - Update files
 - Update files
 - Update files
+- Update files
 
 ### 2025-11-23
 
 #### Changed
+- Update files
 - Update files
 - Update files
 - Update files

@@ -2,14 +2,16 @@
 
 Lister exposes the contents of any web-accessible folder and subfolders for browsing and sharing. With minimal configuration, installation takes less than a minute. It's meant to be a custom from-scratch work-alike of https://www.directorylister.com/
 
+**Deployment context**: The product priority is **personal, convenient file access**. Automated abuse (bots, scrapers) matters more than hiding listings from casual humans. Multi-tenant access, sellable hosting, and similar scenarios are **out of scope** for the current deployment; they are captured in [section 5](#5-commercialization-and-multi-user-deferred) and **Phase 4** in `plan.md`.
+
 ## 1. Core Features
 
 * Directory listing shows a sortable list of files for any web-accessible directory or subdirectory
 * File type icons show file types at a glance
-* Simple drag-and-drop installation allows you to be up and running in less than a minute and is easy to remove
+* Drag-and-drop installation allows you to be up and running in less than a minute and is straightforward to remove
 * Sortable columns: default alphabetical by filename, with options to sort by type, size, or date
 * Theme and styling integrate with https://jonplummer.com/, including dark mode support
-* Easy file sharing via direct URL access
+* Direct URL access for sharing files
 * Anti-abuse capabilities: exponential rate-limiting and bot scraping prevention
 * Responsive design for mobile and desktop
 
@@ -18,20 +20,30 @@ Lister exposes the contents of any web-accessible folder and subfolders for brow
 * Readme rendering allows exposing the contents of READMEs directly on the page
 * Text preview allows you to see a preview of a text or markdown document
 * Image preview allows you to see a preview of a selected image and page through images in the directory
-* Directory access control: ability to restrict access to specific directories
 
 ## 3. Features to be considered later
 
 * File search to locate files
 * File hashes for download verification
 * Multi-file download: select multiple files/folders and download as zip
+* MCP (Model Context Protocol) integration for AI agents
+
+## 4. Nice to have features
+
+* Shared design system package to coordinate theme data with jonplummer-11ty and other projects
+
+## 5. Commercialization and multi-user (deferred)
+
+Not required for the current personal deployment. Revisit if Lister is offered as a product or service, serves multiple tenants, or holds sensitive data. Roadmap: **Phase 4** in `plan.md`.
+
+* Directory access control: ability to restrict access to specific directories
+* OWASP-oriented security headers and related hardening (see plan Phase 4)
 * Authenticated file management:
   * Upload files from computer to selected folder
   * Drag-and-drop file upload and rearrangement
   * Delete files or folders
   * Authentication via SSH key or user/pass (sshpass)
-* MCP (Model Context Protocol) integration for AI agents
-* Enhanced security admin dashboard features:
+* Enhanced security admin dashboard features (beyond the current basic dashboard):
   * **Security concerns to prevent, trap, and/or log:**
     * Bot scraping and automated access (curl, wget, scrapers, crawlers, spiders)
     * Rate limit violations (excessive requests per minute)
@@ -52,7 +64,6 @@ Lister exposes the contents of any web-accessible folder and subfolders for brow
     * Session management to avoid repeated password entry
     * Secure authentication mechanism
 
-## 4. Nice to have features
+## Changelog
 
-* Shared design system package to coordinate theme data with jonplummer-11ty and other projects
-
+* **2026-03-21** — Documented deployment context (personal use; bots over human snooping). Moved directory access control, authenticated file management, enhanced security admin depth, and OWASP-style hardening into **section 5 (deferred)** and aligned with **Phase 4** in `plan.md`. Deduplicated MCP (listed once under section 3). *Rationale:* Separate current scope from commercialization / multi-user work so the backlog matches actual priorities.
