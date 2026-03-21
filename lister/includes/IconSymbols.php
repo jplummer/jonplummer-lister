@@ -1,7 +1,7 @@
 <?php
 /**
- * File-type icon keys → emoji for table rows. Single source for App and
- * lister/templates/index.php (injected as JSON for expandable rows).
+ * File-type icon keys → Material Symbols Outlined ligature names for table rows.
+ * Single source for App and lister/templates/index.php (injected as JSON for expandable rows).
  */
 
 class IconSymbols
@@ -19,45 +19,45 @@ class IconSymbols
     }
 
     self::$map = [
-      // Folders
-      'folder' => '📁',
+      // Folders (file rows; directory rows use CSS ::before)
+      'folder' => 'folder',
 
       // Basic file types
-      'file' => '📄',
+      'file' => 'draft',
 
       // Media types
-      'image' => '🖼️',
-      'video' => '🎬',
-      'audio' => '🎵',
+      'image' => 'image',
+      'video' => 'movie',
+      'audio' => 'audio_file',
 
       // Documents and text
-      'document' => '📄',
-      'text' => '📝',
-      'pdf' => '📕',
-      'book' => '📚',
+      'document' => 'description',
+      'text' => 'article',
+      'pdf' => 'picture_as_pdf',
+      'book' => 'menu_book',
 
       // Code and development
-      'code' => '💻',
-      'web' => '🌐',
-      'exec' => '⚙️',
+      'code' => 'code',
+      'web' => 'language',
+      'exec' => 'terminal',
 
       // Data and office
-      'spreadsheet' => '📊',
-      'sheet' => '📊',
-      'presentation' => '📽️',
-      'slide' => '📽️',
+      'spreadsheet' => 'table_chart',
+      'sheet' => 'table_chart',
+      'presentation' => 'slideshow',
+      'slide' => 'slideshow',
 
       // Archives and storage
-      'archive' => '📦',
+      'archive' => 'folder_zip',
 
       // System and fonts
-      'font' => '🔤',
-      'config' => '⚙️',
-      'backup' => '💾',
-      'database' => '🗄️',
-      'cad' => '📐',
-      'ebook' => '📖',
-      'game' => '🎮',
+      'font' => 'font_download',
+      'config' => 'settings',
+      'backup' => 'save',
+      'database' => 'database',
+      'cad' => 'architecture',
+      'ebook' => 'menu_book',
+      'game' => 'sports_esports',
     ];
 
     return self::$map;
@@ -70,6 +70,6 @@ class IconSymbols
   public static function symbolFor($iconKey)
   {
     $map = self::getMap();
-    return $map[$iconKey] ?? '📄';
+    return $map[$iconKey] ?? 'draft';
   }
 }

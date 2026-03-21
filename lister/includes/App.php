@@ -122,6 +122,11 @@ class App
     try {
       $this->data = $this->lister->scanDirectory();
       $this->breadcrumbs = $this->lister->getBreadcrumbs();
+      require_once __DIR__ . '/ReadmePreview.php';
+      $this->data['readme_preview'] = ReadmePreview::load(
+        $this->data['current_path'],
+        $this->config
+      );
     } catch (Exception $e) {
       $this->error = $e->getMessage();
       $this->data = null;
@@ -130,7 +135,7 @@ class App
   }
 
   /**
-   * Get icon symbol for file type
+   * Material Symbols Outlined ligature name for a file-type icon key
    */
   public function getIconSymbol($icon)
   {

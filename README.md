@@ -76,8 +76,9 @@ See [docs/notes.md](docs/notes.md) for development workflow and troubleshooting.
 ## Acknowledgments
 
 - **File Type Detection**: Uses [dyne/file-extension-list](https://github.com/dyne/file-extension-list) for comprehensive file extension to type mapping
-- **Icons**: Emoji-based file type icons for clean, universal display
+- **Icons**: [Material Symbols Outlined](https://fonts.google.com/icons) via Google Fonts for file-type and folder glyphs
+- **README rendering**: [Parsedown](https://github.com/erusev/parsedown) (MIT) for Markdown previews
 
 ## License
 
-MIT License
+MIT License (Parsedown is bundled under its own MIT license in `lister/includes/Parsedown.php`)

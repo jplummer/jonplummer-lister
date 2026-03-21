@@ -8,7 +8,11 @@ All notable changes to Lister will be documented in this file.
 
 ### 2026-03-21
 
+#### Added
+- README preview below listing: `ReadmePreview.php`, bundled `Parsedown.php`, `display.readme_preview` in config, styles under `.lister-readme`.
+
 #### Changed
+- File type and folder icons use Material Symbols Outlined (Google Fonts); `lister/includes/IconSymbols.php` maps keys to ligature names.
 - Update files
 
 #### Added

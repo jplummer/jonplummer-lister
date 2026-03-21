@@ -7,6 +7,9 @@
   <link rel="icon" href="/lister/assets/images/2021/02/jp_round-48x48.jpg?v=2" sizes="32x32">
   <link rel="icon" href="/lister/assets/images/2021/02/jp_round.jpg?v=2" sizes="192x192">
   <link rel="apple-touch-icon" href="/lister/assets/images/2021/02/jp_round-180x180.jpg?v=2">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0">
   <link rel="stylesheet" href="/lister/assets/lister.css">
 </head>
 <body>
@@ -72,9 +75,7 @@
                           <?php endif; ?>
                         <?php else: ?>
                           <a href="<?= htmlspecialchars($item['url']) ?>" class="file-link">
-                            <span class="icon <?= htmlspecialchars($item['icon']) ?>">
-                              <?= $getIconSymbol($item['icon']) ?>
-                            </span>
+                            <span class="icon material-symbols-outlined <?= htmlspecialchars($item['icon']) ?>" aria-hidden="true"><?= htmlspecialchars($getIconSymbol($item['icon']), ENT_QUOTES, 'UTF-8') ?></span>
                             <span class="item-name"><?= htmlspecialchars($item['name']) ?></span>
                           </a>
                         <?php endif; ?>
@@ -90,6 +91,29 @@
               <div class="empty">
                 <p>This directory is empty.</p>
               </div>
+            <?php endif; ?>
+            <?php if (!empty($data['readme_preview'])): ?>
+              <?php
+              $readme = $data['readme_preview'];
+              $readmeMtime = (int) ($readme['modified'] ?? 0);
+              $readmeDt = $readmeMtime > 0 ? date('c', $readmeMtime) : '';
+              ?>
+              <section class="lister-readme" aria-label="Readme: <?= htmlspecialchars($readme['filename'], ENT_QUOTES, 'UTF-8') ?>">
+                <p class="lister-readme-meta">
+                  <span class="lister-readme-meta-filename"><?= htmlspecialchars($readme['filename'], ENT_QUOTES, 'UTF-8') ?></span>
+                  <span class="lister-readme-meta-sep" aria-hidden="true"> · </span>
+                  <?php if ($readmeDt !== ''): ?>
+                    <time class="lister-readme-meta-time" datetime="<?= htmlspecialchars($readmeDt, ENT_QUOTES, 'UTF-8') ?>"><?= htmlspecialchars($readme['modified_formatted'] ?? '', ENT_QUOTES, 'UTF-8') ?></time>
+                  <?php else: ?>
+                    <span class="lister-readme-meta-time"><?= htmlspecialchars($readme['modified_formatted'] ?? '', ENT_QUOTES, 'UTF-8') ?></span>
+                  <?php endif; ?>
+                </p>
+                <div class="lister-readme-panel">
+                  <div class="lister-readme-body readme-markdown">
+                    <?= $readme['html'] ?>
+                  </div>
+                </div>
+              </section>
             <?php endif; ?>
           </div>
         <?php endif; ?>
@@ -320,7 +344,8 @@
         a.setAttribute('href', fileUrl);
         const iconSpan = document.createElement('span');
         const iconKey = item.icon || 'file';
-        iconSpan.className = 'icon ' + iconKey;
+        iconSpan.className = 'icon material-symbols-outlined ' + iconKey;
+        iconSpan.setAttribute('aria-hidden', 'true');
         iconSpan.textContent = getIconSymbol(iconKey);
         const nameSpan = document.createElement('span');
         nameSpan.className = 'item-name';
@@ -365,7 +390,7 @@
     }
     
     function getIconSymbol(iconType) {
-      return LISTER_ICON_SYMBOLS[iconType] ?? '📄';
+      return LISTER_ICON_SYMBOLS[iconType] ?? 'draft';
     }
   </script>
 </body>

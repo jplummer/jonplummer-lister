@@ -13,7 +13,8 @@
     "items_per_page": 50,
     "show_hidden_files": false,
     "default_sort": "name",
-    "sort_direction": "asc"
+    "sort_direction": "asc",
+    "readme_preview": true
   },
   "file_hiding": {
     "hide_dotfiles": true,

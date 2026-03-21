@@ -6,7 +6,7 @@
 - **Phase 2**: Partially complete (UX, abuse resistance, shipping polish)
 - **Phase 3**: Not started (search, bulk file operations)
 - **Phase 4**: Someday maybe — commercialization / multi-user (see [Phase 4](#phase-4-commercialization-and-multi-user))
-- **Next**: File previews, keyboard navigation, README rendering
+- **Next**: Text and image previews, keyboard navigation, accessibility audit
 
 ## Phase 1: Core Foundation (MVP)
 **Goal**: Basic directory listing with sorting and theming  
@@ -21,7 +21,6 @@
 **Status**: Complete — see [Archive](#archive-completed-work).
 
 ### Product: browsing & previews
-- [ ] Add README rendering for directories
 - [ ] Create text file preview system
 - [ ] Build image preview with navigation
 
@@ -63,7 +62,6 @@
 ### Visual polish (incremental / optional)
 - [ ] Diagnose favicon issue (diagnostic script exists)
 - [ ] Styling adjustments to better match jonplummer.com
-- [ ] Consider file type icons (optional)
 - [ ] Reduce file count (optional)
 
 ### Customization & integration
@@ -207,7 +205,7 @@ lister/
 #### 1.7 File Type System
 - [x] Implement comprehensive file type detection (700+ extensions)
 - [x] Add proper file type capitalization
-- [x] Create file type icon system with emoji fallbacks
+- [x] Create file type icon system (Material Symbols Outlined via Google Fonts)
 - [x] Add MIME type detection
 
 #### 1.8 Development Tools
@@ -240,6 +238,12 @@ lister/
 
 #### 2.5 Polish & Refinement
 - [x] Fix caret shape in directory navigation
+
+#### 2.6 Directory table & README presentation
+- [x] README rendering for directories (Markdown via Parsedown safe mode, `.txt` escaped; `display.readme_preview` in config; bordered panel with grey meta line: filename · modified time)
+- [x] Name column layout: flex row, 16px disclosure gutter for files and empty folders, caret/icon/name aligned to first line when names wrap
+- [x] Metadata columns: size right-aligned, muted text on size/modified/type, extra horizontal padding between columns
+- [x] Empty folder row height aligned with other rows (no extra wrapper padding)
 
 ### Success criteria (met)
 - [x] Lists files in any directory with proper sorting

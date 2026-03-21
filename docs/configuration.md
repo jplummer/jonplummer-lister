@@ -57,6 +57,10 @@ HOST_DOMAIN=your-domain.com
 - Consider using SSH keys instead of passwords when possible
 - Regularly update your hosting credentials
 
+## Lister `config/default.json`
+
+  - **`display.readme_preview`** (boolean, default `true`): When a recognized README exists in the directory being listed (e.g. `README.md`, `README.txt`), render it below the file table. Set to `false` to disable. Files larger than 512 KiB are skipped.
+
 ## Troubleshooting
 
 **Connection Issues:**

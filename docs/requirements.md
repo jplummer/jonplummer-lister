@@ -14,11 +14,11 @@ Lister exposes the contents of any web-accessible folder and subfolders for brow
 * Direct URL access for sharing files
 * Anti-abuse capabilities: exponential rate-limiting and bot scraping prevention
 * Responsive design for mobile and desktop
+* README preview: if the listed directory contains a recognized README file (`README.md`, `README.txt`, etc.), rendered content appears below the listing (Markdown via Parsedown safe mode, plain text escaped)
 
 ## 2. Features to be considered
 
-* Readme rendering allows exposing the contents of READMEs directly on the page
-* Text preview allows you to see a preview of a text or markdown document
+* Text preview allows you to see a preview of a text or markdown document (single file, not the directory README)
 * Image preview allows you to see a preview of a selected image and page through images in the directory
 
 ## 3. Features to be considered later
@@ -66,6 +66,8 @@ Not required for the current personal deployment. Revisit if Lister is offered a
 
 ## Changelog
 
+* **2026-03-21** — README preview below the directory table when a matching README exists in that folder; `display.readme_preview` in config toggles it; `lister/includes/Parsedown.php` (MIT) parses Markdown in safe mode; `.txt` readmes are escaped plain text. *Rationale:* GitHub-style folder documentation on the listing page without JavaScript.
+* **2026-03-21** — File type and folder icons use Material Symbols Outlined loaded from Google Fonts (ligature names in `lister/includes/IconSymbols.php`). Listing pages request `fonts.googleapis.com` / `fonts.gstatic.com`. *Rationale:* Consistent outlined icon set; emoji removed from the name column.
 * **2026-03-21** — Sort preference: clickable column headers; resolution order is query string (overrides), then cookie `lister_sort`, then `display.default_sort` / `display.sort_direction` in config. The cookie is updated when the URL carries `sort` or `dir`. AJAX directory expansion sends the same `sort`/`dir` as the page so nested listings match. *Rationale:* Stable sort across navigation, shareable URLs, and consistent behavior for in-page expansion.
 * **2026-03-21** — When `security.enabled` is true in config, `lister/api.php` uses the same Security checks as HTML page loads (blocked IP, bot-style user agent, per-minute rate limit). Denied API responses use JSON with HTTP 403 so the expandable UI can surface errors consistently. *Rationale:* The listing UI loads children via POST to the API; leaving that endpoint unguarded weakened the intended anti-abuse behavior.
 * **2026-03-21** — Documented deployment context (personal use; bots over human snooping). Moved directory access control, authenticated file management, enhanced security admin depth, and OWASP-style hardening into **section 5 (deferred)** and aligned with **Phase 4** in `plan.md`. Deduplicated MCP (listed once under section 3). *Rationale:* Separate current scope from commercialization / multi-user work so the backlog matches actual priorities.
