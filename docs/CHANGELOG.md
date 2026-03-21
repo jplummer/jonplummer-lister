@@ -8,6 +8,9 @@ All notable changes to Lister will be documented in this file.
 
 ### 2026-03-21
 
+#### Changed
+- Update files
+
 #### Added
 - README preview below listing: `ReadmePreview.php`, bundled `Parsedown.php`, `display.readme_preview` in config, styles under `.lister-readme`.
 

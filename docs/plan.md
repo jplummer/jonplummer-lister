@@ -58,11 +58,11 @@
 - [ ] Verify drag-and-drop installation works as promised
 - [ ] Check whether directory listing capability is required for the tool to work
 - [ ] **Low priority**: Investigate OpenSSH “post-quantum key exchange” warning when running `deploy.sh` / SFTP (what client and DreamHost `sshd` support; optional hardening, not urgent for this threat model) — https://openssh.com/pq.html
+- [ ] **Optional**: Refine drag-and-drop install experience by **install surface**, not raw file count: README states an unambiguous upload target; shipped tree keeps top-level items purposeful; release zip omits dev-only files. Treat merging PHP for fewer files as low value unless it also reduces confusion.
 
 ### Visual polish (incremental / optional)
 - [ ] Diagnose favicon issue (diagnostic script exists)
 - [ ] Styling adjustments to better match jonplummer.com
-- [ ] Reduce file count (optional)
 
 ### Customization & integration
 - [ ] Make it easier to integrate Lister with custom website styling

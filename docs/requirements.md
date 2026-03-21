@@ -9,6 +9,7 @@ Lister exposes the contents of any web-accessible folder and subfolders for brow
 * Directory listing shows a sortable list of files for any web-accessible directory or subdirectory; column headers change sort. The active sort is stored in an HttpOnly cookie so navigation without query parameters stays consistent, while `sort` and `dir` query parameters override the cookie and refresh it so URLs can encode a specific view
 * File type icons show file types at a glance
 * Drag-and-drop installation allows you to be up and running in less than a minute and is straightforward to remove
+* Shipped packages should minimize installer confusion: clear instructions for what to upload and where, a purposeful top-level layout in the delivered tree, and runtime-only contents in release artifacts. Total file count is not a primary packaging goal
 * Sortable columns: default alphabetical by filename, with options to sort by type, size, or date
 * Theme and styling integrate with https://jonplummer.com/, including dark mode support
 * Direct URL access for sharing files
@@ -66,6 +67,7 @@ Not required for the current personal deployment. Revisit if Lister is offered a
 
 ## Changelog
 
+* **2026-03-21** — Installation packaging: requirements now favor clear upload instructions, sane top-level layout in shipped artifacts, and excluding non-runtime files from releases over minimizing total file count; `plan.md` “Shipping & installation” captures the optional backlog item (replacing a misplaced “reduce file count” polish note). *Rationale:* Drag-and-drop success depends on cognitive load and the correct target, not file-count metrics.
 * **2026-03-21** — README preview below the directory table when a matching README exists in that folder; `display.readme_preview` in config toggles it; `lister/includes/Parsedown.php` (MIT) parses Markdown in safe mode; `.txt` readmes are escaped plain text. *Rationale:* GitHub-style folder documentation on the listing page without JavaScript.
 * **2026-03-21** — File type and folder icons use Material Symbols Outlined loaded from Google Fonts (ligature names in `lister/includes/IconSymbols.php`). Listing pages request `fonts.googleapis.com` / `fonts.gstatic.com`. *Rationale:* Consistent outlined icon set; emoji removed from the name column.
 * **2026-03-21** — Sort preference: clickable column headers; resolution order is query string (overrides), then cookie `lister_sort`, then `display.default_sort` / `display.sort_direction` in config. The cookie is updated when the URL carries `sort` or `dir`. AJAX directory expansion sends the same `sort`/`dir` as the page so nested listings match. *Rationale:* Stable sort across navigation, shareable URLs, and consistent behavior for in-page expansion.
