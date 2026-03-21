@@ -6,7 +6,7 @@ Lister exposes the contents of any web-accessible folder and subfolders for brow
 
 ## 1. Core Features
 
-* Directory listing shows a sortable list of files for any web-accessible directory or subdirectory
+* Directory listing shows a sortable list of files for any web-accessible directory or subdirectory; column headers change sort. The active sort is stored in an HttpOnly cookie so navigation without query parameters stays consistent, while `sort` and `dir` query parameters override the cookie and refresh it so URLs can encode a specific view
 * File type icons show file types at a glance
 * Drag-and-drop installation allows you to be up and running in less than a minute and is straightforward to remove
 * Sortable columns: default alphabetical by filename, with options to sort by type, size, or date
@@ -66,4 +66,6 @@ Not required for the current personal deployment. Revisit if Lister is offered a
 
 ## Changelog
 
+* **2026-03-21** — Sort preference: clickable column headers; resolution order is query string (overrides), then cookie `lister_sort`, then `display.default_sort` / `display.sort_direction` in config. The cookie is updated when the URL carries `sort` or `dir`. AJAX directory expansion sends the same `sort`/`dir` as the page so nested listings match. *Rationale:* Stable sort across navigation, shareable URLs, and consistent behavior for in-page expansion.
+* **2026-03-21** — When `security.enabled` is true in config, `lister/api.php` uses the same Security checks as HTML page loads (blocked IP, bot-style user agent, per-minute rate limit). Denied API responses use JSON with HTTP 403 so the expandable UI can surface errors consistently. *Rationale:* The listing UI loads children via POST to the API; leaving that endpoint unguarded weakened the intended anti-abuse behavior.
 * **2026-03-21** — Documented deployment context (personal use; bots over human snooping). Moved directory access control, authenticated file management, enhanced security admin depth, and OWASP-style hardening into **section 5 (deferred)** and aligned with **Phase 4** in `plan.md`. Deduplicated MCP (listed once under section 3). *Rationale:* Separate current scope from commercialization / multi-user work so the backlog matches actual priorities.

@@ -4,13 +4,26 @@
  * Handles AJAX requests for expandable directory navigation
  */
 
-// Load configuration
-$config = json_decode(file_get_contents(__DIR__ . '/config/default.json'), true);
+$configPath = __DIR__ . '/config/default.json';
+$configRaw = file_get_contents($configPath);
+$config = json_decode($configRaw !== false ? $configRaw : '', true);
 
-// Load DirectoryLister class
+if (!is_array($config)) {
+    header('Content-Type: application/json');
+    http_response_code(500);
+    echo json_encode(['success' => false, 'error' => 'Configuration error']);
+    exit;
+}
+
+if ($config['security']['enabled'] ?? false) {
+    require_once __DIR__ . '/includes/Security.php';
+    $security = new Security($config, true);
+    $security->checkRequest();
+}
+
 require_once __DIR__ . '/includes/DirectoryLister.php';
+require_once __DIR__ . '/includes/SortPreference.php';
 
-// Set JSON response header
 header('Content-Type: application/json');
 
 try {
@@ -72,7 +85,9 @@ try {
     
     // Create DirectoryLister instance with normalized basePath
     $lister = new DirectoryLister($config, $normalizedBasePath);
-    
+    $sortPrefs = SortPreference::resolveForApi($config);
+    $lister->setSortOverride($sortPrefs['sort_by'], $sortPrefs['sort_dir']);
+
     // Scan the requested directory (use normalized path)
     $result = $lister->scanDirectory($realFullPath);
     

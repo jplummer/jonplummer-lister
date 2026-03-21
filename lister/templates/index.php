@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-lister-sort="<?= htmlspecialchars($sortBy, ENT_QUOTES, 'UTF-8') ?>" data-lister-sort-dir="<?= htmlspecialchars($sortDir, ENT_QUOTES, 'UTF-8') ?>">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -35,10 +35,18 @@
               <table>
                 <thead>
                   <tr>
-                    <th>Name</th>
-                    <th>Size</th>
-                    <th>Modified</th>
-                    <th>Type</th>
+                    <th scope="col"<?php if ($sortBy === 'name'): ?> aria-sort="<?= $sortDir === 'asc' ? 'ascending' : 'descending' ?>"<?php endif; ?>>
+                      <a class="sort-header" href="<?= htmlspecialchars(SortPreference::sortColumnHref('name', $sortBy, $sortDir), ENT_QUOTES, 'UTF-8') ?>">Name</a>
+                    </th>
+                    <th scope="col"<?php if ($sortBy === 'size'): ?> aria-sort="<?= $sortDir === 'asc' ? 'ascending' : 'descending' ?>"<?php endif; ?>>
+                      <a class="sort-header" href="<?= htmlspecialchars(SortPreference::sortColumnHref('size', $sortBy, $sortDir), ENT_QUOTES, 'UTF-8') ?>">Size</a>
+                    </th>
+                    <th scope="col"<?php if ($sortBy === 'modified'): ?> aria-sort="<?= $sortDir === 'asc' ? 'ascending' : 'descending' ?>"<?php endif; ?>>
+                      <a class="sort-header" href="<?= htmlspecialchars(SortPreference::sortColumnHref('modified', $sortBy, $sortDir), ENT_QUOTES, 'UTF-8') ?>">Modified</a>
+                    </th>
+                    <th scope="col"<?php if ($sortBy === 'type'): ?> aria-sort="<?= $sortDir === 'asc' ? 'ascending' : 'descending' ?>"<?php endif; ?>>
+                      <a class="sort-header" href="<?= htmlspecialchars(SortPreference::sortColumnHref('type', $sortBy, $sortDir), ENT_QUOTES, 'UTF-8') ?>">Type</a>
+                    </th>
                   </tr>
                 </thead>
                 <tbody id="directory-contents">
@@ -131,6 +139,13 @@
       // POST body: nested web paths may break as GET query (slashes / %2F) on some hosts.
       const body = new URLSearchParams();
       body.set('path', path);
+      const root = document.documentElement;
+      if (root.dataset.listerSort) {
+        body.set('sort', root.dataset.listerSort);
+      }
+      if (root.dataset.listerSortDir) {
+        body.set('dir', root.dataset.listerSortDir);
+      }
       
       fetch('/lister/api.php', {
         method: 'POST',

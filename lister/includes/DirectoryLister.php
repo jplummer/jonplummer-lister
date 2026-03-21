@@ -12,6 +12,10 @@ class DirectoryLister
   private $files = [];
   private $directories = [];
   private $extensionTypes = null;
+  /** @var string|null */
+  private $sortOverrideBy = null;
+  /** @var string|null */
+  private $sortOverrideDir = null;
 
   public function __construct($config, $basePath = null)
   {
@@ -20,6 +24,15 @@ class DirectoryLister
     // Normalize basePath to ensure consistent path comparison
     $this->basePath = realpath($rawBasePath) ?: $rawBasePath;
     $this->currentPath = $this->getCurrentPath();
+  }
+
+  /**
+   * Apply sort column and direction for this request (overrides display.* config).
+   */
+  public function setSortOverride($sortBy, $sortDir)
+  {
+    $this->sortOverrideBy = $sortBy;
+    $this->sortOverrideDir = $sortDir;
   }
 
   /**
@@ -513,8 +526,8 @@ class DirectoryLister
    */
   private function sortItems()
   {
-    $sortBy = $this->config['display']['default_sort'] ?? 'name';
-    $sortDir = $this->config['display']['sort_direction'] ?? 'asc';
+    $sortBy = $this->sortOverrideBy ?? ($this->config['display']['default_sort'] ?? 'name');
+    $sortDir = $this->sortOverrideDir ?? ($this->config['display']['sort_direction'] ?? 'asc');
     
     $sortFunction = function($a, $b) use ($sortBy, $sortDir) {
       if ($sortBy === 'size') {

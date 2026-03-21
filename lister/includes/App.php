@@ -11,6 +11,8 @@ class App
   private $data;
   private $breadcrumbs;
   private $error;
+  private $sortBy;
+  private $sortDir;
 
   public function __construct()
   {
@@ -128,6 +130,12 @@ class App
    */
   private function processRequest()
   {
+    require_once __DIR__ . '/SortPreference.php';
+    $prefs = SortPreference::resolveForHtmlPage($this->config);
+    $this->sortBy = $prefs['sort_by'];
+    $this->sortDir = $prefs['sort_dir'];
+    $this->lister->setSortOverride($this->sortBy, $this->sortDir);
+
     try {
       $this->data = $this->lister->scanDirectory();
       $this->breadcrumbs = $this->lister->getBreadcrumbs();
@@ -225,6 +233,8 @@ class App
     $data = $this->data;
     $breadcrumbs = $this->breadcrumbs;
     $error = $this->error;
+    $sortBy = $this->sortBy;
+    $sortDir = $this->sortDir;
     $deploymentTimestamp = $this->getDeploymentTimestamp();
     
     // Make getIconSymbol function available to template

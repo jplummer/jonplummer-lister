@@ -8,10 +8,13 @@ class Security
 {
   private $dataDir;
   private $config;
-  
-  public function __construct($config)
+  /** When true, denyAccess() returns JSON (for lister/api.php) instead of HTML */
+  private $denyAsJson;
+
+  public function __construct($config, $denyAsJson = false)
   {
     $this->config = $config;
+    $this->denyAsJson = $denyAsJson;
     $this->dataDir = __DIR__ . '/../data';
     
     // Create data directory if it doesn't exist
@@ -231,6 +234,20 @@ class Security
   private function denyAccess($message)
   {
     http_response_code(403);
+    if ($this->denyAsJson) {
+      if (!headers_sent()) {
+        header('Content-Type: application/json; charset=utf-8');
+      }
+      $jsonFlags = JSON_UNESCAPED_SLASHES;
+      if (defined('JSON_INVALID_UTF8_SUBSTITUTE')) {
+        $jsonFlags |= JSON_INVALID_UTF8_SUBSTITUTE;
+      }
+      echo json_encode([
+        'success' => false,
+        'error' => $message
+      ], $jsonFlags);
+      exit;
+    }
     ?>
     <!DOCTYPE html>
     <html lang="en">
