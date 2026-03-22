@@ -6,7 +6,7 @@ Notable changes to Lister. Deployment builds show a **compact ID** (last 8 digit
 
 ### 2026-03-21
 
-- **Modal previews**: `preview_kind` / `data-preview` on rows; `<dialog>` for text (`lister/preview.php` + Parsedown for `.md`), PDF (`iframe`), images with prev/next within the visible table; `display.preview_text_max_bytes`.
+- **Modal previews**: `preview_kind` / `data-preview`; text via `lister/preview.php` (e.g. `.md`); PDF, **and** server-rendered web (`.html`, `.htm`, `.php`, `.shtml`, ASP/JSP/CFML/CGI where applicable) via `<iframe>` so output is rendered, not source; images with prev/next; `display.preview_text_max_bytes`.
 - **Install surface**: Preflight install error rendered from root `index.php` only (removed extra root `install_error.php`). Docs: packaging favors clear upload target and runtime-only zips over minimizing file count.
 - **Listing UX**: README block under the table (`ReadmePreview`, `display.readme_preview`); DR10 palette via `light-dark()`; Material Symbols file/folder icons (`IconSymbols.php`); sortable columns with query → cookie → config; API POST sends same `sort`/`dir` for expanded rows.
 - **Expand / API**: Viewport loading indicator (≥500ms, overlapping fetches); `PathSanitizer`; when `security.enabled`, `lister/api.php` runs the same checks as pages and returns JSON 403 on deny.

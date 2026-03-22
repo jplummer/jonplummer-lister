@@ -292,9 +292,9 @@ class DirectoryLister
   }
 
   /**
-   * Whether the file can open in the listing modal: image, pdf, or text (incl. code / markdown).
+   * Whether the file can open in the listing modal: image, pdf, iframe (URL in modal), or text.
    *
-   * @return string|null 'image', 'pdf', 'text', or null
+   * @return string|null 'image', 'pdf', 'iframe', 'text', or null
    */
   public function previewKindForFilename($name)
   {
@@ -302,13 +302,26 @@ class DirectoryLister
   }
 
   /**
-   * @return string|null 'image', 'pdf', 'text', or null
+   * @return string|null 'image', 'pdf', 'iframe', 'text', or null
    */
   private function getPreviewKindForFile($name)
   {
     $ext = $this->getFileExtension($name);
     if ($ext === 'pdf') {
       return 'pdf';
+    }
+
+    // Rendered in <iframe> at file URL (HTML output, server-side execution), not as source text.
+    $iframeExts = [
+      'html', 'htm', 'xhtml', 'shtml',
+      'php', 'phtml',
+      'asp', 'aspx',
+      'jsp', 'jspx',
+      'cfm', 'cfml',
+      'cgi',
+    ];
+    if (in_array($ext, $iframeExts, true)) {
+      return 'iframe';
     }
 
     $this->loadExtensionTypes();

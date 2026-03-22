@@ -315,7 +315,7 @@
 
       previewNav.hidden = true;
 
-      if (kind === 'pdf') {
+      if (kind === 'pdf' || kind === 'iframe') {
         const iframe = document.createElement('iframe');
         iframe.className = 'lister-preview-iframe';
         iframe.title = label;
