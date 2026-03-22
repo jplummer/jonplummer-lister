@@ -3,10 +3,10 @@
 ## Current Status: WORKS GOOD ✅
 - **Deployed**: misc.jonplummer.com
 - **Phase 1**: Complete (MVP + additional features)
-- **Phase 2**: In progress — modal previews shipped; remaining: keyboard/a11y, error pages, shipping/docs tasks, optional polish
+- **Phase 2**: In progress — modal previews and keyboard listing navigation shipped; remaining: a11y audit, error pages, shipping/docs tasks, optional polish
 - **Phase 3**: Not started (search, bulk file operations)
 - **Phase 4**: Someday maybe — commercialization / multi-user (see [Phase 4](#phase-4-commercialization-and-multi-user))
-- **Next**: Keyboard navigation, accessibility audit
+- **Next**: Accessibility audit
 
 ## Phase 1: Core Foundation (MVP) – Basic directory listing with sorting and theming – Complete
 
@@ -17,7 +17,7 @@
 ### Styling completeness (Phase 2.1) – Complete
 
 ### Product: interaction & quality
-- [ ] Implement keyboard navigation
+- [x] Implement keyboard navigation (roving row focus; ↑↓; → / ← expand-collapse; Enter activate; Space preview or same as Enter; initial focus first row; Esc close modal; ← / → preview carousel via dialog capture listener; browser find for search)
 - [ ] Accessibility audit
 
 ### Abuse & automation
@@ -237,8 +237,12 @@ lister/
 - [x] Empty folder row height aligned with other rows (no extra wrapper padding)
 
 #### 2.7 Modal file previews
-- [x] **Modal previews** (`<dialog>`): text / markdown via `lister/preview.php` (Parsedown safe / escaped plain / `<pre>` for other text kinds), PDF in `<iframe>`, images with `<img>` and ← / → among image rows in the current table (including expanded rows); `data-preview` + `preview_kind`; `display.preview_text_max_bytes`
+- [x] **Modal previews** (`<dialog>`): text / markdown via `lister/preview.php` (Parsedown safe / escaped plain / `<pre>` for other text kinds), PDF in `<iframe>`, images with `<img>`; ← / → / chrome buttons step through all `data-preview` links in table order (including expanded rows); `data-preview` + `preview_kind`; `display.preview_text_max_bytes`
 - [x] Primary click opens modal; modified clicks (e.g. ⌘/Ctrl) keep normal navigation
+
+#### 2.10 Listing keyboard navigation
+- [x] Roving `tabindex` on `tr.item-row`; name-cell `.directory-toggle` / `.file-link` removed from tab order (`tabindex="-1"`) so Tab moves row-to-row
+- [x] ↑↓ prev/next row; → expand / ← collapse folder rows; Enter toggles folder or opens file (preview when `data-preview`); Space preview when supported else Enter-equivalent; initial `focus` first row (`preventScroll`); Esc closes modal and restores row focus; modal ← / → on `dialog` `keydown` capture (all preview kinds in list order); row focus: subtle `td` background
 
 #### 2.8 Install & packaging (done)
 - [x] Preflight install error UI inlined in root `index.php` (removed separate `install_error.php` from deploy surface)

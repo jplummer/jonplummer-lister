@@ -64,6 +64,9 @@
   /* Name column: Material Symbols size and fixed cell width */
   --lister-icon-size: 1.375rem;
   --lister-icon-column: 1.5rem;
+
+  /* Roving keyboard focus: subtle row fill (avoids outline vs table border clash) */
+  --lister-row-focus-bg: light-dark(rgba(0, 0, 0, 0.055), rgba(255, 255, 255, 0.07));
 }
 
 /* Box sizing rules */
@@ -328,7 +331,7 @@ td {
   min-height: 0;
   color: var(--text-color);
   text-decoration: none;
-  font-weight: var(--font-weight-bold);
+  font-weight: 400;
   font-size: inherit;
   line-height: var(--line-height);
   transition: color 0.3s ease;
@@ -389,6 +392,19 @@ footer .deploy-id {
 }
 
 /* Expandable directory styles */
+/* Roving keyboard focus on listing rows (see requirements: keyboard) */
+#directory-contents tr.item-row:focus {
+  outline: none;
+}
+
+#directory-contents tr.item-row:focus-visible {
+  outline: none;
+}
+
+#directory-contents tr.item-row:focus-visible > td {
+  background-color: var(--lister-row-focus-bg);
+}
+
 .directory-toggle {
   background: none;
   border: none;
@@ -403,7 +419,7 @@ footer .deploy-id {
   min-height: 0;
   color: var(--text-color);
   text-decoration: none;
-  font-weight: var(--font-weight-bold);
+  font-weight: 400;
   font-size: inherit;
   line-height: var(--line-height);
   transition: color 0.3s ease;

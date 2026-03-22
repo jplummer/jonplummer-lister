@@ -130,8 +130,8 @@
     <div class="lister-preview-chrome">
       <h2 id="lister-preview-title" class="lister-preview-title"></h2>
       <div class="lister-preview-nav" id="lister-preview-nav" hidden>
-        <button type="button" class="lister-preview-prev" aria-label="Previous image">←</button>
-        <button type="button" class="lister-preview-next" aria-label="Next image">→</button>
+        <button type="button" class="lister-preview-prev" aria-label="Previous preview">←</button>
+        <button type="button" class="lister-preview-next" aria-label="Next preview">→</button>
       </div>
       <button type="button" class="lister-preview-close" aria-label="Close">Close</button>
     </div>
@@ -195,8 +195,189 @@
     let previewNav = null;
     let previewPrev = null;
     let previewNext = null;
-    let imagePreviewList = [];
-    let imagePreviewIndex = -1;
+    let previewCarouselLinks = [];
+    let previewCarouselIndex = -1;
+
+    // —— Listing keyboard (roving row focus; see requirements.md) ——
+    let listFocusedRow = null;
+
+    function getListingRows() {
+      const tbody = document.getElementById('directory-contents');
+      if (!tbody) {
+        return [];
+      }
+      return Array.from(tbody.querySelectorAll('tr.item-row'));
+    }
+
+    function setListFocusedRow(row) {
+      if (!row || !row.closest('#directory-contents')) {
+        return;
+      }
+      getListingRows().forEach((r) => {
+        r.setAttribute('tabindex', '-1');
+      });
+      row.setAttribute('tabindex', '0');
+      listFocusedRow = row;
+    }
+
+    function moveListingFocus(delta) {
+      const rows = getListingRows();
+      if (!rows.length) {
+        return;
+      }
+      let idx = listFocusedRow ? rows.indexOf(listFocusedRow) : 0;
+      if (idx < 0) {
+        idx = 0;
+      }
+      idx = Math.max(0, Math.min(rows.length - 1, idx + delta));
+      setListFocusedRow(rows[idx]);
+      rows[idx].focus();
+    }
+
+    function onListingFocusIn(e) {
+      if (previewDialog && previewDialog.open) {
+        return;
+      }
+      const row = e.target.closest && e.target.closest('#directory-contents tr.item-row');
+      if (!row || e.target === row) {
+        return;
+      }
+      if (e.target.closest('a.file-link') || e.target.closest('button.directory-toggle')) {
+        setListFocusedRow(row);
+        row.focus();
+      }
+    }
+
+    function activateListingRow(row) {
+      const toggle = row.querySelector('.directory-toggle');
+      const link = row.querySelector('a.file-link');
+      if (toggle) {
+        const path = toggle.getAttribute('data-path');
+        const icon = toggle.querySelector('.toggle-icon');
+        if (row.classList.contains('expanded')) {
+          collapseDirectory(row, icon);
+        } else {
+          expandDirectory(row, path, icon);
+        }
+        return;
+      }
+      if (link) {
+        const kind = link.getAttribute('data-preview');
+        if (kind) {
+          openFilePreview(link);
+        } else {
+          window.location.href = link.href;
+        }
+      }
+    }
+
+    function spaceOpenPreviewIfAvailable(row, e) {
+      const link = row.querySelector('a.file-link[data-preview]');
+      if (!link) {
+        return false;
+      }
+      if (e) {
+        e.preventDefault();
+      }
+      openFilePreview(link);
+      return true;
+    }
+
+    function getListingRowFromActiveElement() {
+      const el = document.activeElement;
+      if (!el || !el.closest) {
+        return null;
+      }
+      return el.closest('#directory-contents tr.item-row');
+    }
+
+    function onListingKeydown(e) {
+      if (e.metaKey || e.ctrlKey || e.altKey) {
+        return;
+      }
+      if (previewDialog && previewDialog.open) {
+        return;
+      }
+      const tag = e.target.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || (e.target.isContentEditable && e.target.isContentEditable !== 'false')) {
+        return;
+      }
+      const row = getListingRowFromActiveElement();
+      if (!row) {
+        return;
+      }
+
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        moveListingFocus(1);
+        return;
+      }
+      if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        moveListingFocus(-1);
+        return;
+      }
+      if (e.key === 'ArrowRight') {
+        const toggle = row.querySelector('.directory-toggle');
+        if (!toggle) {
+          return;
+        }
+        e.preventDefault();
+        if (!row.classList.contains('expanded')) {
+          expandDirectory(row, toggle.getAttribute('data-path'), toggle.querySelector('.toggle-icon'));
+        }
+        return;
+      }
+      if (e.key === 'ArrowLeft') {
+        const toggle = row.querySelector('.directory-toggle');
+        if (!toggle || !row.classList.contains('expanded')) {
+          return;
+        }
+        e.preventDefault();
+        collapseDirectory(row, toggle.querySelector('.toggle-icon'));
+        return;
+      }
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        activateListingRow(row);
+        return;
+      }
+      if (e.key === ' ') {
+        if (spaceOpenPreviewIfAvailable(row, e)) {
+          return;
+        }
+        e.preventDefault();
+        activateListingRow(row);
+      }
+    }
+
+    function initListingKeyboard() {
+      const tbody = document.getElementById('directory-contents');
+      if (!tbody) {
+        return;
+      }
+      const rows = getListingRows();
+      if (!rows.length) {
+        return;
+      }
+      tbody.querySelectorAll('a.file-link, button.directory-toggle').forEach((el) => {
+        el.setAttribute('tabindex', '-1');
+      });
+      rows.forEach((r, i) => {
+        r.setAttribute('tabindex', i === 0 ? '0' : '-1');
+      });
+      listFocusedRow = rows[0];
+      tbody.addEventListener('focusin', onListingFocusIn);
+      document.addEventListener('keydown', onListingKeydown);
+      rows[0].focus({ preventScroll: true });
+    }
+
+    function restoreListingFocusAfterPreviewClose() {
+      if (listFocusedRow && listFocusedRow.isConnected) {
+        setListFocusedRow(listFocusedRow);
+        listFocusedRow.focus();
+      }
+    }
 
     function webPathFromFileHref(href) {
       const u = new URL(href, window.location.href);
@@ -213,47 +394,47 @@
       return d.innerHTML;
     }
 
-    function collectImagePreviewList() {
+    function collectPreviewLinkElements() {
       const tbody = document.getElementById('directory-contents');
       if (!tbody) {
         return [];
       }
-      return Array.from(tbody.querySelectorAll('a.file-link[data-preview="image"]')).map((a) => ({
-        href: a.href,
-        label: (a.querySelector('.item-name') && a.querySelector('.item-name').textContent || '').trim()
-      }));
+      return Array.from(tbody.querySelectorAll('a.file-link[data-preview]'));
     }
 
-    function findImagePreviewIndex(list, hrefAttr) {
+    function findPreviewCarouselIndexByHref(links, hrefAttr) {
       const target = new URL(hrefAttr, window.location.href).href;
-      return list.findIndex((item) => item.href === target);
+      return links.findIndex((a) => a.href === target);
     }
 
-    function updateImageNav() {
+    function syncPreviewCarouselForLink(link) {
+      previewCarouselLinks = collectPreviewLinkElements();
+      let idx = previewCarouselLinks.indexOf(link);
+      if (idx < 0) {
+        idx = findPreviewCarouselIndexByHref(previewCarouselLinks, link.href);
+      }
+      previewCarouselIndex = idx >= 0 ? idx : 0;
+    }
+
+    function updatePreviewCarouselNav() {
       if (!previewNav || !previewPrev || !previewNext) {
         return;
       }
-      const n = imagePreviewList.length;
+      const n = previewCarouselLinks.length;
       previewNav.hidden = n <= 1;
-      previewPrev.disabled = imagePreviewIndex <= 0;
-      previewNext.disabled = imagePreviewIndex >= n - 1;
+      previewPrev.disabled = previewCarouselIndex <= 0;
+      previewNext.disabled = previewCarouselIndex >= n - 1;
     }
 
-    function stepImagePreview(delta) {
-      if (imagePreviewList.length < 2) {
+    function stepPreviewCarousel(delta) {
+      if (previewCarouselLinks.length < 2) {
         return;
       }
-      imagePreviewIndex = Math.max(0, Math.min(imagePreviewList.length - 1, imagePreviewIndex + delta));
-      const item = imagePreviewList[imagePreviewIndex];
-      const img = previewBody.querySelector('.lister-preview-img');
-      if (img && item) {
-        img.src = item.href;
-        img.alt = item.label;
+      previewCarouselIndex = Math.max(0, Math.min(previewCarouselLinks.length - 1, previewCarouselIndex + delta));
+      const nextLink = previewCarouselLinks[previewCarouselIndex];
+      if (nextLink) {
+        openFilePreview(nextLink);
       }
-      if (previewTitle && item) {
-        previewTitle.textContent = item.label;
-      }
-      updateImageNav();
     }
 
     function onPreviewDialogClose() {
@@ -265,24 +446,29 @@
       if (img) {
         img.removeAttribute('src');
       }
-      imagePreviewList = [];
-      imagePreviewIndex = -1;
+      previewCarouselLinks = [];
+      previewCarouselIndex = -1;
+      restoreListingFocusAfterPreviewClose();
     }
 
     function onPreviewKeydown(e) {
       if (!previewDialog || !previewDialog.open) {
         return;
       }
-      const isImage = previewBody && previewBody.querySelector('.lister-preview-img');
-      if (!isImage) {
+      if (e.metaKey || e.ctrlKey || e.altKey) {
+        return;
+      }
+      if (previewCarouselLinks.length < 2) {
         return;
       }
       if (e.key === 'ArrowLeft') {
         e.preventDefault();
-        stepImagePreview(-1);
+        e.stopPropagation();
+        stepPreviewCarousel(-1);
       } else if (e.key === 'ArrowRight') {
         e.preventDefault();
-        stepImagePreview(1);
+        e.stopPropagation();
+        stepPreviewCarousel(1);
       }
     }
 
@@ -294,26 +480,26 @@
         return;
       }
 
+      const previewRow = link.closest && link.closest('tr.item-row');
+      if (previewRow) {
+        setListFocusedRow(previewRow);
+      }
+
+      syncPreviewCarouselForLink(link);
+
       previewTitle.textContent = label;
       previewBody.innerHTML = '';
 
       if (kind === 'image') {
-        imagePreviewList = collectImagePreviewList();
-        imagePreviewIndex = findImagePreviewIndex(imagePreviewList, href);
-        if (imagePreviewIndex < 0) {
-          imagePreviewIndex = 0;
-        }
         const img = document.createElement('img');
         img.className = 'lister-preview-img';
         img.alt = label;
         img.src = link.href;
         previewBody.appendChild(img);
-        updateImageNav();
+        updatePreviewCarouselNav();
         previewDialog.showModal();
         return;
       }
-
-      previewNav.hidden = true;
 
       if (kind === 'pdf' || kind === 'iframe') {
         const iframe = document.createElement('iframe');
@@ -321,6 +507,7 @@
         iframe.title = label;
         iframe.src = link.href;
         previewBody.appendChild(iframe);
+        updatePreviewCarouselNav();
         previewDialog.showModal();
         return;
       }
@@ -330,6 +517,7 @@
         loading.className = 'lister-preview-loading';
         loading.textContent = 'Loading…';
         previewBody.appendChild(loading);
+        updatePreviewCarouselNav();
         previewDialog.showModal();
         const path = webPathFromFileHref(link.href);
         fetch('/lister/preview.php?path=' + encodeURIComponent(path))
@@ -373,10 +561,10 @@
         closeBtn.addEventListener('click', () => previewDialog.close());
       }
       if (previewPrev) {
-        previewPrev.addEventListener('click', () => stepImagePreview(-1));
+        previewPrev.addEventListener('click', () => stepPreviewCarousel(-1));
       }
       if (previewNext) {
-        previewNext.addEventListener('click', () => stepImagePreview(1));
+        previewNext.addEventListener('click', () => stepPreviewCarousel(1));
       }
       previewDialog.addEventListener('click', (e) => {
         if (e.target === previewDialog) {
@@ -384,7 +572,8 @@
         }
       });
       previewDialog.addEventListener('close', onPreviewDialogClose);
-      document.addEventListener('keydown', onPreviewKeydown);
+      // Capture on the dialog so ← / → work while focus is on chrome (e.g. Close); bubbling on document is unreliable with showModal().
+      previewDialog.addEventListener('keydown', onPreviewKeydown, true);
       document.addEventListener('click', (event) => {
         const link = event.target.closest('#directory-contents a.file-link[data-preview]');
         if (!link) {
@@ -403,6 +592,7 @@
 
     document.addEventListener('DOMContentLoaded', function() {
       initListerPreview();
+      initListingKeyboard();
       // Use event delegation to handle all directory toggles
       document.addEventListener('click', function(event) {
         if (event.target.closest('.directory-toggle')) {
@@ -509,6 +699,14 @@
       
       row.classList.remove('expanded');
       toggleIcon.textContent = ''; // Clear text since CSS handles the icon
+
+      queueMicrotask(() => {
+        const ae = document.activeElement;
+        if (row.isConnected && (!ae || ae === document.body || !ae.isConnected)) {
+          setListFocusedRow(row);
+          row.focus();
+        }
+      });
     }
     
     function itemWebPath(item) {
@@ -532,6 +730,7 @@
       tr.setAttribute('data-path', webPath);
       tr.setAttribute('data-nesting-level', String(nestingLevel));
       tr.setAttribute('data-parent-path', parentWebPath);
+      tr.setAttribute('tabindex', '-1');
 
       const tdName = document.createElement('td');
 
@@ -562,6 +761,7 @@
           btn.appendChild(toggleIcon);
           btn.appendChild(iconEl);
           btn.appendChild(nameSpan);
+          btn.setAttribute('tabindex', '-1');
           tdName.appendChild(btn);
         }
       } else {
@@ -572,6 +772,7 @@
         if (item.preview_kind) {
           a.setAttribute('data-preview', item.preview_kind);
         }
+        a.setAttribute('tabindex', '-1');
         const iconSpan = document.createElement('span');
         const iconKey = item.icon || 'file';
         iconSpan.className = 'icon material-symbols-outlined ' + iconKey;

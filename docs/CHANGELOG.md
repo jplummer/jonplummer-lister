@@ -6,7 +6,9 @@ Notable changes to Lister. Deployment builds show a **compact ID** (last 8 digit
 
 ### 2026-03-21
 
-- **Modal previews**: `preview_kind` / `data-preview`; text via `lister/preview.php` (e.g. `.md`); PDF, **and** server-rendered web (`.html`, `.htm`, `.php`, `.shtml`, ASP/JSP/CFML/CGI where applicable) via `<iframe>` so output is rendered, not source; images with prev/next; `display.preview_text_max_bytes`.
+- **Listing**: File and folder names use normal font weight (not bold). Preview modal prev/next applies to all previewable files in table order, not only images; capture-phase **←** / **→** on `<dialog>` unchanged.
+- **Keyboard**: Roving row focus (↑↓, → / ← expand-collapse, Enter); **Space** opens preview when available, otherwise same as Enter; initial focus on first row; Esc closes preview; name-cell controls `tabindex="-1"`. Row focus: subtle cell background. Documented in `requirements.md`.
+- **Modal previews**: `preview_kind` / `data-preview`; text via `lister/preview.php` (e.g. `.md`); PDF, **and** server-rendered web (`.html`, `.htm`, `.php`, `.shtml`, ASP/JSP/CFML/CGI where applicable) via `<iframe>` so output is rendered, not source; images; prev/next across all preview kinds in list order; `display.preview_text_max_bytes`.
 - **Install surface**: Preflight install error rendered from root `index.php` only (removed extra root `install_error.php`). Docs: packaging favors clear upload target and runtime-only zips over minimizing file count.
 - **Listing UX**: README block under the table (`ReadmePreview`, `display.readme_preview`); DR10 palette via `light-dark()`; Material Symbols file/folder icons (`IconSymbols.php`); sortable columns with query → cookie → config; API POST sends same `sort`/`dir` for expanded rows.
 - **Expand / API**: Viewport loading indicator (≥500ms, overlapping fetches); `PathSanitizer`; when `security.enabled`, `lister/api.php` runs the same checks as pages and returns JSON 403 on deny.

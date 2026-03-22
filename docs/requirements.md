@@ -16,6 +16,7 @@ Lister exposes the contents of any web-accessible folder and subfolders for brow
 * **Traffic scope**: Lister is not positioned for high request volume or serious abuse. Optional `security` in config may apply light per-IP limits and bot-like UA handling; that does not replace edge or host-level controls. Drag-and-drop install does not require tuning `security`. Broader anti-abuse / admin tooling remains deferred (see §5, Phase 4 in `plan.md`)
 * Responsive design for mobile and desktop
 * README preview: if the listed directory contains a recognized README file (`README.md`, `README.txt`, etc.), rendered content appears below the listing (Markdown via Parsedown safe mode, plain text escaped)
+* **Keyboard (listing table)**: The file/folder table supports **roving focus** on rows (one row in the tab order at a time; name-cell controls use `tabindex="-1"` so activation is **Enter** / **Space** as below). When the listing loads, focus moves to the first row (without scrolling the page) so arrow keys apply immediately. **↑** / **↓** move to the previous/next row. **→** expands the focused folder row when it has a disclosure; **←** collapses it when that row is expanded. **Enter** activates the row: folders toggle expand/collapse (same as the disclosure control); files follow the link, or open the modal preview when `data-preview` is set. **Space** opens the modal preview when the file supports preview; otherwise **Space** activates the row the same way as **Enter** (so non-preview files and folders still respond). **Escape** closes an open preview modal and returns focus to the listing row. With the preview modal open and more than one previewable file listed, **←** / **→** (and the prev/next controls) move to the previous/next preview in **table order** among all rows with `data-preview` (text, PDF, images, etc., including under expanded folders). Keys are handled on the dialog in the capture phase so they work while focus is on modal controls (e.g. Close). Embedded PDF **iframes** still consume keys when focus is inside the viewer. **Search** is the browser’s own find-in-page (e.g. ⌘F); no separate in-app search shortcut is required for this behavior.
 
 ## 2. Features to be considered
 
@@ -67,6 +68,14 @@ Not required for the current personal deployment. Revisit if Lister is offered a
     * Secure authentication mechanism
 
 ## Changelog
+
+* **2026-03-21** — **Listing typography**: File and folder names in the table use normal (400) weight instead of bold. Rationale: calmer listing, filenames remain readable via color/link styling.
+
+* **2026-03-21** — **Preview carousel**: Modal prev/next and **←** / **→** step through every `data-preview` file in list order, not images only. Rationale: consistent keyboard and control behavior across preview kinds.
+
+* **2026-03-21** — **Keyboard (listing + preview)**: Initial focus on first listing row (`focus({ preventScroll: true })`); **Space** on non-preview rows matches **Enter**; image preview **←** / **→** use capture-phase `keydown` on the `<dialog>` so keys work when focus is on chrome; row focus styling uses a subtle cell background instead of outline. Rationale: fix modal shortcuts and non-preview **Space**; clearer focus affordance in tables.
+
+* **2026-03-21** — **Keyboard navigation (core)**: Documented listing keyboard behavior: roving row focus; ↑↓; → / ← expand/collapse; Enter activate; Space preview-only for previewable files; Esc close modal; ← / → in image preview; search via browser find. Rationale: match agreed UX without Command-key chords; keep scope to the single-column table.
 
 * **2026-03-21** — **Traffic scope & README**: Core features no longer claim robust in-app rate limiting; README states low-traffic intent and that optional `security` is a guardrail only. Rationale: honest positioning for shared hosting and drag-and-drop install; heavier anti-abuse remains §5 / Phase 4.
 
