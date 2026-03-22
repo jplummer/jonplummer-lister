@@ -38,6 +38,26 @@ if (!empty($missingFiles) || !empty($permissionIssues)) {
   exit;
 }
 
+/**
+ * Read `app.debug` from default.json without loading App (for catch block).
+ * Invalid or missing JSON → false (production-safe).
+ */
+function lister_read_app_debug_flag(): bool {
+  $path = __DIR__ . '/lister/config/default.json';
+  if (!is_readable($path)) {
+    return false;
+  }
+  $raw = file_get_contents($path);
+  if ($raw === false) {
+    return false;
+  }
+  $data = json_decode($raw, true);
+  if (!is_array($data)) {
+    return false;
+  }
+  return !empty($data['app']['debug']);
+}
+
 // Load the main App class
 require_once __DIR__ . '/lister/includes/App.php';
 
@@ -95,7 +115,21 @@ try {
       'Some hosting providers restrict certain functions for security'
     ];
   }
-  
+
+  $listerRuntimeDebug = lister_read_app_debug_flag();
+  if (!$listerRuntimeDebug) {
+    error_log(sprintf(
+      'Lister [%s] %s | %s:%d',
+      $errorType,
+      $errorMessage,
+      $e->getFile(),
+      $e->getLine()
+    ));
+    $errorMessage = 'Something went wrong while loading this page. Please try again later.';
+    $suggestions = [];
+    $errorType = 'Error';
+  }
+
   http_response_code(500);
   $runtimeErrorPath = __DIR__ . '/lister/templates/runtime_error.php';
   if (is_readable($runtimeErrorPath)) {
@@ -103,7 +137,11 @@ try {
     include $runtimeErrorPath;
   } else {
     header('Content-Type: text/plain; charset=UTF-8');
-    echo $errorType . ': ' . $errorMessage . "\n";
+    if (!$listerRuntimeDebug) {
+      echo "An error occurred.\n";
+    } else {
+      echo $errorType . ': ' . $errorMessage . "\n";
+    }
   }
 }
 

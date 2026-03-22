@@ -3,21 +3,16 @@
 ## Current Status: WORKS GOOD ✅
 - **Deployed**: misc.jonplummer.com
 - **Phase 1**: Complete — [archive](#archive-completed-work)
-- **Phase 2**: In progress — ops/shipping docs; optional polish; small error follow-ups ([remaining](#phase-2-remaining-work))
+- **Phase 2**: In progress — ops/shipping docs; optional polish ([remaining](#phase-2-remaining-work))
 - **Phase 3**: Not started; one item [cancelled](#explicitly-cancelled-wont-do)
 - **Phase 4**: Deferred — [commercialization / multi-user](#phase-4-commercialization-and-multi-user)
-- **Next**: Production-safe runtime errors; ops/shipping documentation
+- **Next**: Ops/shipping documentation
 
 ## Phase 2: Remaining work
 
 **Context**: Personal, convenient file access; main abuse concern is automation, not casual humans. Phase 4 for multi-tenant / product depth.
 
-Shipped listing UX (previews, keyboard, a11y, 404, etc.) lives in the [archive](#phase-2-completed-items).
-
-### Error experiences
-- [ ] **Production runtime**: If `app.debug` is false, generic visitor message; `error_log` (or similar) for detail; full detail when debug true.
-- [ ] **Server-level 404**: Document `ErrorDocument` / nginx when PHP never runs (e.g. missing static asset).
-- [ ] Smoke-test errors on a deployed host.
+Shipped listing UX (previews, keyboard, a11y, 404, runtime `app.debug`, error docs—see [archive](#phase-2-completed-items) **2.14**) lives in the archive.
 
 ### Operations: traffic, links, and delete safety
 **Goal**: Use logs to avoid breaking bookmarks/embeds; discover inbound links.
@@ -175,6 +170,11 @@ lister/
 #### 2.13 HTTP errors & Apache routing
 - [x] Missing listing path → HTTP 404 (`http_error_404.php`, shared chrome); `runtime_error.php` uses `lister.css` + same shell
 - [x] `.htaccess` rewrite: `!-f` `!-d` → `index.php` so bogus paths hit Lister (not only `/` and real dirs)
+
+#### 2.14 Production runtime + error documentation
+- [x] `app.debug` false → generic 500 page + `error_log` with real exception; true → full Details + suggestions (`index.php`, `runtime_error.php`)
+- [x] Server-level 404 vs Lister 404 documented in `docs/configuration.md`
+- [x] Checklist: `docs/error-smoke-tests.md`
 
 #### Host note (done)
 - [x] Server autoindex **not** required — PHP enumerates; double autoindex undesirable

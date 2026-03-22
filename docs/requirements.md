@@ -16,6 +16,7 @@ Lister exposes the contents of any web-accessible folder and subfolders for brow
 * Theme and styling integrate with https://jonplummer.com/, including dark mode support
 * Direct URL access for sharing files
 * **Not found**: A URL path under the listing that does not match any file or directory returns HTTP **404** and an HTML page using the same lister chrome and design tokens as the main view (message, requested path, links to listing root and jonplummer.com—pattern aligned with the site’s [404 page](https://jonplummer.com/404.html))
+* **Runtime errors**: With `app.debug` **false** (default in `lister/config/default.json`), uncaught errors from the main app show a **generic** message to visitors; the real exception is written to the PHP **error log**. With `app.debug` **true**, the same page shows full details and install hints (development only). Host-level 404 for URLs that never reach PHP is documented in `docs/configuration.md`; smoke checks in `docs/error-smoke-tests.md`.
 * **Traffic scope**: Lister is not positioned for high request volume or serious abuse. Optional `security` in config may apply light per-IP limits and bot-like UA handling; that does not replace edge or host-level controls. Drag-and-drop install does not require tuning `security`. Broader anti-abuse / admin tooling remains deferred (see §5, Phase 4 in `plan.md`)
 * Responsive design for mobile and desktop
 * README preview: if the listed directory contains a recognized README file (`README.md`, `README.txt`, etc.), rendered content appears below the listing (Markdown via Parsedown safe mode, plain text escaped)
@@ -71,6 +72,8 @@ Not required for the current personal deployment. Revisit if Lister is offered a
     * Secure authentication mechanism
 
 ## Changelog
+
+* **2026-03-21** — **Production runtime errors**: `app.debug` gates visitor-visible 500 detail vs `error_log`; `docs/configuration.md` server 404 section; `docs/error-smoke-tests.md`. Core features bullet updated.
 
 * **2026-03-21** — **404 + error chrome**: Invalid listing paths return HTTP 404 with dedicated page; runtime errors use shared lister chrome and `lister.css`. Core features bullet describes behavior and jonplummer.com 404 reference.
 
