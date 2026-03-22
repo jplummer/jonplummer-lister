@@ -17,9 +17,6 @@ Modal previews, README panel, keyboard listing navigation, and related UX are **
 ### Product: interaction & quality
 - [ ] Accessibility audit
 
-### Abuse & automation
-- [ ] Block known and detected malicious bots and crawlers
-
 ### Error experiences
 - [ ] Create 404 error page for non-existent files/directories
   - [ ] Match jonplummer.com design system
@@ -43,9 +40,10 @@ Modal previews, README panel, keyboard listing navigation, and related UX are **
 - [ ] Document **Referer** in logs: when it appears, what it suggests about off-site links, and why it is incomplete (direct navigation, apps, stripped referrers); complement with **Search Console** (or similar) and occasional URL search for link discovery
 
 ### Shipping & installation
+- [ ] **Investigation — `.htaccess`-like coverage on non-Apache hosts**: Apache’s per-directory `.htaccess` (rewrites, deny `lister/includes` / `data` / `scripts`, block `*.json` web access) does not have a single portable twin. **Possible with caveats**: ship or document **reference snippets** (e.g. **nginx** `location` / `try_files`, **Caddy** route block, **IIS** `web.config`) that mirror the same intent; note that many **shared nginx** setups **do not** allow users to drop per-site includes (unlike `AllowOverride` on Apache). **LiteSpeed** often honors Apache-style rules. Outcome should clarify what “drag-and-drop” guarantees on DreamHost-style Apache vs nginx-only vs IIS, and what remains manual/host-panel work.
 - [ ] Ensure deploy script and other development conveniences are not part of delivered package
 - [ ] Verify drag-and-drop installation works as promised
-- [ ] Check whether directory listing capability is required for the tool to work
+- [x] **Resolved**: Server **autoindex** (“directory listing” in Apache/nginx) is **not** required. Lister enumerates folders with PHP (`scandir` / reads); the host only needs PHP execution and read access to the published tree. (Leaving raw autoindex **on** alongside Lister is usually undesirable—double exposure.)
 - [ ] **Low priority**: Investigate OpenSSH “post-quantum key exchange” warning when running `deploy.sh` / SFTP (what client and DreamHost `sshd` support; optional hardening, not urgent for this threat model) — https://openssh.com/pq.html
 - [ ] **Optional**: Refine drag-and-drop install experience by **install surface**, not raw file count: README states an unambiguous upload target; shipped tree keeps top-level items purposeful; release zip omits dev-only files. Treat merging PHP for fewer files as low value unless it also reduces confusion.
 
@@ -87,6 +85,13 @@ Modal previews, README panel, keyboard listing navigation, and related UX are **
 **Goal**: Product-grade hosting, tenants, or sensitive data—**out of scope** for the current personal deployment. Revisit only if Lister is sold, multi-tenant, or holds data you treat as confidential.
 
 **Related requirements**: [Commercialization and multi-user (deferred)](requirements.md#5-commercialization-and-multi-user-deferred) in `requirements.md`.
+
+### Optional in-app anti-abuse (not a drag-and-drop default)
+
+**Context**: Shipped `security.enabled` can turn on coarse UA checks and per-IP limits (`Security.php`); that is a **light guardrail**, not a maintained threat feed. For personal, low-traffic deploys we are **not** expanding this by default—host/WAF or `security.enabled: false` is acceptable.
+
+- [ ] Curated or periodically updated blocklist for **known malicious** bots/crawlers (beyond current regex UA heuristics). Needs an update story if bundled in a static zip (false positives, stale lists).
+- [ ] Revisit **stricter in-app rate limiting** (tighter defaults, more policy knobs). Deferred until traffic or abuse justifies it; document that current limits are optional and light.
 
 ### Access and hardening
 - [ ] Implement directory access control

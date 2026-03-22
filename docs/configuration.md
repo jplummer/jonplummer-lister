@@ -21,6 +21,8 @@ Lister works with any hosting provider that supports:
 - SFTP access
 - .htaccess support
 
+You do **not** need the host’s built-in **directory listing** (autoindex) turned on. Lister lists files via PHP.
+
 ### Examples
 
 **Dreamhost:**

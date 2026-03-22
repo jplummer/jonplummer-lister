@@ -6,6 +6,8 @@ Notable changes to Lister. Deployment builds show a **compact ID** (last 8 digit
 
 ### 2026-03-21
 
+- **Plan**: Shipping task to investigate non-Apache equivalents to `.htaccess` (nginx/Caddy/IIS, etc.) and honest drag-and-drop scope per host.
+- **Plan / docs**: Optional anti-abuse expansion (curated bot lists, stricter rate limits) moved under Phase 4; autoindex not required for Lister (PHP enumeration) noted in plan, `requirements.md`, and `configuration.md`.
 - **Plan**: Active Phase 2 trimmed to remaining work; shipped items stay in archive; **Explicitly cancelled** section for file filter by type/size (dropped).
 - **Listing**: File and folder names use normal font weight (not bold). Preview modal prev/next applies to all previewable files in table order, not only images; capture-phase **←** / **→** on `<dialog>` unchanged.
 - **Keyboard**: Roving row focus (↑↓, → / ← expand-collapse, Enter); **Space** opens preview when available, otherwise same as Enter; initial focus on first row; Esc closes preview; name-cell controls `tabindex="-1"`. Row focus: subtle cell background. Documented in `requirements.md`.

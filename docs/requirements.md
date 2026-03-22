@@ -9,6 +9,7 @@ Lister exposes the contents of any web-accessible folder and subfolders for brow
 * Directory listing shows a sortable list of files for any web-accessible directory or subdirectory; column headers change sort. The active sort is stored in an HttpOnly cookie so navigation without query parameters stays consistent, while `sort` and `dir` query parameters override the cookie and refresh it so URLs can encode a specific view
 * File type icons show file types at a glance
 * Drag-and-drop installation allows you to be up and running in less than a minute and is straightforward to remove
+* **Host configuration**: Web server **autoindex** (Apache `Options Indexes`, nginx autoindex, etc.) does **not** need to be enabled. Lister builds the file table in PHP from the filesystem; only PHP execution and read access to the served directory tree are required
 * Shipped packages should minimize installer confusion: clear instructions for what to upload and where, a purposeful top-level layout in the delivered tree, and runtime-only contents in release artifacts. Total file count is not a primary packaging goal
 * Sortable columns: default alphabetical by filename, with options to sort by type, size, or date
 * Theme and styling integrate with https://jonplummer.com/, including dark mode support
@@ -68,6 +69,8 @@ Not required for the current personal deployment. Revisit if Lister is offered a
     * Secure authentication mechanism
 
 ## Changelog
+
+* **2026-03-21** — **Deployment**: Documented that server autoindex / “directory listing” is not required; Lister enumerates via PHP. Plan: deferred optional anti-abuse (curated bot lists, stricter rate limits) to Phase 4; removed open Phase 2 “abuse” line in favor of that framing.
 
 * **2026-03-21** — **Listing typography**: File and folder names in the table use normal (400) weight instead of bold. Rationale: calmer listing, filenames remain readable via color/link styling.
 
