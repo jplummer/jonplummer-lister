@@ -3,10 +3,10 @@
 ## Current Status: WORKS GOOD ✅
 - **Deployed**: misc.jonplummer.com
 - **Phase 1**: Complete — see [Archive: Phase 1](#phase-1-core-foundation-mvp)
-- **Phase 2**: In progress — custom error pages; operations and shipping documentation; optional polish (see [Phase 2 remaining](#phase-2-remaining-work))
+- **Phase 2**: In progress — error-page polish (prod-safe 500, server-level notes); operations and shipping documentation; optional polish (see [Phase 2 remaining](#phase-2-remaining-work))
 - **Phase 3**: Not started (search, bulk file operations); one item [cancelled](#explicitly-cancelled-wont-do)
 - **Phase 4**: Someday maybe — commercialization / multi-user (see [Phase 4](#phase-4-commercialization-and-multi-user))
-- **Next**: Custom error pages (404 / 500)
+- **Next**: Production-safe runtime errors; ops/shipping docs
 
 ## Phase 2: Remaining work
 
@@ -15,19 +15,11 @@
 Modal previews, README panel, keyboard listing navigation, accessibility pass (see `docs/accessibility-audit.md`), and related UX are **archived** under [Phase 2 completed](#phase-2-completed-items).
 
 ### Error experiences
-- [ ] Create 404 error page for non-existent files/directories
-  - [ ] Match jonplummer.com design system
-  - [ ] Include navigation back to parent directory or root
-  - [ ] Show helpful message with requested path
-  - [ ] Provide search suggestions if applicable
-- [ ] Enhance 500 error page for server errors
-  - [ ] Match jonplummer.com design system
-  - [ ] Replace basic error handler in index.php
-  - [ ] Include navigation back to root
-  - [ ] Show user-friendly message (hide technical details in production)
-  - [ ] Log detailed error information for debugging
-- [ ] Ensure error pages work in both development and production environments
-- [ ] Test error pages with various edge cases (malformed URLs, missing directories, etc.)
+- [x] **404** for missing listing paths (invalid URL under the lister root): HTTP 404, dedicated template with `lister.css` chrome aligned with the main listing (same header/footer pattern as [jonplummer.com 404](https://jonplummer.com/404.html): short message, “More information” links). See archive **2.13**.
+- [x] **Runtime / catchable errors** after App loads: `runtime_error.php` uses the same chrome and design tokens (no inline Bootstrap-style sheet).
+- [ ] **Production runtime UX**: When `app.debug` is false, show a generic message to visitors; log details with `error_log` (or similar); keep full detail when debug is true.
+- [ ] **Server-level 404**: Document Apache `ErrorDocument` / nginx behavior when the request never reaches `index.php` (e.g. missing static file).
+- [ ] Smoke-test error flows on a deployed host (invalid path, forced config error in dev only).
 
 ### Operations: traffic, links, and delete safety
 **Goal**: Use server-side evidence to avoid breaking external bookmarks, embeds, or automations that still request file URLs; discover inbound links where possible.
@@ -252,6 +244,10 @@ lister/
 
 #### 2.12 Accessibility (audit + fixes)
 - [x] Skip link to main; single page `h1` (site name demoted to `p.site-title`); table caption (visually hidden); `aria-current` on active sort link; `aria-expanded` on folder toggles; decorative icons `aria-hidden`; expanding-indicator screen-reader text. See `docs/accessibility-audit.md` for scope and follow-ups.
+
+#### 2.13 HTTP error pages (404 + runtime chrome)
+- [x] Missing filesystem path for the requested URL returns **404** (no longer falling back to listing the site root). `http_error_404.php` + `_error_chrome_*.php`; copy and nav echo [jonplummer.com /404](https://jonplummer.com/404.html) structure (message + “More information” list + listing root).
+- [x] `runtime_error.php` shares lister layout and `lister.css` (tokens match listing / jonplummer DR10 styling).
 
 #### 2.8 Install & packaging (done)
 - [x] Preflight install error UI inlined in root `index.php` (removed separate `install_error.php` from deploy surface)

@@ -13,6 +13,8 @@ class App
   private $error;
   private $sortBy;
   private $sortDir;
+  /** HTTP status for render() (e.g. 404 for missing listing path) */
+  private $httpStatus = 200;
 
   public function __construct()
   {
@@ -119,6 +121,14 @@ class App
     $this->sortDir = $prefs['sort_dir'];
     $this->lister->setSortOverride($this->sortBy, $this->sortDir);
 
+    if ($this->lister->isRequestPathMissing()) {
+      $this->httpStatus = 404;
+      $this->error = 'The requested path does not exist.';
+      $this->data = null;
+      $this->breadcrumbs = [];
+      return;
+    }
+
     try {
       $this->data = $this->lister->scanDirectory();
       $this->breadcrumbs = $this->lister->getBreadcrumbs();
@@ -165,6 +175,20 @@ class App
    */
   public function render()
   {
+    if ($this->httpStatus !== 200) {
+      http_response_code($this->httpStatus);
+    }
+
+    if ($this->error !== null && $this->httpStatus === 404 && $this->lister->isRequestPathMissing()) {
+      $label = $this->lister->getRequestPathMissingLabel();
+      $listerRequestPathDisplay = ($label === '' || $label === '/') ? '/' : '/' . $label;
+      $listerPageTitle = 'Page not found — Miscellaneous';
+      $listerMainHeading = 'Page not found';
+      $deploymentTimestamp = $this->getDeploymentTimestamp();
+      include __DIR__ . '/../templates/http_error_404.php';
+      return;
+    }
+
     $templatePath = __DIR__ . '/../templates/index.php';
     if (!file_exists($templatePath)) {
       throw new Exception('Template file not found: lister/templates/index.php. Make sure you uploaded the entire lister/ folder.');

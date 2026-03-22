@@ -18,6 +18,10 @@ class DirectoryLister
   private $sortOverrideBy = null;
   /** @var string|null */
   private $sortOverrideDir = null;
+  /** True when the URL path is not an existing file or directory under the listing root */
+  private $requestPathMissing = false;
+  /** URL path (no leading slash) after sanitization; for 404 messaging only */
+  private $requestPathMissingLabel = '';
 
   public function __construct($config, $basePath = null)
   {
@@ -53,23 +57,44 @@ class DirectoryLister
     
     // If path is empty, use base path
     if (empty($path)) {
+      $this->requestPathMissing = false;
       return $this->basePath;
     }
-    
+
     $fullPath = $this->basePath . '/' . $path;
-    
+
     // If the path is a file, get its directory
     if (is_file($fullPath)) {
+      $this->requestPathMissing = false;
       return dirname($fullPath);
     }
-    
+
     // If the path is a directory, return it directly
     if (is_dir($fullPath)) {
+      $this->requestPathMissing = false;
       return $fullPath;
     }
-    
-    // If neither file nor directory exists, return base path
+
+    // Neither file nor directory: 404 (do not silently list site root)
+    $this->requestPathMissing = true;
+    $this->requestPathMissingLabel = $path;
     return $this->basePath;
+  }
+
+  /**
+   * Whether the request URI pointed at a path that does not exist as a file or folder.
+   */
+  public function isRequestPathMissing()
+  {
+    return $this->requestPathMissing;
+  }
+
+  /**
+   * Sanitized request path without leading slash (for display on 404).
+   */
+  public function getRequestPathMissingLabel()
+  {
+    return $this->requestPathMissingLabel;
   }
 
   /**
