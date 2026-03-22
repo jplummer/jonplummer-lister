@@ -27,6 +27,12 @@ RewriteCond %{REQUEST_FILENAME} -f
 RewriteCond %{REQUEST_URI} !^/index\.php$
 RewriteRule ^(.*)$ - [L]
 
+# Anything else (neither existing file nor directory): run Lister so it can 404 in-app
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !^/index\.php$
+RewriteRule ^ index.php [L,QSA]
+
 # Block all JSON files (config files)
 <Files "*.json">
   Order Deny,Allow

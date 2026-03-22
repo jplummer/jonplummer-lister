@@ -6,6 +6,7 @@ Notable changes to Lister. Deployment builds show a **compact ID** (last 8 digit
 
 ### 2026-03-21
 
+- **Apache routing**: `.htaccess` catch-all sends non-file, non-directory URLs (e.g. `/neef`) to `index.php` so Lister’s in-app 404 runs; previously only `/` and real dirs were rewritten.
 - **404 / errors**: Missing path under lister root returns HTTP 404 (`http_error_404.php`, shared chrome); `runtime_error.php` uses `lister.css` + same header/footer as listing; `DirectoryLister` no longer falls back to root for bad paths.
 - **Accessibility**: Audit doc (`docs/accessibility-audit.md`); skip link; single page `h1`; table caption; `aria-expanded` on folder buttons; `aria-current` on sort; SR text for folder load; `plan.md` archive **2.12**.
 - **Plan**: Shipping task to investigate non-Apache equivalents to `.htaccess` (nginx/Caddy/IIS, etc.) and honest drag-and-drop scope per host.
