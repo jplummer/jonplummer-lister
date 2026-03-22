@@ -286,8 +286,55 @@ class DirectoryLister
       'extension' => $isDir ? null : $this->getFileExtension($name),
       'mime_type' => $isDir ? null : $this->getMimeType($fullPath),
       'type' => $isDir ? 'Folder' : $this->getFileType($name),
-      'icon' => $this->getFileIcon($name, $isDir)
+      'icon' => $this->getFileIcon($name, $isDir),
+      'preview_kind' => $isDir ? null : $this->getPreviewKindForFile($name)
     ];
+  }
+
+  /**
+   * Whether the file can open in the listing modal: image, pdf, or text (incl. code / markdown).
+   *
+   * @return string|null 'image', 'pdf', 'text', or null
+   */
+  public function previewKindForFilename($name)
+  {
+    return $this->getPreviewKindForFile($name);
+  }
+
+  /**
+   * @return string|null 'image', 'pdf', 'text', or null
+   */
+  private function getPreviewKindForFile($name)
+  {
+    $ext = $this->getFileExtension($name);
+    if ($ext === 'pdf') {
+      return 'pdf';
+    }
+
+    $this->loadExtensionTypes();
+    if (isset($this->extensionTypes[$ext])) {
+      $cat = $this->extensionTypes[$ext][0];
+      if ($cat === 'image') {
+        return 'image';
+      }
+      if (in_array($cat, ['text', 'code', 'web'], true)) {
+        return 'text';
+      }
+      if ($cat === 'data' && in_array($ext, ['json', 'xml', 'yaml', 'yml', 'toml', 'csv', 'tsv'], true)) {
+        return 'text';
+      }
+    }
+
+    $fallbackText = [
+      'md', 'markdown', 'log', 'gitignore', 'editorconfig',
+      'json', 'yaml', 'yml', 'toml', 'csv', 'tsv', 'sh', 'bash', 'zsh',
+      'htaccess', 'gitattributes'
+    ];
+    if (in_array($ext, $fallbackText, true)) {
+      return 'text';
+    }
+
+    return null;
   }
 
   /**

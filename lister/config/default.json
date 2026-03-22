@@ -14,7 +14,8 @@
     "show_hidden_files": false,
     "default_sort": "name",
     "sort_direction": "asc",
-    "readme_preview": true
+    "readme_preview": true,
+    "preview_text_max_bytes": 524288
   },
   "file_hiding": {
     "hide_dotfiles": true,

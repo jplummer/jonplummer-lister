@@ -74,7 +74,8 @@
                             </button>
                           <?php endif; ?>
                         <?php else: ?>
-                          <a href="<?= htmlspecialchars($item['url']) ?>" class="file-link">
+                          <?php $previewKind = $item['preview_kind'] ?? null; ?>
+                          <a href="<?= htmlspecialchars($item['url']) ?>" class="file-link"<?php if ($previewKind): ?> data-preview="<?= htmlspecialchars($previewKind, ENT_QUOTES, 'UTF-8') ?>"<?php endif; ?>>
                             <span class="icon material-symbols-outlined <?= htmlspecialchars($item['icon']) ?>" aria-hidden="true"><?= htmlspecialchars($getIconSymbol($item['icon']), ENT_QUOTES, 'UTF-8') ?></span>
                             <span class="item-name"><?= htmlspecialchars($item['name']) ?></span>
                           </a>
@@ -124,6 +125,18 @@
   <div id="lister-expanding-indicator" class="lister-expanding-indicator" role="status" aria-live="polite" aria-atomic="true" aria-hidden="true">
     <span class="lister-expanding-indicator-panel" aria-hidden="true">⏳</span>
   </div>
+
+  <dialog id="lister-preview-dialog" class="lister-preview-dialog" aria-labelledby="lister-preview-title">
+    <div class="lister-preview-chrome">
+      <h2 id="lister-preview-title" class="lister-preview-title"></h2>
+      <div class="lister-preview-nav" id="lister-preview-nav" hidden>
+        <button type="button" class="lister-preview-prev" aria-label="Previous image">←</button>
+        <button type="button" class="lister-preview-next" aria-label="Next image">→</button>
+      </div>
+      <button type="button" class="lister-preview-close" aria-label="Close">Close</button>
+    </div>
+    <div class="lister-preview-body" id="lister-preview-body"></div>
+  </dialog>
 
   <footer>
     <p>Lister © <?= date('Y') ?> Jon Plummer</p>
@@ -175,7 +188,221 @@
       }, remaining);
     }
 
+    // —— Modal preview (text / PDF / images) ——
+    let previewDialog = null;
+    let previewTitle = null;
+    let previewBody = null;
+    let previewNav = null;
+    let previewPrev = null;
+    let previewNext = null;
+    let imagePreviewList = [];
+    let imagePreviewIndex = -1;
+
+    function webPathFromFileHref(href) {
+      const u = new URL(href, window.location.href);
+      let p = u.pathname;
+      if (p.startsWith('/')) {
+        p = p.slice(1);
+      }
+      return p;
+    }
+
+    function escapeHtml(s) {
+      const d = document.createElement('div');
+      d.textContent = s;
+      return d.innerHTML;
+    }
+
+    function collectImagePreviewList() {
+      const tbody = document.getElementById('directory-contents');
+      if (!tbody) {
+        return [];
+      }
+      return Array.from(tbody.querySelectorAll('a.file-link[data-preview="image"]')).map((a) => ({
+        href: a.href,
+        label: (a.querySelector('.item-name') && a.querySelector('.item-name').textContent || '').trim()
+      }));
+    }
+
+    function findImagePreviewIndex(list, hrefAttr) {
+      const target = new URL(hrefAttr, window.location.href).href;
+      return list.findIndex((item) => item.href === target);
+    }
+
+    function updateImageNav() {
+      if (!previewNav || !previewPrev || !previewNext) {
+        return;
+      }
+      const n = imagePreviewList.length;
+      previewNav.hidden = n <= 1;
+      previewPrev.disabled = imagePreviewIndex <= 0;
+      previewNext.disabled = imagePreviewIndex >= n - 1;
+    }
+
+    function stepImagePreview(delta) {
+      if (imagePreviewList.length < 2) {
+        return;
+      }
+      imagePreviewIndex = Math.max(0, Math.min(imagePreviewList.length - 1, imagePreviewIndex + delta));
+      const item = imagePreviewList[imagePreviewIndex];
+      const img = previewBody.querySelector('.lister-preview-img');
+      if (img && item) {
+        img.src = item.href;
+        img.alt = item.label;
+      }
+      if (previewTitle && item) {
+        previewTitle.textContent = item.label;
+      }
+      updateImageNav();
+    }
+
+    function onPreviewDialogClose() {
+      const iframe = previewBody && previewBody.querySelector('iframe');
+      if (iframe) {
+        iframe.src = 'about:blank';
+      }
+      const img = previewBody && previewBody.querySelector('img');
+      if (img) {
+        img.removeAttribute('src');
+      }
+      imagePreviewList = [];
+      imagePreviewIndex = -1;
+    }
+
+    function onPreviewKeydown(e) {
+      if (!previewDialog || !previewDialog.open) {
+        return;
+      }
+      const isImage = previewBody && previewBody.querySelector('.lister-preview-img');
+      if (!isImage) {
+        return;
+      }
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        stepImagePreview(-1);
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        stepImagePreview(1);
+      }
+    }
+
+    function openFilePreview(link) {
+      const kind = link.getAttribute('data-preview');
+      const href = link.getAttribute('href');
+      const label = (link.querySelector('.item-name') && link.querySelector('.item-name').textContent || '').trim();
+      if (!kind || !href) {
+        return;
+      }
+
+      previewTitle.textContent = label;
+      previewBody.innerHTML = '';
+
+      if (kind === 'image') {
+        imagePreviewList = collectImagePreviewList();
+        imagePreviewIndex = findImagePreviewIndex(imagePreviewList, href);
+        if (imagePreviewIndex < 0) {
+          imagePreviewIndex = 0;
+        }
+        const img = document.createElement('img');
+        img.className = 'lister-preview-img';
+        img.alt = label;
+        img.src = link.href;
+        previewBody.appendChild(img);
+        updateImageNav();
+        previewDialog.showModal();
+        return;
+      }
+
+      previewNav.hidden = true;
+
+      if (kind === 'pdf') {
+        const iframe = document.createElement('iframe');
+        iframe.className = 'lister-preview-iframe';
+        iframe.title = label;
+        iframe.src = link.href;
+        previewBody.appendChild(iframe);
+        previewDialog.showModal();
+        return;
+      }
+
+      if (kind === 'text') {
+        const loading = document.createElement('p');
+        loading.className = 'lister-preview-loading';
+        loading.textContent = 'Loading…';
+        previewBody.appendChild(loading);
+        previewDialog.showModal();
+        const path = webPathFromFileHref(link.href);
+        fetch('/lister/preview.php?path=' + encodeURIComponent(path))
+          .then((r) => r.json())
+          .then((data) => {
+            previewBody.innerHTML = '';
+            if (!data.success) {
+              const err = document.createElement('p');
+              err.className = 'lister-preview-error';
+              err.textContent = data.error || 'Could not load preview';
+              previewBody.appendChild(err);
+              return;
+            }
+            const wrap = document.createElement('div');
+            wrap.className = 'lister-preview-scroll';
+            wrap.innerHTML = data.html;
+            previewBody.appendChild(wrap);
+          })
+          .catch((err) => {
+            previewBody.innerHTML = '';
+            const p = document.createElement('p');
+            p.className = 'lister-preview-error';
+            p.textContent = String(err && err.message ? err.message : err);
+            previewBody.appendChild(p);
+          });
+      }
+    }
+
+    function initListerPreview() {
+      previewDialog = document.getElementById('lister-preview-dialog');
+      previewTitle = document.getElementById('lister-preview-title');
+      previewBody = document.getElementById('lister-preview-body');
+      previewNav = document.getElementById('lister-preview-nav');
+      if (!previewDialog || !previewTitle || !previewBody) {
+        return;
+      }
+      previewPrev = previewDialog.querySelector('.lister-preview-prev');
+      previewNext = previewDialog.querySelector('.lister-preview-next');
+      const closeBtn = previewDialog.querySelector('.lister-preview-close');
+      if (closeBtn) {
+        closeBtn.addEventListener('click', () => previewDialog.close());
+      }
+      if (previewPrev) {
+        previewPrev.addEventListener('click', () => stepImagePreview(-1));
+      }
+      if (previewNext) {
+        previewNext.addEventListener('click', () => stepImagePreview(1));
+      }
+      previewDialog.addEventListener('click', (e) => {
+        if (e.target === previewDialog) {
+          previewDialog.close();
+        }
+      });
+      previewDialog.addEventListener('close', onPreviewDialogClose);
+      document.addEventListener('keydown', onPreviewKeydown);
+      document.addEventListener('click', (event) => {
+        const link = event.target.closest('#directory-contents a.file-link[data-preview]');
+        if (!link) {
+          return;
+        }
+        if (event.button !== 0) {
+          return;
+        }
+        if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) {
+          return;
+        }
+        event.preventDefault();
+        openFilePreview(link);
+      });
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
+      initListerPreview();
       // Use event delegation to handle all directory toggles
       document.addEventListener('click', function(event) {
         if (event.target.closest('.directory-toggle')) {
@@ -342,6 +569,9 @@
         a.className = 'file-link';
         const fileUrl = item.url || ('/' + encodeURIComponent(item.name));
         a.setAttribute('href', fileUrl);
+        if (item.preview_kind) {
+          a.setAttribute('data-preview', item.preview_kind);
+        }
         const iconSpan = document.createElement('span');
         const iconKey = item.icon || 'file';
         iconSpan.className = 'icon material-symbols-outlined ' + iconKey;

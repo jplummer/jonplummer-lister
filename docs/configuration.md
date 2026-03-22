@@ -60,6 +60,7 @@ HOST_DOMAIN=your-domain.com
 ## Lister `config/default.json`
 
   - **`display.readme_preview`** (boolean, default `true`): When a recognized README exists in the directory being listed (e.g. `README.md`, `README.txt`), render it below the file table. Set to `false` to disable. Files larger than 512 KiB are skipped.
+  - **`display.preview_text_max_bytes`** (integer, default `524288`): Maximum size for text/code/markdown content loaded into the modal preview via `lister/preview.php`. Larger files show an error in the modal.
 
 ## Troubleshooting
 

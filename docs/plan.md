@@ -6,7 +6,7 @@
 - **Phase 2**: Partially complete (UX, abuse resistance, shipping polish)
 - **Phase 3**: Not started (search, bulk file operations)
 - **Phase 4**: Someday maybe — commercialization / multi-user (see [Phase 4](#phase-4-commercialization-and-multi-user))
-- **Next**: Modal text / image / PDF previews, keyboard navigation, accessibility audit
+- **Next**: Keyboard navigation, accessibility audit
 
 ## Phase 1: Core Foundation (MVP) – Basic directory listing with sorting and theming – Complete
 
@@ -17,8 +17,8 @@
 ### Styling completeness (Phase 2.1) – Complete
 
 ### Product: browsing & previews
-- [ ] **Modal previews** (click to open, Escape / backdrop to close): text and markdown (escaped or safe-rendered like README), images with prev/next within the current directory listing, PDF in an `<iframe>` (or equivalent) so the file URL stays same-origin and already access-controlled
-- [ ] Wire preview affordance on main table and expanded (AJAX) rows; optional config toggles and size limits for fetched text
+- [x] **Modal previews** (click to open, Escape / backdrop to close): text and markdown (escaped or safe-rendered like README), images with prev/next within the current directory listing, PDF in an `<iframe>` (or equivalent) so the file URL stays same-origin and already access-controlled
+- [x] Wire preview affordance on main table and expanded (AJAX) rows; optional config toggles and size limits for fetched text (`display.preview_text_max_bytes`)
 
 ### Product: interaction & quality
 - [ ] Implement keyboard navigation

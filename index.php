@@ -13,7 +13,8 @@ $requiredFiles = [
   'lister/config/default.json' => 'Configuration file',
   'lister/templates/index.php' => 'Main template',
   'lister/includes/DirectoryLister.php' => 'Directory listing class',
-  'lister/api.php' => 'API endpoint'
+  'lister/api.php' => 'API endpoint',
+  'lister/preview.php' => 'Text preview API for modal'
 ];
 
 $missingFiles = [];

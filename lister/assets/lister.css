@@ -607,7 +607,6 @@ footer .deploy-id {
   height: fit-content;
   min-height: 0;
   color: var(--text-color-light);
-  font-style: italic;
   cursor: default;
   line-height: var(--line-height);
   /* td already has vertical padding; match .directory-toggle / .file-link (padding: 0) */
@@ -833,6 +832,123 @@ footer .deploy-id {
 .lister-readme .readme-markdown img {
   max-width: 100%;
   height: auto;
+}
+
+/* Modal: in-page preview for text / PDF / images */
+.lister-preview-dialog {
+  margin: auto;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  padding: 0;
+  max-width: min(92vw, 52rem);
+  width: 100%;
+  background: var(--content-background-color);
+  color: var(--text-color);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+}
+
+.lister-preview-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.lister-preview-chrome {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-bottom: 1px solid var(--border-color);
+  background: var(--hover-color);
+}
+
+.lister-preview-title {
+  margin: 0;
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  word-break: break-word;
+}
+
+.lister-preview-nav {
+  display: flex;
+  gap: var(--spacing-xs);
+}
+
+.lister-preview-prev,
+.lister-preview-next {
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+  font-size: var(--font-size-md);
+  line-height: 1;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background: var(--content-background-color);
+  color: var(--text-color);
+}
+
+.lister-preview-close {
+  padding: 0.35rem 0.75rem;
+  cursor: pointer;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background: var(--content-background-color);
+  color: var(--text-color);
+  font-size: var(--font-size-xxs);
+}
+
+.lister-preview-body {
+  padding: var(--spacing-md);
+  max-height: min(78vh, 40rem);
+  overflow: auto;
+}
+
+.lister-preview-scroll {
+  max-width: 100%;
+}
+
+.lister-preview-img {
+  display: block;
+  max-width: 100%;
+  max-height: min(72vh, 36rem);
+  width: auto;
+  height: auto;
+  margin: 0 auto;
+}
+
+.lister-preview-iframe {
+  display: block;
+  width: 100%;
+  min-height: min(70vh, 36rem);
+  border: 0;
+  background: var(--content-background-color);
+}
+
+.lister-preview-loading,
+.lister-preview-error {
+  margin: 0;
+  color: var(--text-color-light);
+}
+
+.lister-preview-error {
+  color: var(--link-color);
+}
+
+.lister-preview-code {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: var(--font-size-xxs);
+  line-height: var(--line-height-xs);
+}
+
+.lister-preview-dialog .readme-markdown {
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-xs);
+}
+
+.lister-preview-dialog .readme-markdown pre {
+  overflow-x: auto;
 }
 
 /* Print styles */
