@@ -1,6 +1,6 @@
 # Lister - Directory Listing Application
 
-A simple, clean directory listing application for web servers.
+A clean directory listing application for web servers.
 
 ## 📦 Install Package
 
@@ -31,9 +31,12 @@ Lister is meant for low-traffic, personal browsing. Do not rely on it where sust
 ```bash
 # Start development server with router (recommended)
 php -S localhost:8000 router.php
+```
 
-# Test the application
-curl http://localhost:8000
+With optional `security` enabled, default `curl` is often blocked (bot-like User-Agent). Use a browser, or:
+
+```bash
+curl -H 'User-Agent: Mozilla/5.0 (local smoke test)' http://localhost:8000/
 ```
 
 ### Deployment
@@ -50,18 +53,25 @@ curl http://localhost:8000
 ```
 .
 ├── index.php              # Main application entry point (preflight install errors)
+├── INSTALL.md             # Installation and removal (upload target)
 ├── .htaccess              # Apache security rules
 ├── lister/                # Application directory
-│   ├── config/
-│   │   └── default.json   # Configuration
+│   ├── api.php            # AJAX (folder expand)
+│   ├── admin.php          # Optional security admin UI
+│   ├── preview.php        # Modal text/PDF preview helper
+│   ├── config/            # default.json, extensions.json
 │   ├── includes/          # PHP classes
-│   └── assets/            # CSS, JS, icons
-├── scripts/
-│   └── deploy.sh          # Deployment script
+│   ├── templates/         # Listing UI, 404, runtime error chrome
+│   └── assets/            # lister.css, images (favicons)
+├── scripts/               # deploy.sh, teardown.sh, hooks, diagnostics
 └── docs/
-    ├── plan.md            # Development plan
-    ├── requirements.md    # Project requirements
-    └── notes.md           # Development notes
+    ├── plan.md
+    ├── requirements.md
+    ├── notes.md
+    ├── configuration.md
+    ├── CHANGELOG.md
+    ├── error-smoke-tests.md
+    └── accessibility-audit.md
 ```
 
 ## Configuration

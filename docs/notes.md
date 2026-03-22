@@ -49,12 +49,17 @@ Repository root (same directory as `index.php`, `router.php`, and `.htaccess`):
 │   │   ├── Security.php   # Security & rate limiting
 │   │   └── SortPreference.php # Sort cookie / query handling
 │   ├── templates/
-│   │   ├── index.php      # Main template
-│   │   └── runtime_error.php # Fatal error HTML (index.php catch)
+│   │   ├── index.php      # Main listing template
+│   │   ├── http_error_404.php # In-app 404 body
+│   │   ├── runtime_error.php # Uncaught error body (index.php catch)
+│   │   ├── _error_chrome_top.php # Shared error chrome: head, header, <main> open
+│   │   └── _error_chrome_bottom.php # Shared error chrome: </main>, footer
 │   ├── assets/
-│   │   └── lister.css     # Stylesheet
+│   │   ├── lister.css     # Stylesheet
+│   │   └── images/        # Favicon JPEGs (flat under images/)
 │   ├── api.php            # AJAX API endpoint
 │   ├── admin.php          # Security admin panel
+│   ├── preview.php        # Modal text/PDF preview helper
 │   └── data/              # Runtime data (git ignored)
 │       ├── security.log   # Security incidents
 │       └── rate_*.json    # Rate limiting data
@@ -68,7 +73,10 @@ Repository root (same directory as `index.php`, `router.php`, and `.htaccess`):
     ├── plan.md            # Development plan
     ├── requirements.md    # Project requirements
     ├── notes.md           # This file
-    └── configuration.md   # Configuration guide
+    ├── configuration.md   # Configuration guide
+    ├── CHANGELOG.md       # Release-style change log
+    ├── error-smoke-tests.md # Post-deploy error checks
+    └── accessibility-audit.md # A11y notes
 ```
 
 ## Development Workflow

@@ -4,6 +4,11 @@ Notable changes to Lister. Deployment builds show a **compact ID** (last 8 digit
 
 ## Recent changes
 
+### 2026-03-22
+
+- **Assets**: Favicon JPEGs moved from `lister/assets/images/2021/02/` to `lister/assets/images/`; listing and error templates plus `scripts/diagnose_favicon.php` updated; query string `?v=3` for cache bust.
+- **Docs**: `INSTALL.md` rewritten for current layout, `lister/data/` permissions, config links, and removal; `README.md` Quick Start matches security-aware curl; `docs/notes.md` project tree lists templates, `preview.php`, and `assets/images/`.
+
 ### 2026-03-21
 
 - **Runtime errors**: `app.debug` false → generic 500 + `error_log`; true → full `runtime_error.php` detail; `docs/error-smoke-tests.md`; server vs Lister 404 in `configuration.md`.
