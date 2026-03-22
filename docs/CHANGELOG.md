@@ -1,232 +1,50 @@
 # Changelog
 
-All notable changes to Lister will be documented in this file.
+Notable changes to Lister. Deployment builds show a **compact ID** (last 8 digits of Unix time) in the footer instead of semantic versions.
 
-**Note**: As of 2025-11-23, this project uses a compact deployment ID (last 8 digits of unix timestamp) for deployment tracking instead of semantic versioning. The deployment ID is displayed in the application footer.
-
-## Recent Changes
+## Recent changes
 
 ### 2026-03-21
 
-#### Added
-- Add preview.php
-
-#### Changed
-- Update files
-- Update deployment configuration
-- Update files
-
-#### Added
-- README preview below listing: `ReadmePreview.php`, bundled `Parsedown.php`, `display.readme_preview` in config, styles under `.lister-readme`.
-
-#### Changed
-- Update files
-- Update deployment configuration
-- File type and folder icons use Material Symbols Outlined (Google Fonts); `lister/includes/IconSymbols.php` maps keys to ligature names.
-- Update files
-
-#### Added
-- Add 2 new files
-
-#### Changed
-- Update files
-- Update deployment configuration
-- Update files
-- Update files
-
-#### Added
-- Add IconSymbols class
-
-#### Changed
-- Update files
-- Update deployment configuration
-- Update files
-- Folder expand: viewport-centered loading panel (themed translucent rounded square, larger hourglass), minimum display 500ms, depth counting for overlapping fetches.
-
-#### Added
-- Add PathSanitizer class
-
-#### Changed
-- Update files
-- Update deployment configuration
-- Update files
-- Update files
-- `plan.md`: Phase 2 operations subsection (access logs, safe-delete workflow, Referer caveats); optional log-analysis helpers (3.4); Phase 4 wording clarified as optional in threat-model note.
-
-#### Security
-- Add ConfigLoader class
-- Add SortPreference class
-
-#### Changed
-- Update files
-- Update deployment configuration
-- Update files
-- Update files
-- Reorganize `plan.md` and `requirements.md`: archive completed plan items, detangle Phase 2, Phase 3 personal-scope backlog, Phase 4 deferred commercialization/multi-user; requirements deployment context and section 5 deferred scope.
-- Align lister CSS with jonplummer.com DR10 palette: `light-dark()` tokens, sage page background, theme-aware error box, masked folder caret, print `:root` overrides.
+- **Modal previews**: `preview_kind` / `data-preview` on rows; `<dialog>` for text (`lister/preview.php` + Parsedown for `.md`), PDF (`iframe`), images with prev/next within the visible table; `display.preview_text_max_bytes`.
+- **Install surface**: Preflight install error rendered from root `index.php` only (removed extra root `install_error.php`). Docs: packaging favors clear upload target and runtime-only zips over minimizing file count.
+- **Listing UX**: README block under the table (`ReadmePreview`, `display.readme_preview`); DR10 palette via `light-dark()`; Material Symbols file/folder icons (`IconSymbols.php`); sortable columns with query → cookie → config; API POST sends same `sort`/`dir` for expanded rows.
+- **Expand / API**: Viewport loading indicator (≥500ms, overlapping fetches); `PathSanitizer`; when `security.enabled`, `lister/api.php` runs the same checks as pages and returns JSON 403 on deny.
+- **Docs / scope**: `plan.md` + `requirements.md` reorganized (Phase 4 deferred commercialization); deployment context note in requirements.
 
 ### 2025-11-24
 
-#### Changed
-- Update files
-- Update deployment configuration
-- Update files
-- Update files
-- Update files
-- Update files
-- Update files
-- Update files
-- Update files
-- Update files
-- Update files
-
-#### Added
-- Add 2 new files
-
-#### Changed
-- Update files
-- Update deployment configuration
-- Update files
-- Update files
-- Update files
-- Update files
-- Update files
-- Update files
-- Update files
-- Update files
-- Update files
+- Ongoing fixes and hook-driven deploy metadata updates (no single theme).
 
 ### 2025-11-23
 
-#### Changed
-- Update files
-- Update deployment configuration
-- Update files
-- Update files
-- Update files
-- Update files
-- Update files
-- Update files
-- Update files
-- Update files
-- Update color palette to DR10 with WCAG AA contrast adjustments
-- Update documentation and configuration files
-- Replaced versioning system with compact deployment ID (last 8 digits of unix timestamp) for deployment verification
-- Move data directory to lister/data/ for safer deployment
-- Fixed URL encoding for files and directories with spaces in names
-  - Changed from `urlencode` to `rawurlencode` to properly encode spaces as %20 instead of +
+- **URLs**: `rawurlencode` path segments so spaces become `%20` in links.
+- **Deploy**: Data under `lister/data/`; footer deployment ID; favicon links + assets; git hooks in `scripts/`.
+- **Docs / security**: Changelog and security dashboard documentation; sensitive-file hiding patterns.
 
-#### Added
-- Add favicon and apple-touch-icon links to template
-- Add favicon image assets
-- Add git hooks to scripts/ with setup script
-
-#### Security
-- Add ConfigLoader class
-- Enhance security and documentation: block sensitive files, add changelog, document security dashboard
-
-## [1.0.0] - 2025-10-10
+## [1.0.0] — 2025-10-10
 
 ### Added
-- **File Hiding System**: Configurable options to hide files from directory listings
-  - Hide dotfiles (enabled by default)
-  - Hide sensitive files (SSH keys, certificates, .env files, etc.)
-  - Hide OS-specific cruft (.DS_Store, Thumbs.db, etc.)
-  - Hide application files (index.php, lister/ directory, etc.)
-  - Pattern-based matching for flexible filtering
-  - Hidden files remain accessible via direct URL
 
-### Security
-- **IP-based Blocking System**: Automatic blocking of IPs that exceed rate limits
-  - Temporary blocks (default 5 minutes)
-  - Block expiration and automatic cleanup
-  - Logging of blocked IP access attempts
+- **File hiding**: Dotfiles, sensitive names, OS cruft, app paths; patterns; hidden files still reachable by direct URL.
+- **Security**: IP block after rate limit; exponential / per-IP limits; incident log (IP, UA, URI, referer, time); basic password admin at `/lister/admin.php`.
+- **UX**: Loading states; clearer errors; empty-folder rows.
+- **Dev**: `deploy.sh`, `teardown.sh`, security test script, pattern tests, `router.php` for `php -S`.
 
-- **Enhanced Rate Limiting**: More sophisticated rate limiting implementation
-  - Configurable requests per minute (default: 30)
-  - Per-IP tracking with automatic cleanup
-  - Exponential backoff for violations
-
-- **Request Logging and Monitoring**: Comprehensive security incident logging
-  - Logs all security incidents with full context
-  - Tracks IP, user agent, request URI, referer, timestamp
-  - Incident types: BOT_DETECTED, RATE_LIMIT_EXCEEDED, SUSPICIOUS_REQUEST, BLOCKED_IP_ACCESS_ATTEMPT
-
-- **Security Admin Dashboard**: Basic admin interface for security monitoring
-  - Password-protected access (basic implementation)
-  - View total security incidents count
-  - Display recent security incidents with details
-  - View current security configuration
-  - Accessible at `/lister/admin.php`
-
-### User Experience
-- **Loading States and Transitions**: Improved visual feedback during directory operations
-- **Better Error Messages**: More informative error handling and user-facing messages
-- **Empty Folder Detection**: Proper display of empty directories in navigation
-
-### Development
-- **Deployment Scripts**: Automated deployment and teardown scripts
-  - `scripts/deploy.sh` for deployment to web server
-  - `scripts/teardown.sh` for removal from web server
-- **Security Testing**: Security testing script for validation
-- **Pattern Matching Tests**: Tests for file pattern matching functionality
-- **Development Router**: PHP built-in server router for local development
-
-## [0.9.0] - 2025-10-08
+## [0.9.0] — 2025-10-08
 
 ### Added
-- **Enhanced Directory Navigation**: Expandable directory tree with AJAX
-  - Progressive indentation for nested folders
-  - Loading states for directory expansion
-  - Empty folder detection and display
 
-- **Comprehensive File Type System**: Extensive file type detection and display
-  - Support for 700+ file extensions
-  - Proper file type capitalization
-  - Emoji-based icon system with fallbacks
-  - MIME type detection
+- Expandable directories (AJAX), nesting, loading states, empty folders.
+- Large extension map (~700), MIME detection; emoji icons (since replaced by Material Symbols in 2026-03 work).
 
 ### Changed
-- **Requirements Documentation**: Updated and clarified project requirements
-  - Added design principles (semantic HTML, minimal classes, minimal JavaScript)
-  - Clarified sorting behavior (default alphabetical with type/size/date options)
-  - Moved responsive design to core features
-  - Added directory access control to features to be considered
-  - Reorganized authentication features
-  - Clarified installation structure
 
-## [0.8.0] - Initial Release
+- Requirements: design principles, sorting, responsive as core, access-control noted as future.
 
-### Added
-- **Core Directory Listing**: Basic directory listing functionality
-  - Sortable table (name, type, size, date)
-  - File type icons
-  - File size formatting
-  - Modification date display
-  - Breadcrumb navigation
+## [0.8.0] — Initial release
 
-- **Security Features**:
-  - Basic rate limiting (30 requests/minute)
-  - Bot detection via User-Agent filtering
-  - .htaccess rules to hide infrastructure files
-  - Input sanitization
-  - Suspicious request detection
-  - Security logging
-
-- **Theming & Styling**:
-  - Integration with jonplummer.com design patterns
-  - Dark mode support
-  - Mobile-first responsive design
-  - Semantic HTML structure
-
-- **Configuration System**: JSON-based configuration
-  - Default configuration file
-  - Easy customization
-  - Security settings
-  - Display preferences
-
-- **Project Structure**: Clean, organized codebase
-  - Modular PHP classes (App, DirectoryLister, Security)
-  - Template system
-  - Asset organization
-  - Development tools
+- Core listing (sort, icons, sizes, dates, breadcrumbs).
+- Basic rate limit, bot UA filter, `.htaccess` hardening, sanitization, suspicious-request logging.
+- Theming aligned with jonplummer.com, dark mode, responsive layout.
+- JSON config (`lister/config/default.json`).

@@ -3,7 +3,7 @@
 ## Current Status: WORKS GOOD ✅
 - **Deployed**: misc.jonplummer.com
 - **Phase 1**: Complete (MVP + additional features)
-- **Phase 2**: Partially complete (UX, abuse resistance, shipping polish)
+- **Phase 2**: In progress — modal previews shipped; remaining: keyboard/a11y, error pages, shipping/docs tasks, optional polish
 - **Phase 3**: Not started (search, bulk file operations)
 - **Phase 4**: Someday maybe — commercialization / multi-user (see [Phase 4](#phase-4-commercialization-and-multi-user))
 - **Next**: Keyboard navigation, accessibility audit
@@ -15,10 +15,6 @@
 **Context**: Primary use is **personal, convenient file access**, not high-sensitivity hosting. **Threat model**: automated abuse (bots, scrapers) is the main concern—not fine-grained control over curious humans. Multi-tenant access, auth-as-product, and similar work are an optional **Phase 4** and do not drive the current deployment.
 
 ### Styling completeness (Phase 2.1) – Complete
-
-### Product: browsing & previews
-- [x] **Modal previews** (click to open, Escape / backdrop to close): text and markdown (escaped or safe-rendered like README), images with prev/next within the current directory listing, PDF in an `<iframe>` (or equivalent) so the file URL stays same-origin and already access-controlled
-- [x] Wire preview affordance on main table and expanded (AJAX) rows; optional config toggles and size limits for fetched text (`display.preview_text_max_bytes`)
 
 ### Product: interaction & quality
 - [ ] Implement keyboard navigation
@@ -57,7 +53,6 @@
 - [ ] **Optional**: Refine drag-and-drop install experience by **install surface**, not raw file count: README states an unambiguous upload target; shipped tree keeps top-level items purposeful; release zip omits dev-only files. Treat merging PHP for fewer files as low value unless it also reduces confusion.
 
 ### Visual polish (incremental / optional)
-- [x] **Favicon verification**: Run `scripts/diagnose_favicon.php` against the environment (template links + files on disk + stray `favicon.ico`). In the browser, confirm each linked icon URL returns 200 in the Network tab; spot-check tab icons in Safari and Chrome; on iOS, use Add to Home Screen to confirm `apple-touch-icon`. Optional later: `site.webmanifest` + maskable icons if Android shortcuts matter.
 - [ ] Styling adjustments to better match jonplummer.com
 
 ### Customization & integration
@@ -240,6 +235,17 @@ lister/
 - [x] Name column layout: flex row, 16px disclosure gutter for files and empty folders, caret/icon/name aligned to first line when names wrap
 - [x] Metadata columns: size right-aligned, muted text on size/modified/type, extra horizontal padding between columns
 - [x] Empty folder row height aligned with other rows (no extra wrapper padding)
+
+#### 2.7 Modal file previews
+- [x] **Modal previews** (`<dialog>`): text / markdown via `lister/preview.php` (Parsedown safe / escaped plain / `<pre>` for other text kinds), PDF in `<iframe>`, images with `<img>` and ← / → among image rows in the current table (including expanded rows); `data-preview` + `preview_kind`; `display.preview_text_max_bytes`
+- [x] Primary click opens modal; modified clicks (e.g. ⌘/Ctrl) keep normal navigation
+
+#### 2.8 Install & packaging (done)
+- [x] Preflight install error UI inlined in root `index.php` (removed separate `install_error.php` from deploy surface)
+- [x] Requirements + plan: install packaging goals emphasize upload target and runtime-only artifacts over raw file count
+
+#### 2.9 Favicon verification (checklist completed in repo)
+- [x] Documented steps: `scripts/diagnose_favicon.php`, Network tab 200s, Safari/Chrome tab + iOS Add to Home Screen; optional later: `site.webmanifest` + maskable icons for Android shortcuts
 
 ### Success criteria (met)
 - [x] Lists files in any directory with proper sorting
