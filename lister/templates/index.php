@@ -4,9 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Miscellaneous - Directory Listing</title>
-  <link rel="icon" href="/lister/assets/images/2021/02/jp_round-48x48.jpg?v=2" sizes="32x32">
-  <link rel="icon" href="/lister/assets/images/2021/02/jp_round.jpg?v=2" sizes="192x192">
-  <link rel="apple-touch-icon" href="/lister/assets/images/2021/02/jp_round-180x180.jpg?v=2">
+  <link rel="icon" href="/lister/assets/images/jp_round-48x48.jpg?v=3" sizes="32x32">
+  <link rel="icon" href="/lister/assets/images/jp_round.jpg?v=3" sizes="192x192">
+  <link rel="apple-touch-icon" href="/lister/assets/images/jp_round-180x180.jpg?v=3">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0">
@@ -248,6 +248,15 @@
       rows[idx].focus();
     }
 
+    /** Row with matching `data-path` (web path), or null. */
+    function findListingRowByWebPath(webPath) {
+      if (!webPath) {
+        return null;
+      }
+      const rows = getListingRows();
+      return rows.find((r) => (r.getAttribute('data-path') || '') === webPath) || null;
+    }
+
     function onListingFocusIn(e) {
       if (previewDialog && previewDialog.open) {
         return;
@@ -344,11 +353,26 @@
       }
       if (e.key === 'ArrowLeft') {
         const toggle = row.querySelector('.directory-toggle');
-        if (!toggle || !row.classList.contains('expanded')) {
+        if (toggle && row.classList.contains('expanded')) {
+          e.preventDefault();
+          collapseDirectory(row, toggle.querySelector('.toggle-icon'));
           return;
         }
-        e.preventDefault();
-        collapseDirectory(row, toggle.querySelector('.toggle-icon'));
+        const parentPath = row.getAttribute('data-parent-path');
+        if (!parentPath) {
+          return;
+        }
+        const isDir = row.getAttribute('data-type') === 'directory';
+        const fileGoesToParent = !isDir;
+        const collapsedOrEmptyDir = isDir && (!toggle || !row.classList.contains('expanded'));
+        if (fileGoesToParent || collapsedOrEmptyDir) {
+          const parentRow = findListingRowByWebPath(parentPath);
+          if (parentRow) {
+            e.preventDefault();
+            setListFocusedRow(parentRow);
+            parentRow.focus();
+          }
+        }
         return;
       }
       if (e.key === 'Enter') {

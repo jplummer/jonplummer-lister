@@ -58,9 +58,9 @@ header('Content-Type: text/html; charset=utf-8');
   $baseDir = dirname(__DIR__);
   $templatePath = $baseDir . '/lister/templates/index.php';
   $faviconPaths = [
-    '32x32' => 'lister/assets/images/2021/02/jp_round-48x48.jpg',
-    '192x192' => 'lister/assets/images/2021/02/jp_round.jpg',
-    '180x180' => 'lister/assets/images/2021/02/jp_round-180x180.jpg'
+    '32x32' => 'lister/assets/images/jp_round-48x48.jpg',
+    '192x192' => 'lister/assets/images/jp_round.jpg',
+    '180x180' => 'lister/assets/images/jp_round-180x180.jpg'
   ];
   
   // Check 1: Template file exists

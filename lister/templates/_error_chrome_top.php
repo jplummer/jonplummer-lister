@@ -11,9 +11,9 @@ $__listerPt = $listerPageTitle ?? 'Error';
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><?= htmlspecialchars($__listerPt, ENT_QUOTES, 'UTF-8') ?></title>
-  <link rel="icon" href="/lister/assets/images/2021/02/jp_round-48x48.jpg?v=2" sizes="32x32">
-  <link rel="icon" href="/lister/assets/images/2021/02/jp_round.jpg?v=2" sizes="192x192">
-  <link rel="apple-touch-icon" href="/lister/assets/images/2021/02/jp_round-180x180.jpg?v=2">
+  <link rel="icon" href="/lister/assets/images/jp_round-48x48.jpg?v=3" sizes="32x32">
+  <link rel="icon" href="/lister/assets/images/jp_round.jpg?v=3" sizes="192x192">
+  <link rel="apple-touch-icon" href="/lister/assets/images/jp_round-180x180.jpg?v=3">
   <link rel="stylesheet" href="/lister/assets/lister.css">
 </head>
 <body>

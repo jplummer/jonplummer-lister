@@ -1,68 +1,62 @@
-# Lister Installation Guide
+# Lister installation
 
-## Quick Installation (Under 1 Minute)
+## What to upload
 
-### Step 1: Upload Files
-Upload only the following files and folders to your web server's root (or target) directory:
+In your web root (or the directory that should run Lister), place:
 
 - `index.php`
 - `.htaccess`
-- `lister/` folder
+- `lister/` (the whole directory)
 
-Do not upload documentation files or other non-essential items from the repository.
+Do not upload `docs/`, `scripts/`, `router.php`, or other development-only files from the repository. You may keep a copy of this file for reference.
 
-### Step 2: Set Permissions
+## Permissions
+
 ```bash
-chmod 644 index.php
-chmod 644 .htaccess
+chmod 644 index.php .htaccess
 chmod 644 lister/config/*.json
 ```
 
-### Step 3: Test
-Visit `https://yourdomain.com/` in your browser.
+Lister creates `lister/data/` at runtime if needed (security logs and related files). The PHP process must be able to create and write that directory. On many hosts the default upload permissions are enough; if you see errors mentioning `lister/data/`, try `chmod 755 lister` (and create `lister/data` with `chmod 755` if your host requires it).
 
-## File Structure
+## Check that it works
+
+Visit your site in a browser. If optional `security` is enabled in config, a bare `curl` without a normal browser User-Agent may be rejected—use the browser for a first check.
+
+## Layout on the server
+
 ```
 your-domain.com/
-├── index.php              # Main application (preflight install errors inline)
-├── .htaccess              # Security rules
+├── index.php       # Entry point; preflight errors if setup is incomplete
+├── .htaccess       # Apache routing and hardening (production; not router.php)
 └── lister/
-    ├── api.php            # AJAX API endpoint
-    ├── config/
-    │   ├── default.json   # Configuration (required)
-    │   └── extensions.json # File type mappings (optional)
-    ├── includes/          # PHP classes
-    │   ├── App.php
-    │   ├── DirectoryLister.php
-    │   └── Security.php
-    ├── templates/
-    │   ├── index.php      # Main template
-    │   └── runtime_error.php # Fatal error page (loaded by index.php)
-    └── assets/            # CSS, JS, icons
+    ├── api.php         # AJAX (e.g. folder expand)
+    ├── admin.php       # Optional security admin UI
+    ├── preview.php     # Text/PDF preview helper
+    ├── config/         # default.json (required), extensions.json (optional)
+    ├── includes/       # PHP classes
+    ├── templates/      # Listing UI, HTTP 404, runtime error chrome
+    ├── assets/         # CSS, images (e.g. favicons)
+    └── data/           # Created at runtime; not in git
 ```
+
+For the full repository map (including dev files), see `docs/notes.md`.
 
 ## Configuration
-Edit `lister/config/default.json` to customize:
-- Display settings
-- Security options
-- Theme preferences
 
-## Upgrading
-If you previously deployed `install_error.php` next to `index.php`, you can delete that file after uploading the new `index.php` (preflight errors are shown from `index.php` only).
+Edit `lister/config/default.json` for paths, display, optional `security`, and `app.debug`. For hosting variables and deploy scripts, see `docs/configuration.md`.
+
+## Legacy file
+
+Very old installs may still have `install_error.php` next to `index.php`. Remove it after upgrading; preflight messages come only from `index.php`.
 
 ## Removal
-To remove Lister, you can either:
 
-### Option 1: Use the teardown script
-```bash
-./scripts/teardown.sh
-```
+- **Automated:** from a machine with the repo and a configured `.env`, run `./scripts/teardown.sh` (removes `index.php`, `.htaccess`, and `lister/` on the remote path).
+- **Manual:** delete those same paths.
+- Delete `install_error.php` yourself if it is still there.
 
-### Option 2: Manual removal
-Delete the following files from your server:
-- `index.php`
-- `.htaccess`
-- `lister/` directory
+## More help
 
-## Support
-See `docs/notes.md` for development and troubleshooting information.
+- `docs/configuration.md` — environment, hosting notes, pointers to error checks
+- `docs/notes.md` — local development, deploy workflow, troubleshooting
