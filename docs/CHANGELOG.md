@@ -6,6 +6,7 @@ Notable changes to Lister. Deployment builds show a **compact ID** (last 8 digit
 
 ### 2026-03-21
 
+- **Plan**: Active Phase 2 trimmed to remaining work; shipped items stay in archive; **Explicitly cancelled** section for file filter by type/size (dropped).
 - **Listing**: File and folder names use normal font weight (not bold). Preview modal prev/next applies to all previewable files in table order, not only images; capture-phase **←** / **→** on `<dialog>` unchanged.
 - **Keyboard**: Roving row focus (↑↓, → / ← expand-collapse, Enter); **Space** opens preview when available, otherwise same as Enter; initial focus on first row; Esc closes preview; name-cell controls `tabindex="-1"`. Row focus: subtle cell background. Documented in `requirements.md`.
 - **Modal previews**: `preview_kind` / `data-preview`; text via `lister/preview.php` (e.g. `.md`); PDF, **and** server-rendered web (`.html`, `.htm`, `.php`, `.shtml`, ASP/JSP/CFML/CGI where applicable) via `<iframe>` so output is rendered, not source; images; prev/next across all preview kinds in list order; `display.preview_text_max_bytes`.

@@ -2,22 +2,19 @@
 
 ## Current Status: WORKS GOOD ✅
 - **Deployed**: misc.jonplummer.com
-- **Phase 1**: Complete (MVP + additional features)
-- **Phase 2**: In progress — modal previews and keyboard listing navigation shipped; remaining: a11y audit, error pages, shipping/docs tasks, optional polish
-- **Phase 3**: Not started (search, bulk file operations)
+- **Phase 1**: Complete — see [Archive: Phase 1](#phase-1-core-foundation-mvp)
+- **Phase 2**: In progress — accessibility audit; custom error pages; operations and shipping documentation; optional polish (see [Phase 2 remaining](#phase-2-remaining-work))
+- **Phase 3**: Not started (search, bulk file operations); one item [cancelled](#explicitly-cancelled-wont-do)
 - **Phase 4**: Someday maybe — commercialization / multi-user (see [Phase 4](#phase-4-commercialization-and-multi-user))
 - **Next**: Accessibility audit
 
-## Phase 1: Core Foundation (MVP) – Basic directory listing with sorting and theming – Complete
-
-## Phase 2: Enhanced Features – Improved UX and additional functionality
+## Phase 2: Remaining work
 
 **Context**: Primary use is **personal, convenient file access**, not high-sensitivity hosting. **Threat model**: automated abuse (bots, scrapers) is the main concern—not fine-grained control over curious humans. Multi-tenant access, auth-as-product, and similar work are an optional **Phase 4** and do not drive the current deployment.
 
-### Styling completeness (Phase 2.1) – Complete
+Modal previews, README panel, keyboard listing navigation, and related UX are **archived** under [Phase 2 completed](#phase-2-completed-items).
 
 ### Product: interaction & quality
-- [x] Implement keyboard navigation (roving row focus; ↑↓; → / ← expand-collapse; Enter activate; Space preview or same as Enter; initial focus first row; Esc close modal; ← / → preview carousel via dialog capture listener; browser find for search)
 - [ ] Accessibility audit
 
 ### Abuse & automation
@@ -69,7 +66,6 @@
 
 ### 3.1 Search & Discovery
 - Implement client-side file search
-- Add file filtering by type/size (nah)
 - Create advanced sorting options
 
 ### 3.2 File Operations
@@ -82,6 +78,10 @@
 
 ### 3.4 Log analysis helpers (optional)
 - [ ] Add documented **grep/awk (or small script) recipes** for common log formats to aggregate hits by path or list distinct referrers for a path—stays optional if raw log access is enough
+
+## Explicitly cancelled (won’t do)
+
+* **File filtering by type/size** (formerly under Phase 3.1) — Not pursuing for this product; sorting and browser find are enough for personal use.
 
 ## Phase 4: Commercialization and multi-user
 **Goal**: Product-grade hosting, tenants, or sensitive data—**out of scope** for the current personal deployment. Revisit only if Lister is sold, multi-tenant, or holds data you treat as confidential.
@@ -243,6 +243,10 @@ lister/
 #### 2.10 Listing keyboard navigation
 - [x] Roving `tabindex` on `tr.item-row`; name-cell `.directory-toggle` / `.file-link` removed from tab order (`tabindex="-1"`) so Tab moves row-to-row
 - [x] ↑↓ prev/next row; → expand / ← collapse folder rows; Enter toggles folder or opens file (preview when `data-preview`); Space preview when supported else Enter-equivalent; initial `focus` first row (`preventScroll`); Esc closes modal and restores row focus; modal ← / → on `dialog` `keydown` capture (all preview kinds in list order); row focus: subtle `td` background
+- [x] Browser find-in-page for search (no separate in-app search shortcut)
+
+#### 2.11 Listing typography
+- [x] File and folder names in the table use normal (400) font weight instead of bold
 
 #### 2.8 Install & packaging (done)
 - [x] Preflight install error UI inlined in root `index.php` (removed separate `install_error.php` from deploy surface)
