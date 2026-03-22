@@ -19,8 +19,9 @@ Lister exposes the contents of any web-accessible folder and subfolders for brow
 
 ## 2. Features to be considered
 
-* Text preview allows you to see a preview of a text or markdown document (single file, not the directory README)
-* Image preview allows you to see a preview of a selected image and page through images in the directory
+* Text preview opens in a **modal** for a text or markdown document (single file, not the directory README); content handling aligns with README preview rules where applicable
+* Image preview opens in the **same modal pattern**, with a way to move to other images in the **currently listed** directory
+* PDF preview opens in that **modal** (e.g. embedded viewer) when the user clicks the file, without granting access beyond the existing file URL
 
 ## 3. Features to be considered later
 
@@ -67,6 +68,7 @@ Not required for the current personal deployment. Revisit if Lister is offered a
 
 ## Changelog
 
+* **2026-03-21** — Previews (section 2): text, image, and PDF targets use a shared **modal** interaction (click to open, dismiss with Escape/backdrop); image navigation stays within the visible directory list. *Rationale:* Matches desired UX; `plan.md` “browsing & previews” updated accordingly.
 * **2026-03-21** — Installation packaging: requirements now favor clear upload instructions, sane top-level layout in shipped artifacts, and excluding non-runtime files from releases over minimizing total file count; `plan.md` “Shipping & installation” captures the optional backlog item (replacing a misplaced “reduce file count” polish note). *Rationale:* Drag-and-drop success depends on cognitive load and the correct target, not file-count metrics.
 * **2026-03-21** — README preview below the directory table when a matching README exists in that folder; `display.readme_preview` in config toggles it; `lister/includes/Parsedown.php` (MIT) parses Markdown in safe mode; `.txt` readmes are escaped plain text. *Rationale:* GitHub-style folder documentation on the listing page without JavaScript.
 * **2026-03-21** — File type and folder icons use Material Symbols Outlined loaded from Google Fonts (ligature names in `lister/includes/IconSymbols.php`). Listing pages request `fonts.googleapis.com` / `fonts.gstatic.com`. *Rationale:* Consistent outlined icon set; emoji removed from the name column.

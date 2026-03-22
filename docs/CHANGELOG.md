@@ -9,6 +9,7 @@ All notable changes to Lister will be documented in this file.
 ### 2026-03-21
 
 #### Changed
+- Update files
 - Update deployment configuration
 - Update files
 
@@ -16,6 +17,7 @@ All notable changes to Lister will be documented in this file.
 - README preview below listing: `ReadmePreview.php`, bundled `Parsedown.php`, `display.readme_preview` in config, styles under `.lister-readme`.
 
 #### Changed
+- Update files
 - Update deployment configuration
 - File type and folder icons use Material Symbols Outlined (Google Fonts); `lister/includes/IconSymbols.php` maps keys to ligature names.
 - Update files
@@ -24,6 +26,7 @@ All notable changes to Lister will be documented in this file.
 - Add 2 new files
 
 #### Changed
+- Update files
 - Update deployment configuration
 - Update files
 - Update files
@@ -32,6 +35,7 @@ All notable changes to Lister will be documented in this file.
 - Add IconSymbols class
 
 #### Changed
+- Update files
 - Update deployment configuration
 - Update files
 - Folder expand: viewport-centered loading panel (themed translucent rounded square, larger hourglass), minimum display 500ms, depth counting for overlapping fetches.
@@ -40,6 +44,7 @@ All notable changes to Lister will be documented in this file.
 - Add PathSanitizer class
 
 #### Changed
+- Update files
 - Update deployment configuration
 - Update files
 - Update files
@@ -50,6 +55,7 @@ All notable changes to Lister will be documented in this file.
 - Add SortPreference class
 
 #### Changed
+- Update files
 - Update deployment configuration
 - Update files
 - Update files
@@ -59,6 +65,7 @@ All notable changes to Lister will be documented in this file.
 ### 2025-11-24
 
 #### Changed
+- Update files
 - Update deployment configuration
 - Update files
 - Update files
@@ -74,6 +81,7 @@ All notable changes to Lister will be documented in this file.
 - Add 2 new files
 
 #### Changed
+- Update files
 - Update deployment configuration
 - Update files
 - Update files
@@ -88,6 +96,7 @@ All notable changes to Lister will be documented in this file.
 ### 2025-11-23
 
 #### Changed
+- Update files
 - Update deployment configuration
 - Update files
 - Update files

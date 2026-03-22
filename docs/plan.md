@@ -6,23 +6,19 @@
 - **Phase 2**: Partially complete (UX, abuse resistance, shipping polish)
 - **Phase 3**: Not started (search, bulk file operations)
 - **Phase 4**: Someday maybe — commercialization / multi-user (see [Phase 4](#phase-4-commercialization-and-multi-user))
-- **Next**: Text and image previews, keyboard navigation, accessibility audit
+- **Next**: Modal text / image / PDF previews, keyboard navigation, accessibility audit
 
-## Phase 1: Core Foundation (MVP)
-**Goal**: Basic directory listing with sorting and theming  
-**Status**: Complete — details in [Archive](#archive-completed-work).
+## Phase 1: Core Foundation (MVP) – Basic directory listing with sorting and theming – Complete
 
-## Phase 2: Enhanced Features
-**Goal**: Improved UX and additional functionality.
+## Phase 2: Enhanced Features – Improved UX and additional functionality
 
 **Context**: Primary use is **personal, convenient file access**, not high-sensitivity hosting. **Threat model**: automated abuse (bots, scrapers) is the main concern—not fine-grained control over curious humans. Multi-tenant access, auth-as-product, and similar work are an optional **Phase 4** and do not drive the current deployment.
 
-### Styling completeness (Phase 2.1)
-**Status**: Complete — see [Archive](#archive-completed-work).
+### Styling completeness (Phase 2.1) – Complete
 
 ### Product: browsing & previews
-- [ ] Create text file preview system
-- [ ] Build image preview with navigation
+- [ ] **Modal previews** (click to open, Escape / backdrop to close): text and markdown (escaped or safe-rendered like README), images with prev/next within the current directory listing, PDF in an `<iframe>` (or equivalent) so the file URL stays same-origin and already access-controlled
+- [ ] Wire preview affordance on main table and expanded (AJAX) rows; optional config toggles and size limits for fetched text
 
 ### Product: interaction & quality
 - [ ] Implement keyboard navigation
@@ -61,7 +57,7 @@
 - [ ] **Optional**: Refine drag-and-drop install experience by **install surface**, not raw file count: README states an unambiguous upload target; shipped tree keeps top-level items purposeful; release zip omits dev-only files. Treat merging PHP for fewer files as low value unless it also reduces confusion.
 
 ### Visual polish (incremental / optional)
-- [ ] Diagnose favicon issue (diagnostic script exists)
+- [x] **Favicon verification**: Run `scripts/diagnose_favicon.php` against the environment (template links + files on disk + stray `favicon.ico`). In the browser, confirm each linked icon URL returns 200 in the Network tab; spot-check tab icons in Safari and Chrome; on iOS, use Add to Home Screen to confirm `apple-touch-icon`. Optional later: `site.webmanifest` + maskable icons if Android shortcuts matter.
 - [ ] Styling adjustments to better match jonplummer.com
 
 ### Customization & integration
