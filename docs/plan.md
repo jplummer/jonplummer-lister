@@ -3,19 +3,16 @@
 ## Current Status: WORKS GOOD ✅
 - **Deployed**: misc.jonplummer.com
 - **Phase 1**: Complete — see [Archive: Phase 1](#phase-1-core-foundation-mvp)
-- **Phase 2**: In progress — accessibility audit; custom error pages; operations and shipping documentation; optional polish (see [Phase 2 remaining](#phase-2-remaining-work))
+- **Phase 2**: In progress — custom error pages; operations and shipping documentation; optional polish (see [Phase 2 remaining](#phase-2-remaining-work))
 - **Phase 3**: Not started (search, bulk file operations); one item [cancelled](#explicitly-cancelled-wont-do)
 - **Phase 4**: Someday maybe — commercialization / multi-user (see [Phase 4](#phase-4-commercialization-and-multi-user))
-- **Next**: Accessibility audit
+- **Next**: Custom error pages (404 / 500)
 
 ## Phase 2: Remaining work
 
 **Context**: Primary use is **personal, convenient file access**, not high-sensitivity hosting. **Threat model**: automated abuse (bots, scrapers) is the main concern—not fine-grained control over curious humans. Multi-tenant access, auth-as-product, and similar work are an optional **Phase 4** and do not drive the current deployment.
 
-Modal previews, README panel, keyboard listing navigation, and related UX are **archived** under [Phase 2 completed](#phase-2-completed-items).
-
-### Product: interaction & quality
-- [ ] Accessibility audit
+Modal previews, README panel, keyboard listing navigation, accessibility pass (see `docs/accessibility-audit.md`), and related UX are **archived** under [Phase 2 completed](#phase-2-completed-items).
 
 ### Error experiences
 - [ ] Create 404 error page for non-existent files/directories
@@ -252,6 +249,9 @@ lister/
 
 #### 2.11 Listing typography
 - [x] File and folder names in the table use normal (400) font weight instead of bold
+
+#### 2.12 Accessibility (audit + fixes)
+- [x] Skip link to main; single page `h1` (site name demoted to `p.site-title`); table caption (visually hidden); `aria-current` on active sort link; `aria-expanded` on folder toggles; decorative icons `aria-hidden`; expanding-indicator screen-reader text. See `docs/accessibility-audit.md` for scope and follow-ups.
 
 #### 2.8 Install & packaging (done)
 - [x] Preflight install error UI inlined in root `index.php` (removed separate `install_error.php` from deploy surface)

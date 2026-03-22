@@ -10,6 +10,7 @@ Lister exposes the contents of any web-accessible folder and subfolders for brow
 * File type icons show file types at a glance
 * Drag-and-drop installation allows you to be up and running in less than a minute and is straightforward to remove
 * **Host configuration**: Web server **autoindex** (Apache `Options Indexes`, nginx autoindex, etc.) does **not** need to be enabled. Lister builds the file table in PHP from the filesystem; only PHP execution and read access to the served directory tree are required
+* **Accessibility**: Listing UI follows common WCAG-oriented patterns (semantic structure, skip link, table caption, sort and expand state for assistive tech, keyboard behavior in §1). Residual risks and follow-ups are in `docs/accessibility-audit.md`
 * Shipped packages should minimize installer confusion: clear instructions for what to upload and where, a purposeful top-level layout in the delivered tree, and runtime-only contents in release artifacts. Total file count is not a primary packaging goal
 * Sortable columns: default alphabetical by filename, with options to sort by type, size, or date
 * Theme and styling integrate with https://jonplummer.com/, including dark mode support
@@ -69,6 +70,8 @@ Not required for the current personal deployment. Revisit if Lister is offered a
     * Secure authentication mechanism
 
 ## Changelog
+
+* **2026-03-21** — **Accessibility**: `docs/accessibility-audit.md`; template/CSS updates (skip link, one `h1`, table caption, `aria-expanded` / `aria-current`, loading text). Core features bullet references audit doc.
 
 * **2026-03-21** — **Deployment**: Documented that server autoindex / “directory listing” is not required; Lister enumerates via PHP. Plan: deferred optional anti-abuse (curated bot lists, stricter rate limits) to Phase 4; removed open Phase 2 “abuse” line in favor of that framing.
 

@@ -6,6 +6,7 @@ Notable changes to Lister. Deployment builds show a **compact ID** (last 8 digit
 
 ### 2026-03-21
 
+- **Accessibility**: Audit doc (`docs/accessibility-audit.md`); skip link; single page `h1`; table caption; `aria-expanded` on folder buttons; `aria-current` on sort; SR text for folder load; `plan.md` archive **2.12**.
 - **Plan**: Shipping task to investigate non-Apache equivalents to `.htaccess` (nginx/Caddy/IIS, etc.) and honest drag-and-drop scope per host.
 - **Plan / docs**: Optional anti-abuse expansion (curated bot lists, stricter rate limits) moved under Phase 4; autoindex not required for Lister (PHP enumeration) noted in plan, `requirements.md`, and `configuration.md`.
 - **Plan**: Active Phase 2 trimmed to remaining work; shipped items stay in archive; **Explicitly cancelled** section for file filter by type/size (dropped).

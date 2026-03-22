@@ -69,6 +69,40 @@
   --lister-row-focus-bg: light-dark(rgba(0, 0, 0, 0.055), rgba(255, 255, 255, 0.07));
 }
 
+/* Skip link: first tab stop, visible on keyboard focus */
+.lister-skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0.5rem;
+  z-index: 10001;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background-color: var(--content-background-color);
+  color: var(--link-color);
+  border: 1px solid var(--border-color);
+  font-size: var(--font-size-xs);
+  line-height: var(--line-height-xs);
+  text-decoration: none;
+}
+
+.lister-skip-link:focus {
+  left: 0.5rem;
+  outline: 2px solid var(--link-color);
+  outline-offset: 2px;
+}
+
+/* Screen-reader-only text (captions, live status wording) */
+.lister-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* Box sizing rules */
 *, *::before, *::after {
   box-sizing: border-box;
@@ -140,11 +174,12 @@ hgroup {
   flex-wrap: wrap;
 }
 
-hgroup h1 {
+hgroup .site-title {
   font-size: var(--font-size-3xl);
   line-height: var(--line-height-3xl);
   font-weight: var(--font-weight-thin);
   margin: 0;
+  font-style: normal;
 }
 
 hgroup p {
@@ -154,17 +189,17 @@ hgroup p {
   font-style: italic;
 }
 
-hgroup h1 a {
+hgroup .site-title a {
   text-decoration: none;
   color: var(--link-color);
 }
 
-hgroup h1 a:hover {
+hgroup .site-title a:hover {
   text-decoration: underline;
 }
 
-hgroup h1 a:visited {
-  color: var(--link-color); /* Keep hgroup as link-color even when visited */
+hgroup .site-title a:visited {
+  color: var(--link-color); /* Keep site title as link-color even when visited */
 }
 
 .breadcrumbs {

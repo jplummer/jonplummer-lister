@@ -13,14 +13,15 @@
   <link rel="stylesheet" href="/lister/assets/lister.css">
 </head>
 <body>
+  <a class="lister-skip-link" href="#lister-main">Skip to main content</a>
   <header>
     <hgroup>
-      <h1><a href="https://jonplummer.com">Jon Plummer</a></h1>
+      <p class="site-title"><a href="https://jonplummer.com">Jon Plummer</a></p>
       <p>Here are some things</p>
     </hgroup>
   </header>
 
-  <main>
+  <main id="lister-main">
     <article>
       <header>
         <h1>Miscellaneous</h1>
@@ -36,19 +37,20 @@
           <div class="directory-listing">
             <?php if (!empty($data['directories']) || !empty($data['files'])): ?>
               <table>
+                <caption class="lister-visually-hidden">Files and folders in this directory</caption>
                 <thead>
                   <tr>
                     <th scope="col"<?php if ($sortBy === 'name'): ?> aria-sort="<?= $sortDir === 'asc' ? 'ascending' : 'descending' ?>"<?php endif; ?>>
-                      <a class="sort-header" href="<?= htmlspecialchars(SortPreference::sortColumnHref('name', $sortBy, $sortDir), ENT_QUOTES, 'UTF-8') ?>">Name</a>
+                      <a class="sort-header" href="<?= htmlspecialchars(SortPreference::sortColumnHref('name', $sortBy, $sortDir), ENT_QUOTES, 'UTF-8') ?>"<?php if ($sortBy === 'name'): ?> aria-current="true"<?php endif; ?>>Name</a>
                     </th>
                     <th scope="col"<?php if ($sortBy === 'size'): ?> aria-sort="<?= $sortDir === 'asc' ? 'ascending' : 'descending' ?>"<?php endif; ?>>
-                      <a class="sort-header" href="<?= htmlspecialchars(SortPreference::sortColumnHref('size', $sortBy, $sortDir), ENT_QUOTES, 'UTF-8') ?>">Size</a>
+                      <a class="sort-header" href="<?= htmlspecialchars(SortPreference::sortColumnHref('size', $sortBy, $sortDir), ENT_QUOTES, 'UTF-8') ?>"<?php if ($sortBy === 'size'): ?> aria-current="true"<?php endif; ?>>Size</a>
                     </th>
                     <th scope="col"<?php if ($sortBy === 'modified'): ?> aria-sort="<?= $sortDir === 'asc' ? 'ascending' : 'descending' ?>"<?php endif; ?>>
-                      <a class="sort-header" href="<?= htmlspecialchars(SortPreference::sortColumnHref('modified', $sortBy, $sortDir), ENT_QUOTES, 'UTF-8') ?>">Modified</a>
+                      <a class="sort-header" href="<?= htmlspecialchars(SortPreference::sortColumnHref('modified', $sortBy, $sortDir), ENT_QUOTES, 'UTF-8') ?>"<?php if ($sortBy === 'modified'): ?> aria-current="true"<?php endif; ?>>Modified</a>
                     </th>
                     <th scope="col"<?php if ($sortBy === 'type'): ?> aria-sort="<?= $sortDir === 'asc' ? 'ascending' : 'descending' ?>"<?php endif; ?>>
-                      <a class="sort-header" href="<?= htmlspecialchars(SortPreference::sortColumnHref('type', $sortBy, $sortDir), ENT_QUOTES, 'UTF-8') ?>">Type</a>
+                      <a class="sort-header" href="<?= htmlspecialchars(SortPreference::sortColumnHref('type', $sortBy, $sortDir), ENT_QUOTES, 'UTF-8') ?>"<?php if ($sortBy === 'type'): ?> aria-current="true"<?php endif; ?>>Type</a>
                     </th>
                   </tr>
                 </thead>
@@ -63,13 +65,13 @@
                         <?php if ($item['is_directory']): ?>
                           <?php if (isset($item['is_empty']) && $item['is_empty']): ?>
                             <span class="empty-folder">
-                              <span class="icon folder"></span>
+                              <span class="icon folder" aria-hidden="true"></span>
                               <span class="item-name"><?= htmlspecialchars($item['name']) ?></span>
                             </span>
                           <?php else: ?>
-                            <button class="directory-toggle" data-path="<?= htmlspecialchars($item['web_path']) ?>">
-                              <span class="toggle-icon"></span>
-                              <span class="icon folder"></span>
+                            <button type="button" class="directory-toggle" data-path="<?= htmlspecialchars($item['web_path']) ?>" aria-expanded="false">
+                              <span class="toggle-icon" aria-hidden="true"></span>
+                              <span class="icon folder" aria-hidden="true"></span>
                               <span class="item-name"><?= htmlspecialchars($item['name']) ?></span>
                             </button>
                           <?php endif; ?>
@@ -123,6 +125,7 @@
   </main>
 
   <div id="lister-expanding-indicator" class="lister-expanding-indicator" role="status" aria-live="polite" aria-atomic="true" aria-hidden="true">
+    <span id="lister-expanding-indicator-text" class="lister-visually-hidden"></span>
     <span class="lister-expanding-indicator-panel" aria-hidden="true">⏳</span>
   </div>
 
@@ -160,8 +163,19 @@
       if (!el) {
         return;
       }
+      const textEl = document.getElementById('lister-expanding-indicator-text');
+      if (textEl) {
+        textEl.textContent = active ? 'Loading folder contents.' : '';
+      }
       el.classList.toggle('is-active', active);
       el.setAttribute('aria-hidden', active ? 'false' : 'true');
+    }
+
+    function setDirectoryToggleExpanded(row, expanded) {
+      const toggle = row.querySelector('.directory-toggle');
+      if (toggle) {
+        toggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+      }
     }
 
     function beginExpandingIndicator() {
@@ -651,6 +665,7 @@
             // Create nested container
             createNestedContainer(row, data.data);
             row.classList.add('expanded');
+            setDirectoryToggleExpanded(row, true);
           } else {
             console.error('Error loading directory:', data.error);
           }
@@ -698,6 +713,7 @@
       });
       
       row.classList.remove('expanded');
+      setDirectoryToggleExpanded(row, false);
       toggleIcon.textContent = ''; // Clear text since CSS handles the icon
 
       queueMicrotask(() => {
@@ -740,6 +756,7 @@
           wrap.className = 'empty-folder';
           const iconEl = document.createElement('span');
           iconEl.className = 'icon folder';
+          iconEl.setAttribute('aria-hidden', 'true');
           const nameSpan = document.createElement('span');
           nameSpan.className = 'item-name';
           nameSpan.textContent = item.name;
@@ -751,10 +768,13 @@
           btn.type = 'button';
           btn.className = 'directory-toggle';
           btn.setAttribute('data-path', webPath);
+          btn.setAttribute('aria-expanded', 'false');
           const toggleIcon = document.createElement('span');
           toggleIcon.className = 'toggle-icon';
+          toggleIcon.setAttribute('aria-hidden', 'true');
           const iconEl = document.createElement('span');
           iconEl.className = 'icon folder';
+          iconEl.setAttribute('aria-hidden', 'true');
           const nameSpan = document.createElement('span');
           nameSpan.className = 'item-name';
           nameSpan.textContent = item.name;
