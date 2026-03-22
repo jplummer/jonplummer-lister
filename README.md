@@ -19,6 +19,12 @@ A simple, clean directory listing application for web servers.
 
 See [INSTALL.md](INSTALL.md) for detailed installation instructions.
 
+## Traffic and scale
+
+Lister is meant for low-traffic, personal browsing. Do not rely on it where sustained high request volume or heavy automated traffic is expected.
+
+`lister/config/default.json` includes an optional `security` block (per-IP request counts, bot-like user-agent rejection, and related logging). That is a light guardrail for quiet sites, not hosting-grade rate limiting or bot defense. For real volume or abuse, use your host’s controls or a different arrangement. You can set `"security.enabled": false` if you prefer not to use it.
+
 ## Quick Start
 
 ### Local Development

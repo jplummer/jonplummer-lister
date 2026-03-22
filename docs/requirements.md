@@ -13,7 +13,7 @@ Lister exposes the contents of any web-accessible folder and subfolders for brow
 * Sortable columns: default alphabetical by filename, with options to sort by type, size, or date
 * Theme and styling integrate with https://jonplummer.com/, including dark mode support
 * Direct URL access for sharing files
-* Anti-abuse capabilities: exponential rate-limiting and bot scraping prevention
+* **Traffic scope**: Lister is not positioned for high request volume or serious abuse. Optional `security` in config may apply light per-IP limits and bot-like UA handling; that does not replace edge or host-level controls. Drag-and-drop install does not require tuning `security`. Broader anti-abuse / admin tooling remains deferred (see §5, Phase 4 in `plan.md`)
 * Responsive design for mobile and desktop
 * README preview: if the listed directory contains a recognized README file (`README.md`, `README.txt`, etc.), rendered content appears below the listing (Markdown via Parsedown safe mode, plain text escaped)
 
@@ -67,5 +67,7 @@ Not required for the current personal deployment. Revisit if Lister is offered a
     * Secure authentication mechanism
 
 ## Changelog
+
+* **2026-03-21** — **Traffic scope & README**: Core features no longer claim robust in-app rate limiting; README states low-traffic intent and that optional `security` is a guardrail only. Rationale: honest positioning for shared hosting and drag-and-drop install; heavier anti-abuse remains §5 / Phase 4.
 
 * **2026-03-21** — **Previews & listing (§2, plan 2.6–2.7)**: Modal text/image/PDF previews (`preview_kind`, `lister/preview.php`, `preview_text_max_bytes`); README panel; Material Symbols icons; column sort with cookie + API POST; API subject to Security when enabled. **Install & scope**: Packaging goals (upload target, runtime-only artifacts); preflight errors only in `index.php`; personal deployment context; deferred multi-user / commercialization in §5 and Phase 4.
